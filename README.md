@@ -1,124 +1,104 @@
-\# AI-Powered Wind Energy Forecasting and Optimisation
+# AI-Powered Wind Energy Forecasting and Battery Storage Optimisation
 
+**Research status:** Active MSc Artificial Intelligence research.
 
+## Overview
 
-\## Project Overview
+This project investigates how machine learning, wind power forecasting, uncertainty estimation, and model predictive control (MPC) can support battery energy storage operation and improve grid export stability.
 
+The research combines artificial intelligence with electrical engineering and renewable energy optimisation.
 
+## Research Objectives
 
-This project aims to develop a machine-learning-based system for forecasting wind power generation and optimising battery energy storage operations.
+1. Forecast wind power generation using machine learning.
+2. Evaluate multi-step forecasting accuracy and uncertainty.
+3. Model battery charging, discharging, and state of charge.
+4. Develop forecast-informed and uncertainty-aware MPC controllers.
+5. Compare controller performance against baseline strategies.
+6. Investigate grid-ramp violations and battery energy constraints.
 
+## Implemented Components
 
+### Wind Power Forecasting
+- Time-series data preparation and feature engineering
+- Persistence forecasting baselines
+- XGBoost forecasting experiments
+- Multi-step forecasting and chronological evaluation
 
-It combines electrical engineering, artificial intelligence, time-series analysis, and optimisation to investigate how renewable energy forecasting can support more efficient energy management.
+### Forecast Uncertainty
+- Forecast error analysis
+- Horizon-dependent uncertainty calibration
+- Nominal and downside forecast scenarios
 
+### Battery Optimisation
+- Battery energy storage simulation
+- Nominal and uncertainty-aware MPC
+- Battery-ramp-aware MPC
+- Energy-reserve MPC
+- Grid-priority MPC
+- Combined uncertainty-reserve grid-priority MPC
 
+## Battery Development Configuration
 
-\*\*Status:\*\* In development.
+| Parameter | Value |
+| --- | --- |
+| Battery capacity | 2,000 kWh |
+| Maximum charge/discharge power | 1,000 kW |
+| SOC limits | 40–90% |
+| Charging/discharging efficiency | 95% |
+| Control interval | 10 minutes |
+| Prediction horizon | 6 intervals |
+| Grid-ramp threshold | 200 kW |
 
+These are research simulation assumptions, not specifications for a commissioned battery installation.
 
+## Preliminary Experimental Results
 
-\## Research Objectives
+The following results are from development Block 2, containing 144 observations and 143 within-block grid-ramp transitions.
 
+| Controller | Ramp violations | Total exceedance (kW) |
+| --- | ---: | ---: |
+| Nominal MPC | 63 | 10,900.590 |
+| Risk-weighted MPC (0.5) | 68 | 11,258.455 |
+| Combined uncertainty-reserve grid-priority MPC | 67 | 11,285.412 |
 
+These preliminary results show that additional uncertainty and reserve objectives do not automatically improve performance. Controller development and evaluation are ongoing.
 
-1\. Analyse real-world wind energy and meteorological datasets.
+**These are not final held-out test results.**
 
-2\. Develop and compare machine learning models for wind power forecasting.
+## Evaluation Metrics
 
-3\. Evaluate prediction accuracy and uncertainty.
+- Forecast MAE and RMSE
+- Mean and maximum grid-power ramp
+- Grid-ramp threshold violations
+- Total ramp exceedance
+- Battery energy throughput
+- State-of-charge behaviour
 
-4\. Investigate the influence of wind speed, direction, and other weather variables on power generation.
+## Technologies
 
-5\. Develop a battery energy storage optimisation model.
+Python, Pandas, NumPy, Scikit-learn, XGBoost, CVXPY, optimisation solvers, Matplotlib, Git and GitHub.
 
-6\. Build an interactive dashboard for visualising predictions and optimisation results.
+## Repository Contents
 
+- `scripts/` — forecasting, simulation, MPC and analysis code
+- `requirements.txt` — Python dependencies
+- `.gitignore` — excludes local datasets, models and generated results
 
+Local datasets and generated outputs are not included by default. Full reproduction instructions are still being prepared.
 
-\## Proposed Technologies
+## Current Research Status
 
+Forecasting, uncertainty estimation and multiple MPC controllers have been implemented. Further controller development, comparison and final held-out evaluation remain in progress.
 
+## Author
 
-\- Python
+**Raja Arqam Abdullah**
 
-\- Pandas and NumPy
+MSc Artificial Intelligence — Teesside University
 
-\- Scikit-learn
+BSc Electrical Engineering
 
-\- XGBoost
+## Licence
 
-\- SciPy
-
-\- Streamlit and Plotly
-
-\- Git and GitHub
-
-
-
-\## Planned Methodology
-
-
-
-\*\*Phase 1:\*\* Data collection, cleaning, and exploratory analysis.
-
-
-
-\*\*Phase 2:\*\* Time-series forecasting using baseline models and machine learning.
-
-
-
-\*\*Phase 3:\*\* Forecast uncertainty estimation and model explainability.
-
-
-
-\*\*Phase 4:\*\* Battery storage modelling and optimisation under engineering constraints.
-
-
-
-\*\*Phase 5:\*\* Dashboard development, testing, and research evaluation.
-
-
-
-\## Evaluation
-
-
-
-Forecasting performance will be assessed using metrics such as MAE, RMSE, and appropriate normalised error measures.
-
-
-
-Chronological training, validation, and test splits will be used to reduce data leakage.
-
-
-
-Battery optimisation will be evaluated against defined baseline operating strategies using metrics appropriate to the available data.
-
-
-
-\## Data Sources
-
-
-
-Publicly available wind energy datasets will be selected and documented, including their licences and limitations.
-
-
-
-\## Author
-
-
-
-Raja Arqam Abdullah
-
-
-
-MSc Artificial Intelligence | BSc Electrical Engineering
-
-
-
-\## Licence
-
-
-
-A software licence will be selected before public release.
-
+No open-source licence has yet been selected.
