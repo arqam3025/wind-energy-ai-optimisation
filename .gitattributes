@@ -1,0 +1,7 @@
+# Research provenance authenticates exact bytes. Preserve them across checkouts.
+src/windresearch/** -text
+configs/*_v1.json -text
+scripts/*_v1.py -text
+tests/*_v1.py -text
+audits/research_grade_20261029/** -text
+docs/research_grade_tables/** -text

@@ -72,6 +72,8 @@ Resampling uses paired daily metrics, 10,000 draws and non-circular block length
 
 Work belongs on branch `research/grade-audit-20261029`. Full generated logs remain ignored; curate small aggregate tables/figures separately. Exact executed source snapshots and hashes are retained when validation is strengthened after experiments. Review an intended release commit/tag, artifact availability and licensing before publication. No push is authorised.
 
+Scoped `.gitattributes` rules preserve exact bytes for the new research source/config/tests, evidence and aggregate tables across Windows/Linux checkouts. Automatic newline conversion would otherwise invalidate recorded SHA256 values. The rules do not rewrite or normalize frozen files, datasets or original results.
+
 The existing dashboard continues to show the archived frozen study. Launch with `.venv/Scripts/python.exe -m streamlit run app/dashboard.py`. New experimental logs never silently replace its research tables or fabricate original solver internals.
 
 Final saved-artifact verification, using a new JSON filename:
