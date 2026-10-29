@@ -1,0 +1,88 @@
+2026-10-29 22:13:55.303 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+test_next_transition_includes_previous_battery_injection (test_completion_diagnostics.DiagnosticTests.test_next_transition_includes_previous_battery_injection) ... ok
+test_wind_limited_requests (test_completion_diagnostics.DiagnosticTests.test_wind_limited_requests) ... ok
+test_initial_render_and_control_changes (test_dashboard.DashboardAppTests.test_initial_render_and_control_changes) ... 2026-10-29 22:13:55.343 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_aggregate_only_without_private_replay (test_dashboard.DashboardDataTests.test_aggregate_only_without_private_replay) ... ok
+test_display_accounting_matches_saved_block (test_dashboard.DashboardDataTests.test_display_accounting_matches_saved_block) ... ok
+test_valid_selection_excludes_development (test_dashboard.DashboardDataTests.test_valid_selection_excludes_development) ... ok
+test_identical_cases_have_exact_zero_differences (test_dependent_statistics_v1.DependentStatisticsTests.test_identical_cases_have_exact_zero_differences) ... ok
+test_recentered_interval_not_forced_to_cross_zero (test_dependent_statistics_v1.DependentStatisticsTests.test_recentered_interval_not_forced_to_cross_zero) ... ok
+test_segment_boundaries_seed_and_short_segment (test_dependent_statistics_v1.DependentStatisticsTests.test_segment_boundaries_seed_and_short_segment) ... ok
+test_equal_and_future_target_intervention_is_invariant (test_forecast_audit_v1.ForecastAuditTests.test_equal_and_future_target_intervention_is_invariant) ... ok
+test_existing_output_refused_before_loading_inputs (test_forecast_audit_v1.ForecastAuditTests.test_existing_output_refused_before_loading_inputs) ... ok
+test_forecast_rmse_aggregates_squared_errors (test_forecast_audit_v1.ForecastAuditTests.test_forecast_rmse_aggregates_squared_errors) ... ok
+test_gap_fallback_uses_origin_count_and_floors (test_forecast_audit_v1.ForecastAuditTests.test_gap_fallback_uses_origin_count_and_floors) ... ok
+test_insufficient_history_and_duplicate_origins_fail (test_forecast_audit_v1.ForecastAuditTests.test_insufficient_history_and_duplicate_origins_fail) ... ok
+test_linear_baseline_is_causal_timestamp_based_and_nonnegative (test_forecast_audit_v1.ForecastAuditTests.test_linear_baseline_is_causal_timestamp_based_and_nonnegative) ... ok
+test_old_eligible_observation_can_change_quantile (test_forecast_audit_v1.ForecastAuditTests.test_old_eligible_observation_can_change_quantile) ... ok
+test_one_sided_width_infinite_and_offset_distinct (test_forecast_audit_v1.ForecastAuditTests.test_one_sided_width_infinite_and_offset_distinct) ... ok
+test_order_statistic_uses_finite_sample_rank_without_interpolation (test_forecast_audit_v1.ForecastAuditTests.test_order_statistic_uses_finite_sample_rank_without_interpolation) ... ok
+test_sensitivity_alpha_changes_rank_without_accessing_future (test_forecast_audit_v1.ForecastAuditTests.test_sensitivity_alpha_changes_rank_without_accessing_future) ... ok
+test_equal_and_future_targets_cannot_change_margin (test_frozen_heldout.CausalityTests.test_equal_and_future_targets_cannot_change_margin) ... ok
+test_freeze_and_inputs (test_frozen_heldout.CausalityTests.test_freeze_and_inputs) ... ok
+test_frozen_optimisation_and_fallback_are_identical (test_frozen_heldout.CausalityTests.test_frozen_optimisation_and_fallback_are_identical) ... ok
+test_rejects_energy_creation (test_heldout_accounting.AccountingTests.test_rejects_energy_creation) ... ok
+test_rejects_equal_time_residual (test_heldout_accounting.AccountingTests.test_rejects_equal_time_residual) ... ok
+test_rejects_power_balance_error (test_heldout_accounting.AccountingTests.test_rejects_power_balance_error) ... ok
+test_terminal_restoration_accounts_for_charge_loss (test_heldout_accounting.AccountingTests.test_terminal_restoration_accounts_for_charge_loss) ... ok
+test_zero_battery_energy_reference (test_heldout_accounting.AccountingTests.test_zero_battery_energy_reference) ... ok
+test_charge_loss_upper_soc_and_power_balance (test_mpc_research_v1.PhysicalExecutionTests.test_charge_loss_upper_soc_and_power_balance) ... ok
+test_discharge_efficiency_lower_soc_zero_wind (test_mpc_research_v1.PhysicalExecutionTests.test_discharge_efficiency_lower_soc_zero_wind) ... ok
+test_invalid_config_rejected (test_mpc_research_v1.PhysicalExecutionTests.test_invalid_config_rejected) ... ok
+test_simultaneous_commitments_are_rejected (test_mpc_research_v1.PhysicalExecutionTests.test_simultaneous_commitments_are_rejected) ... ok
+test_wind_shortfall_clips_charging_before_curtailment (test_mpc_research_v1.PhysicalExecutionTests.test_wind_shortfall_clips_charging_before_curtailment) ... ok
+test_future_targets_cannot_change_nominal_command (test_mpc_research_v1.SolverAndReferenceTests.test_future_targets_cannot_change_nominal_command) ... ok
+test_horizon_one_and_exact_scenario_first_minima (test_mpc_research_v1.SolverAndReferenceTests.test_horizon_one_and_exact_scenario_first_minima) ... ok
+test_native_frozen_one_step_objective_and_first_action_regression (test_mpc_research_v1.SolverAndReferenceTests.test_native_frozen_one_step_objective_and_first_action_regression) ... ok
+test_nonoptimal_status_is_explicit_failure (test_mpc_research_v1.SolverAndReferenceTests.test_nonoptimal_status_is_explicit_failure) ... ok
+test_solver_exception_is_explicit_failure (test_mpc_research_v1.SolverAndReferenceTests.test_solver_exception_is_explicit_failure) ... ok
+test_corrupted_ramp_count_exceedance_and_soc_reporting_are_rejected (test_mpc_research_v1.StudyProtocolTests.test_corrupted_ramp_count_exceedance_and_soc_reporting_are_rejected) ... ok
+test_predeclared_nine_dimensions_and_ablations (test_mpc_research_v1.StudyProtocolTests.test_predeclared_nine_dimensions_and_ablations) ... ok
+test_terminal_inventory_and_corrupted_energy_trace (test_mpc_research_v1.StudyProtocolTests.test_terminal_inventory_and_corrupted_energy_trace) ... ok
+test_aggregate_fallback_root_override_and_schema_rejection (test_platform_data.PlatformDataTests.test_aggregate_fallback_root_override_and_schema_rejection) ... ok
+test_all_cases_conserve_energy_and_match_saved_metrics (test_platform_data.PlatformDataTests.test_all_cases_conserve_energy_and_match_saved_metrics) ... ok
+test_file_change_invalidates_cached_table (test_platform_data.PlatformDataTests.test_file_change_invalidates_cached_table) ... ok
+test_integrity_checks_match_and_do_not_follow_changed_manifest (test_platform_data.PlatformDataTests.test_integrity_checks_match_and_do_not_follow_changed_manifest) ... ok
+test_no_battery_is_a_measured_reference_with_missing_battery_state (test_platform_data.PlatformDataTests.test_no_battery_is_a_measured_reference_with_missing_battery_state) ... ok
+test_planning_is_six_recorded_forecast_targets_not_fake_solver_controls (test_platform_data.PlatformDataTests.test_planning_is_six_recorded_forecast_targets_not_fake_solver_controls) ... ok
+test_rejects_corrupted_timestamps_power_and_soc (test_platform_data.PlatformDataTests.test_rejects_corrupted_timestamps_power_and_soc) ... ok
+test_rejects_equal_time_causal_target_and_false_horizon_actual (test_platform_data.PlatformDataTests.test_rejects_equal_time_causal_target_and_false_horizon_actual) ... ok
+test_rejects_simultaneous_operation_even_with_balance_preserved (test_platform_data.PlatformDataTests.test_rejects_simultaneous_operation_even_with_balance_preserved) ... ok
+test_final_report_refuses_existing_filename (test_research_integrity_v1.ResearchIntegrityTests.test_final_report_refuses_existing_filename) ... ok
+test_malformed_authenticated_manifest_is_rejected (test_research_integrity_v1.ResearchIntegrityTests.test_malformed_authenticated_manifest_is_rejected) ... ok
+test_manifest_changed_and_reference_missing_are_rejected (test_research_integrity_v1.ResearchIntegrityTests.test_manifest_changed_and_reference_missing_are_rejected) ... ok
+test_path_traversal_and_normalized_duplicate_rejected (test_research_integrity_v1.ResearchIntegrityTests.test_path_traversal_and_normalized_duplicate_rejected) ... ok
+test_saved_trace_ramps_soc_and_metrics_are_independently_reconstructed (test_research_integrity_v1.ResearchIntegrityTests.test_saved_trace_ramps_soc_and_metrics_are_independently_reconstructed) ... ok
+test_valid_fixture_then_corrupt_reference_rejected_under_optimized_python (test_research_integrity_v1.ResearchIntegrityTests.test_valid_fixture_then_corrupt_reference_rejected_under_optimized_python) ... ok
+test_windows_baseline_paths_work_and_changes_are_detected (test_research_integrity_v1.ResearchIntegrityTests.test_windows_baseline_paths_work_and_changes_are_detected) ... ok
+test_equal_and_future_calibration_targets_rejected (test_research_protocol_v1.ResearchProtocolTests.test_equal_and_future_calibration_targets_rejected) ... ok
+test_partial_existing_output_not_resumed (test_research_protocol_v1.ResearchProtocolTests.test_partial_existing_output_not_resumed) ... ok
+test_schedule_development_targets_included (test_research_protocol_v1.ResearchProtocolTests.test_schedule_development_targets_included) ... ok
+test_target_purge_is_strict_and_does_not_mutate_input (test_research_protocol_v1.ResearchProtocolTests.test_target_purge_is_strict_and_does_not_mutate_input) ... ok
+test_introduced_removed_identity_includes_episode_boundary (test_result_analysis_v1.TransitionIntegrityTests.test_introduced_removed_identity_includes_episode_boundary) ... ok
+test_unmatched_transition_never_silently_deleted (test_result_analysis_v1.TransitionIntegrityTests.test_unmatched_transition_never_silently_deleted) ... ok
+test_all_eight_pages_render_and_seven_analytical_pages_have_plotly (test_windgrid_ui.WindGridUITests.test_all_eight_pages_render_and_seven_analytical_pages_have_plotly) ... 2026-10-29 22:13:58.629 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_controller_block_horizon_and_uncontrolled_comparison (test_windgrid_ui.WindGridUITests.test_controller_block_horizon_and_uncontrolled_comparison) ... 2026-10-29 22:14:00.093 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_corrupt_local_trace_is_rejected_instead_of_displayed (test_windgrid_ui.WindGridUITests.test_corrupt_local_trace_is_rejected_instead_of_displayed) ... 2026-10-29 22:14:00.926 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_elapsed_playback_tick_advances_once_and_stops_at_episode_end (test_windgrid_ui.WindGridUITests.test_elapsed_playback_tick_advances_once_and_stops_at_episode_end) ... 2026-10-29 22:14:01.170 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-29 22:14:01.662 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-29 22:14:01.810 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-29 22:14:01.810 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_missing_fixed_calibration_is_disclosed_without_inventing_a_plan (test_windgrid_ui.WindGridUITests.test_missing_fixed_calibration_is_disclosed_without_inventing_a_plan) ... 2026-10-29 22:14:02.051 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_missing_summary_root_reports_error_without_traceback (test_windgrid_ui.WindGridUITests.test_missing_summary_root_reports_error_without_traceback) ... 2026-10-29 22:14:02.615 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_play_pause_step_reset_and_episode_end (test_windgrid_ui.WindGridUITests.test_play_pause_step_reset_and_episode_end) ... 2026-10-29 22:14:02.763 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_summary_only_root_keeps_results_available_and_discloses_missing_replay (test_windgrid_ui.WindGridUITests.test_summary_only_root_keeps_results_available_and_discloses_missing_replay) ... 2026-10-29 22:14:04.199 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+
+----------------------------------------------------------------------
+Ran 70 tests in 9.174s
+
+OK

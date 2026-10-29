@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "description": "Independent repeated optimisations of the same three full development episodes under identical full-study config/source, in different3worker job schedules. Wall/solver runtime excluded from equality. No new optimisation or tuning.",
+  "comparisons": [
+    {
+      "block_id": 2,
+      "cases": "sensitivity/base and ablations/base adaptive",
+      "intervals": 144,
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "block_id": 10,
+      "cases": "sensitivity/base and ablations/base adaptive",
+      "intervals": 144,
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "block_id": 18,
+      "cases": "sensitivity/base and ablations/base adaptive",
+      "intervals": 144,
+      "maximum_absolute_numeric_difference": 0.0
+    }
+  ]
+}

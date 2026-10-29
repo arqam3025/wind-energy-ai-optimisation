@@ -1,0 +1,44 @@
+{
+  "description": "Validation-only hardening after exact executed-source archival. No algorithms, configurations or saved results changed. Every trace/metric checked against reconstructed ramps, SOC, power and energy.",
+  "studies": {
+    "pilot": {
+      "status": "pass",
+      "trace_files": 6,
+      "intervals": 864,
+      "causal_uncertainty_rows": 864,
+      "maximum_metric_roundtrip_difference": 9.094947017729282e-13,
+      "maximum_energy_residual_kwh": 1.0103917702508625e-11
+    },
+    "benchmark": {
+      "status": "pass",
+      "trace_files": 294,
+      "intervals": 42336,
+      "causal_uncertainty_rows": 42336,
+      "maximum_metric_roundtrip_difference": 1.4551915228366852e-11,
+      "maximum_energy_residual_kwh": 1.730882104311604e-11
+    },
+    "sensitivity": {
+      "status": "pass",
+      "trace_files": 57,
+      "intervals": 8208,
+      "causal_uncertainty_rows": 49248,
+      "maximum_metric_roundtrip_difference": 7.275957614183426e-12,
+      "maximum_energy_residual_kwh": 1.8530954548623413e-11
+    },
+    "ablations": {
+      "status": "pass",
+      "trace_files": 27,
+      "intervals": 3888,
+      "causal_uncertainty_rows": 15552,
+      "maximum_metric_roundtrip_difference": 1.4551915228366852e-11,
+      "maximum_energy_residual_kwh": 1.779199010343291e-11
+    }
+  },
+  "validation_source_sha256": {
+    "src\\windresearch\\experiments.py": "987fe475706d22efd25d648431e3fbad8dcb76be539354976e93f1a0d418845b",
+    "scripts\\run_controller_benchmarks_v1.py": "bcf7139cea2df5dcaa971ef32beca1c60fa27a6131aaf656b019edd86780582e"
+  },
+  "total_trace_files": 384,
+  "total_intervals": 55296,
+  "status": "pass"
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Exact executed source/config snapshot authenticated against all three completed study protocols, before validation-only hardening.",
+  "studies": [
+    "benchmark",
+    "sensitivity",
+    "ablations"
+  ],
+  "sha256": {
+    "scripts/run_controller_benchmarks_v1.py": "95fe577b3e3ea7fc1694f2b6c8dd2763497b1e334caf4306763b7b0fafbeffbe",
+    "src/windresearch/mpc.py": "cf2b2de6302681c21aae6afc1cdc65ba7ee5a5037ae14bbe0a4503135276a91d",
+    "src/windresearch/experiments.py": "42262598f34c5e1e37a3d7289029f3fda552c9f0c38b5fd999d359e41c8473b2",
+    "src/windresearch/forecast_audit.py": "f861b5978bb036a1e2325afd9ebe00ed7c0cfa6e166aa93134da5ef84f5cd83f",
+    "src/windresearch/protocol.py": "c140df63be23dec92b8c1f09f3153ca6ebecda1dc7a4a948e54a62bb0be9bc44",
+    "configs/mpc_research_v1.json": "c031a459094258d4d694b14088b8c9e30a488bcccd01d379f0b3f7410e05f87b"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "version": "mpc_research_v1",
+  "seed": 20261029,
+  "purpose": "Exploratory retrospective comparisons and development-only OFAT/ablations. No model fitting, tuning or controller selection on evaluation outcomes.",
+  "pilot_blocks": [2],
+  "development_study_blocks": [2, 10, 18],
+  "sensitivity_intervals": 144,
+  "sensitivity_episode_rationale": "Full24h episodes on the three predeclared development blocks. Full episodes retained after performance-only cached-solver timing indicated a practical runtime, before examining sensitivity outcomes. Three days do not support independent-replicate or generality claims. Full49 comparison also uses144 intervals per block.",
+  "capacity_sensitivity_scaling": "SOC percentages, initial/reserve/terminal50% references scale with capacity; power unchanged, so C-rate also changes.",
+  "alpha_sensitivity": "Rolling signed order statistic alpha changes; inherited static floor stays fixed. This is not a newly calibrated nominal coverage guarantee.",
+  "grid_penalty_ablation": "Removing only secondary exceedance leaves primary grid-ramp priority active. Primary-disabled variant retains the secondary penalty. A separate no_grid_penalties variant disables primary priority, secondary exceedance and absolute grid ramp penalties; battery ramp and operational penalties remain.",
+  "base_controller": {
+    "capacity_kwh": 2000.0, "max_power_kw": 1000.0,
+    "min_soc_percent": 40.0, "max_soc_percent": 90.0,
+    "initial_soc_percent": 50.0, "reserve_soc_percent": 50.0, "terminal_soc_percent": 50.0,
+    "eta_charge": 0.95, "eta_discharge": 0.95, "dt_hours": 0.16666666666666666,
+    "horizon": 6, "ramp_limit_kw": 200.0, "risk_weight": 0.5,
+    "battery_ramp_weight": 0.1, "absolute_ramp_weight": 1.0, "secondary_exceedance_weight": 20.0,
+    "throughput_weight": 0.1, "terminal_weight": 2.0,
+    "curtailment_weight": 50.0, "reserve_penalty": 100.0,
+    "primary_tolerance": 100.0, "primary_enabled": true,
+    "solver": "HIGHS", "threads": 1, "random_seed": 20261029,
+    "time_limit_seconds": 30.0, "mip_relative_gap": 0.0
+  }
+}
