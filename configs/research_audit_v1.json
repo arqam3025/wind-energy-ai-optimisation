@@ -1,0 +1,42 @@
+{
+  "study_id": "research_grade_v1_20261029",
+  "interpretation": "retrospective and exploratory; original frozen evaluation unchanged",
+  "seed": 20261029,
+  "frozen_manifest_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+  "model_fitting": "none; existing saved forecasts and model inference only",
+  "forecast_baselines": ["persistence", "saved_xgboost", "nonnegative_causal_two_point_linear_trend"],
+  "fast_change_stratum": "absolute observed target-to-previous-10-minute generation difference > 200.001 kW; offline scoring only",
+  "uncertainty": {
+    "methods": ["fixed_absolute_lower", "adaptive_signed_lower", "fixed_absolute_two_sided"],
+    "nominal_reference": 0.9,
+    "one_sided_width": "infinite upper endpoint; report nominal-minus-lower offset separately",
+    "rolling_window": 144,
+    "eligibility": "target_timestamp strictly less than decision_timestamp"
+  },
+  "controller_cases": ["uncontrolled", "persistence", "nominal", "fixed", "adaptive", "perfect"],
+  "oracle_warning": "Perfect forecasts are nondeployable; finite-horizon composite MPC is not a mathematical upper bound on every realised metric",
+  "development_design": {
+    "blocks": [2, 10, 18],
+    "reason": "chronological spread with all static calibration targets strictly before the first decision; no holdout performance selection",
+    "default_intervals": 144,
+    "runtime_policy": "pilot and estimate first; any reduced prefix or incomplete run must be explicitly recorded, never relabelled as full episodes"
+  },
+  "retrospective_evaluation": {
+    "blocks": "original 49 scheduled evaluation blocks, excluding development block 6",
+    "no_controller_selection": true,
+    "known_overlap": "block 6 development targets share five block 7 scored h1 target timestamps",
+    "known_preinspection": true
+  },
+  "statistics": {
+    "method": "paired non-circular moving-block resampling within each original contiguous segment",
+    "replicates": 10000,
+    "interval_method": "recentered basic: observed minus quantiles of bootstrap statistic minus bootstrap mean; approximate, conditional on declared segmentation",
+    "block_lengths_days": [2, 3, 7],
+    "report_all_lengths": true,
+    "gap_rule": "never form an original resampling block across a segment gap",
+    "short_segment_rule": "use min(requested_length, segment_length); flag segments with only one available complete block",
+    "estimands": ["mean paired block difference", "total paired difference for the fixed exposure", "ratio of paired aggregate sums"],
+    "limits": "conditional exploratory uncertainty under within-segment stationarity and limited dependence assumptions; not restored confirmatory independence"
+  },
+  "output_policy": "exclusive new output directories; checksums, timing, solver failures and configs saved; no overwrite of original results"
+}
