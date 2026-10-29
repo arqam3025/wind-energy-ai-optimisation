@@ -1,12 +1,25 @@
 .venv/
+.venv*/
 __pycache__/
 *.pyc
 .pytest_cache/
+.mplconfig/
 
 data/raw/*
 data/processed/*
 models/*
 results/*
+# Local fine-grained diagnostic exports; review data rights before redistribution.
+docs/completion_tables/interval_ramp_attribution.csv
+docs/completion_tables/representative_intervals.csv
+audits/**/solver_replay/
+audits/**/replay_*.log
 
 .ipynb_checkpoints/
 .env
+.env.*
+.aws/
+*.pem
+*.key
+*.p12
+*.pfx

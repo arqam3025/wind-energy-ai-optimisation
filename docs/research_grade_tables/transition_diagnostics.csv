@@ -1,0 +1,6 @@
+controller,transitions,introduced_violations,removed_violations,net_additional_violations,ramp_improved_intervals,ramp_worsened_intervals,lower_soc_intervals,upper_soc_intervals,committed_charge_limited_by_wind_intervals,violations_with_near_zero_primary_optimum,violations_with_positive_primary_optimum
+persistence_nominal,7056,0,0,0,0,0,0,0,0,1465,0
+xgboost_nominal,7056,116,91,25,1549,2343,0,0,69,1475,15
+fixed_margin,7056,166,129,37,1892,2981,0,0,152,291,1211
+adaptive_one_sided,7056,134,113,21,1369,1928,0,0,85,1081,405
+perfect_forecast_oracle,7056,18,1425,-1407,4476,1343,0,1,0,50,8

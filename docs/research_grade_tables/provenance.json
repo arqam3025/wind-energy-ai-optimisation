@@ -1,0 +1,54 @@
+{
+  "forecast_horizon_metrics.csv": {
+    "source": "results\\research_grade_v1\\forecast_uncertainty\\forecast_horizon_metrics.csv",
+    "sha256": "b3e83ab5a35b845a6150f42db78659ab6427c0c005bd0193172150cba788b229"
+  },
+  "forecast_rapid_change_metrics.csv": {
+    "source": "results\\research_grade_v1\\forecast_uncertainty\\forecast_rapid_change_metrics.csv",
+    "sha256": "ba55bd5e0c2d2ea387d86ae0ddcc3dff9098c7369eddcf1236f56e276a4f8249"
+  },
+  "coverage_horizon_metrics.csv": {
+    "source": "results\\research_grade_v1\\forecast_uncertainty\\coverage_horizon_metrics.csv",
+    "sha256": "2865b5ad1ef9e3adfaadfd3b66836ed0f1140fb00166a995788bc8301d08fb6f"
+  },
+  "coverage_rapid_change_metrics.csv": {
+    "source": "results\\research_grade_v1\\forecast_uncertainty\\coverage_rapid_change_metrics.csv",
+    "sha256": "b2ba3f35deff18b60175aa8125bea6efdade5df07553ef28e090d2d0e2e17bf7"
+  },
+  "coverage_segment_metrics.csv": {
+    "source": "results\\research_grade_v1\\forecast_uncertainty\\coverage_segment_metrics.csv",
+    "sha256": "d74fae142987932918ff0962a27e8d880ac4df8b928e08e74b78a789e2e469eb"
+  },
+  "controller_comparison.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\controller_comparison.csv",
+    "sha256": "568ca280f7f5baa94177554c5daed4304bc7acdf37bcc7d4b5f40d37c410d090"
+  },
+  "energy_accounting.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\energy_accounting.csv",
+    "sha256": "a299a38c46ddf1343c928e7d46df021cf868ace142150d1665cb0ad1e228fa69"
+  },
+  "sensitivity_comparison.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\sensitivity_comparison.csv",
+    "sha256": "b356c5de849fd92b87a476a958900ceec50b230ec0fe0b5ab7071e6256bdba6a"
+  },
+  "ablation_comparison.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\ablation_comparison.csv",
+    "sha256": "aedb2ca7b672545763f6068c8a50b21dcae7037f625880b927607d3dee1aa71c"
+  },
+  "solver_runtime.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\solver_runtime.csv",
+    "sha256": "41537b1305b9c526c0bd4a0dc8c9f12ca8ab6cfe59e3be68e19be1011abdc503"
+  },
+  "transition_diagnostics.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\transition_diagnostics.csv",
+    "sha256": "d235082aee9b1721dec6bab9b12db536bd4b2179a26dc68d5ae439681b7f7069"
+  },
+  "paired_dependent_intervals.csv": {
+    "source": "results\\research_grade_v1_20261029\\analysis\\paired_dependent_intervals.csv",
+    "sha256": "958ed354e322bf18d46e725976968079d4f1a4c2be5be2f4456793ed81889e10"
+  },
+  "dependent_intervals.csv": {
+    "source": "results\\research_grade_v1_20261029\\statistics_original\\dependent_intervals.csv",
+    "sha256": "f262ee4b00a60028dd7a4682c3480d41023745dccc15cfd823957b3834e98324"
+  }
+}
