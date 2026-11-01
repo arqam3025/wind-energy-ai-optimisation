@@ -1,0 +1,102 @@
+{
+  "stage": 1,
+  "report_date_client": "2026-11-01",
+  "audit_status": "AUDIT_COMPLETED",
+  "scientific_status": "BLOCKED_CONFIRMATORY_TEST",
+  "experiment_executed": false,
+  "audit_run": "publication_v2/runs/stage1_20261101_002",
+  "audit_manifest_sha256": "52ba753906fcc66eac9dce06cd4ada9c3ecb635b475dd908f30166c0e698fc75",
+  "preservation": {
+    "status": "pass",
+    "preservation": {
+      "status": "pass",
+      "protected_files": 2131
+    },
+    "freeze": {
+      "status": "pass",
+      "manifest_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+      "references": 59
+    }
+  },
+  "tests": {
+    "stage1_tests_stdlib_final.log": {
+      "tests": 59,
+      "passed": 58,
+      "failed": 0,
+      "skipped": 1,
+      "sha256": "8f66a7a68cf7d79565d1fab760550d76295bfaaafbcbd5452af1c5a2d0c9c7b3"
+    },
+    "regression_tests.log": {
+      "tests": 71,
+      "passed": 71,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "3ea10c68d2a093ff36e9907891715a23b19a30aa123b6b63b44d1c83b7567c86"
+    }
+  },
+  "preflight_exit_code": 2,
+  "available_csv_artifacts": 87,
+  "models": 7,
+  "authenticated_input_artifacts": 204,
+  "missing_inputs": [],
+  "temporal_verification": {
+    "archived_target_rows_checked": 14112,
+    "calibration_availability_limit": "Target-before-decision can be checked structurally; observation/residual arrival and forecast issue times are not recorded",
+    "clock": "opaque historical dataset clock; no timezone or latency assigned",
+    "features": {
+      "feature_value_checks": 1406230,
+      "status": "STRUCTURAL_CLOCK_AND_VALUE_JOINS_PASS",
+      "tables": [
+        {
+          "features_per_row": 14,
+          "path": "data/processed/wind_features_10min.csv",
+          "rows": 50320
+        },
+        {
+          "features_per_row": 14,
+          "path": "data/processed/wind_multistep_features.csv",
+          "rows": 50125
+        }
+      ],
+      "target_value_checks": 401195
+    },
+    "forecast_origin_rows_checked": 32272,
+    "forecast_tables": 72,
+    "forecast_target_pairs_checked": 193632,
+    "historical_boundary_violations": "See inventory.boundary_findings; findings are retained, never repaired or used as eligible input",
+    "new_forecast_or_control_algorithm_executed": false,
+    "original_retrospective_metrics_recomputed": {
+      "adaptive_one_sided": {
+        "ramp_violations": 1486,
+        "summed_exceedance_kw": 323638.5256014633,
+        "transitions": 7056
+      },
+      "fixed": {
+        "ramp_violations": 1502,
+        "summed_exceedance_kw": 326158.29597609676,
+        "transitions": 7056
+      },
+      "uncontrolled": {
+        "ramp_violations": 1465,
+        "summed_exceedance_kw": 317210.2883782386,
+        "transitions": 7056
+      }
+    },
+    "power_encoding": "Raw/features/forecast-table current power is signed. Prepared evaluation-block current power, all persistence forecasts and all actual forecast targets are clipped at zero; original preparation scripts are the evidence.",
+    "status": "STRUCTURAL_AUDIT_ONLY_NOT_OPERATIONAL_CERTIFICATION",
+    "strict_archived_newest_residual_target_checks": 7056
+  },
+  "stage1_test_source_sha256": {
+    "publication_v2/tests/test_integrity.py": "b701ca314b5a846d8d8cf6c33304553ab3a834d347d2cf2865400f05a8e151cd",
+    "publication_v2/tests/test_inventory.py": "6713837bf5973c3d9b10a88ea430a46c880173361c83d5c074c897c33577f3a7",
+    "publication_v2/tests/test_protocol.py": "5be6557ab903ade4cd9e7e08a9a7707537ac155fe94050fe54075667458807d8",
+    "publication_v2/tests/test_runner.py": "180842017a7a6c19427d1727af7b3600cda54ace0560ab809b028721b3d02b87",
+    "publication_v2/tests/test_temporal_audit.py": "8abdf732f8bd33a01b67ada957e3b650fb0295578654c0cd1977e3c3233b762b"
+  },
+  "evidence_sha256": {
+    "chronological_inventory.csv": "011a1702b38d2e54726b06b1927ab7a8e67623673b06074407de8dbeffc6e4d5",
+    "exposure_and_provenance.json": "0d8256cf96c5925461d98619dae7b9bafece982e6d4bc9b3ba4e90d55b4e9cbd",
+    "confirmatory_preflight.log": "b54b08d5b17f62b4804087cb651c2538c5a4e282329f59922bbba8840a80f223"
+  },
+  "earlier_run": "stage1_20261101_001 retained locally; superseded source identity after junction hardening; current verifier correctly rejects stale sources"
+}

@@ -1,0 +1,567 @@
+{
+  "scope": "Stage1 retrospective inventory, not efficacy evaluation",
+  "decision": {
+    "additional_data_needed": [
+      "A genuinely new, independently reserved SCADA outcome period or a new turbine/site with no research-team outcome inspection or controller/model selection exposure.",
+      "A signed or otherwise independently verifiable access/reservation record, exact source release identifier, acquisition dates and hashes, with the outcome custodian and release conditions identified.",
+      "Enough contiguous 10-minute observations for the preregistered exposure, at least 60 minutes of causal feature lookback, all six 10-60-minute targets and a target-level embargo before every scored decision.",
+      "Documented timezone/UTC offset and DST treatment, measurement-window semantics, timestamp synchronization, sensor/quality flags and measurement/forecast release latencies.",
+      "Confirmed units, preprocessing/missing-data rules and access/redistribution licence or explicit permission.",
+      "A separately eligible calibration/development period whose residual target times strictly precede every test decision and whose observation/residual availability times are no later than the decision, with model/controller identities and analysis frozen before outcome access."
+    ],
+    "proposed_split": null,
+    "reason": "Existing 49 episodes are retrospective; no eligible uninspected data with verifiable reservation/access evidence is supplied.",
+    "status": "BLOCKED_CONFIRMATORY_TEST",
+    "uncovered_rows_policy": "Not scored is not untouched. Uncovered periods remain exposure-unknown."
+  },
+  "evidence": [
+    {
+      "evidence": [
+        "scripts/audit_wind_dataset.py:5",
+        "scripts/audit_wind_dataset.py:47"
+      ],
+      "kind": "prior_source_audit",
+      "qualification": "Source proves intended full-file analysis; human reading of every row is not attested.",
+      "scope": "the complete local raw CSV was loaded for descriptive inspection"
+    },
+    {
+      "evidence": [
+        "results/research_grade_v1/forecast_uncertainty/audit_summary.json",
+        "results/research_grade_v1/forecast_uncertainty/feature_timestamp_audit.csv"
+      ],
+      "kind": "saved_full_feature_audit",
+      "qualification": "This is prior artifact inspection, not a new performance experiment or exhaustive human-access log.",
+      "scope": "all 50,125 retained feature rows reconstructed in a previous audit"
+    },
+    {
+      "evidence": [
+        "git:bcb2c99:scripts/inspect_block_25_event.py",
+        "git:bcb2c99:scripts/inspect_block_34_forecasts.py"
+      ],
+      "kind": "pre_freeze_evaluation_access",
+      "scope": "evaluation blocks 25 and 34 investigated before the freeze"
+    },
+    {
+      "evidence": [
+        "data/processed/controller_development_blocks/",
+        "results/evaluation_schedule.csv",
+        "scripts/prepare_development_block_6.py"
+      ],
+      "kind": "development_access",
+      "scope": "18 validation-period development episodes and schedule-designated block 6"
+    },
+    {
+      "evidence": [
+        "results/frozen_heldout/final_20261029/",
+        "results/research_grade_v1_20261029/benchmark/protocol.json",
+        "docs/EXPERIMENTAL_RESULTS.md"
+      ],
+      "kind": "retrospective_evaluation_access",
+      "scope": "49 archived scored episodes and subsequent six-case study"
+    },
+    {
+      "evidence": [
+        "publication_v2/metadata.json"
+      ],
+      "kind": "attestation_absent",
+      "qualification": "Unscored or unlisted rows are exposure-unknown, never inferred untouched.",
+      "scope": "no independently reserved uninspected outcome source has a release/access attestation"
+    }
+  ],
+  "boundary_findings": {
+    "calibration_development": {
+      "affected_horizon_decision_cells": 21,
+      "by_horizon": [
+        {
+          "affected_decision_cells": 1,
+          "horizon_minutes": 10,
+          "latest_calibration_target": "2018-10-15 11:00:00",
+          "unavailable_at_first_development_decision": 1,
+          "unavailable_label_decision_pairs": 1
+        },
+        {
+          "affected_decision_cells": 2,
+          "horizon_minutes": 20,
+          "latest_calibration_target": "2018-10-15 11:10:00",
+          "unavailable_at_first_development_decision": 2,
+          "unavailable_label_decision_pairs": 3
+        },
+        {
+          "affected_decision_cells": 3,
+          "horizon_minutes": 30,
+          "latest_calibration_target": "2018-10-15 11:20:00",
+          "unavailable_at_first_development_decision": 3,
+          "unavailable_label_decision_pairs": 6
+        },
+        {
+          "affected_decision_cells": 4,
+          "horizon_minutes": 40,
+          "latest_calibration_target": "2018-10-15 11:30:00",
+          "unavailable_at_first_development_decision": 4,
+          "unavailable_label_decision_pairs": 10
+        },
+        {
+          "affected_decision_cells": 5,
+          "horizon_minutes": 50,
+          "latest_calibration_target": "2018-10-15 11:40:00",
+          "unavailable_at_first_development_decision": 5,
+          "unavailable_label_decision_pairs": 15
+        },
+        {
+          "affected_decision_cells": 6,
+          "horizon_minutes": 60,
+          "latest_calibration_target": "2018-10-15 11:50:00",
+          "unavailable_at_first_development_decision": 6,
+          "unavailable_label_decision_pairs": 21
+        }
+      ],
+      "evidence": [
+        "results/multistep_calibration_split.csv",
+        "data/processed/controller_development_blocks/development_block_1.csv"
+      ],
+      "first_development_decision": "2018-10-15 11:00:00",
+      "strict_target_time_before_decision": false,
+      "unavailable_label_decision_pairs": 56
+    },
+    "clock": "opaque dataset-local naive timestamps",
+    "combined_declared_development_overlap": {
+      "overlapping_horizon_target_pairs": 30,
+      "overlapping_scored_h1_times": 10,
+      "scope": "Union of the full declared validation-development artifact and every schedule-designated development block; source-target timestamps deduplicated.",
+      "unique_shared_target_times": 10
+    },
+    "full_declared_development_artifact_overlap": {
+      "development_artifact": "results/multistep_controller_development_split.csv",
+      "development_origins": 2990,
+      "latest_h6_target": "2018-11-05 16:00:00",
+      "latest_origin": "2018-11-05 15:00:00",
+      "overlapping_horizon_target_pairs": 15,
+      "overlapping_scored_h1_times": 5,
+      "overlaps": [
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-05 15:10:00",
+          "shared_target": "2018-11-05 15:20:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-05 15:10:00",
+          "shared_target": "2018-11-05 15:30:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-05 15:10:00",
+          "shared_target": "2018-11-05 15:40:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 40,
+          "evaluation_origin": "2018-11-05 15:10:00",
+          "shared_target": "2018-11-05 15:50:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 50,
+          "evaluation_origin": "2018-11-05 15:10:00",
+          "shared_target": "2018-11-05 16:00:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-05 15:20:00",
+          "shared_target": "2018-11-05 15:30:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-05 15:20:00",
+          "shared_target": "2018-11-05 15:40:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-05 15:20:00",
+          "shared_target": "2018-11-05 15:50:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 40,
+          "evaluation_origin": "2018-11-05 15:20:00",
+          "shared_target": "2018-11-05 16:00:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-05 15:30:00",
+          "shared_target": "2018-11-05 15:40:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-05 15:30:00",
+          "shared_target": "2018-11-05 15:50:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-05 15:30:00",
+          "shared_target": "2018-11-05 16:00:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-05 15:40:00",
+          "shared_target": "2018-11-05 15:50:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-05 15:40:00",
+          "shared_target": "2018-11-05 16:00:00"
+        },
+        {
+          "evaluation_block": 1,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-05 15:50:00",
+          "shared_target": "2018-11-05 16:00:00"
+        }
+      ],
+      "qualification": "Declared development artifact includes a tail beyond the eighteen complete controller blocks. Its existence/exposure is confirmed; use of that tail for frozen-controller selection is not established.",
+      "unique_shared_target_times": 5
+    },
+    "interpretation": "Historical defects are inventoried, never used as a valid new protocol.",
+    "scheduled_role_overlap": {
+      "development_blocks": [
+        6
+      ],
+      "evaluation_blocks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "evidence": [
+        "results/evaluation_schedule.csv",
+        "data/processed/evaluation_block_6.csv"
+      ],
+      "overlapping_horizon_target_pairs": 15,
+      "overlapping_scored_h1_times": 5,
+      "overlaps": [
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-15 13:00:00",
+          "shared_target": "2018-11-15 13:10:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-15 13:00:00",
+          "shared_target": "2018-11-15 13:20:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-15 13:00:00",
+          "shared_target": "2018-11-15 13:30:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 40,
+          "evaluation_origin": "2018-11-15 13:00:00",
+          "shared_target": "2018-11-15 13:40:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 50,
+          "evaluation_origin": "2018-11-15 13:00:00",
+          "shared_target": "2018-11-15 13:50:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-15 13:10:00",
+          "shared_target": "2018-11-15 13:20:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-15 13:10:00",
+          "shared_target": "2018-11-15 13:30:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-15 13:10:00",
+          "shared_target": "2018-11-15 13:40:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 40,
+          "evaluation_origin": "2018-11-15 13:10:00",
+          "shared_target": "2018-11-15 13:50:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-15 13:20:00",
+          "shared_target": "2018-11-15 13:30:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-15 13:20:00",
+          "shared_target": "2018-11-15 13:40:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 30,
+          "evaluation_origin": "2018-11-15 13:20:00",
+          "shared_target": "2018-11-15 13:50:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-15 13:30:00",
+          "shared_target": "2018-11-15 13:40:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 20,
+          "evaluation_origin": "2018-11-15 13:30:00",
+          "shared_target": "2018-11-15 13:50:00"
+        },
+        {
+          "development_blocks": [
+            6
+          ],
+          "evaluation_block": 7,
+          "evaluation_horizon_minutes": 10,
+          "evaluation_origin": "2018-11-15 13:40:00",
+          "shared_target": "2018-11-15 13:50:00"
+        }
+      ],
+      "unique_shared_target_times": 5
+    }
+  },
+  "provenance_blockers": [
+    {
+      "code": "BLOCKED_CONFIRMATORY_TEST",
+      "evidence": [
+        "prior_source_audit",
+        "saved_full_feature_audit",
+        "pre_freeze_evaluation_access",
+        "development_access",
+        "retrospective_evaluation_access",
+        "attestation_absent"
+      ],
+      "message": "No genuinely uninspected eligible dataset with verifiable access/reservation evidence is available."
+    },
+    {
+      "code": "UNKNOWN_DATASET_VERSION",
+      "message": "The local SHA256 identifies bytes, not an independently attested upstream dataset release."
+    },
+    {
+      "code": "UNKNOWN_TIMEZONE",
+      "message": "Naive source timestamps do not establish timezone, DST, integration-window end, or clock synchronization."
+    },
+    {
+      "code": "UNKNOWN_MEASUREMENT_AVAILABILITY",
+      "message": "Physical measurement/release latency and operational forecast issue time are not attested."
+    },
+    {
+      "code": "UNKNOWN_DATA_LICENSE",
+      "message": "Dataset access does not establish redistribution permission; exact acquisition terms are absent."
+    },
+    {
+      "code": "UNATTESTED_HISTORICAL_MODEL_FIT",
+      "message": "Current model hashes and source consistency do not independently attest historical fitting data/access."
+    },
+    {
+      "code": "CLEAN_ENVIRONMENT_NOT_REPLICATED",
+      "message": "Installed-package capture is not a tested clean-room installation."
+    }
+  ],
+  "models": [
+    {
+      "bytes": 582593,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_10min.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "8f4d57de5b46012513a305e468e19afe7446677630f9b3220568d25b7dacfdba",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 580437,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h1.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "05134594fda631aa3bbb62b2f1775cc34112ab1499e7c566771bbe2a101eb7a2",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 577447,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h2.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "39ce38a5b0b4e62131370987088dc7dcc1745242e33179c9d1666233f1369eaf",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 578263,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h3.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "e5fe7ded7b6239fd26c47654e8f5e5eabcb48b57d057209e8a99b5cc69cff284",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 575924,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h4.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "ad1bf619db60e58a5dc491863981b694f31afe200b08653470cc53f1abd75ee0",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 583467,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h5.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "ec9cd5e9f4c468dc6cfa00ea84cce2dd5cd90da03bc11a1baa2373d462d38389",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    },
+    {
+      "bytes": 586152,
+      "historical_fit_attestation": "UNKNOWN",
+      "path": "models/wind_xgboost_h6.json",
+      "prediction_issue_time_attestation": "UNKNOWN",
+      "sha256": "5adb91612fa71ded061a1becd301b75aebd762e88ce5b36eb52410169d2475aa",
+      "status": "EXISTING_MODEL_NOT_RETRAINED"
+    }
+  ],
+  "environment": {
+    "clean_environment_replication": "NOT_PERFORMED",
+    "declared_package_mismatches": {},
+    "declared_research_packages": {
+      "cvxpy": "1.9.3",
+      "highspy": "1.15.1",
+      "matplotlib": "3.11.2",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "plotly": "7.1.0",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "streamlit": "1.65.0",
+      "xgboost": "3.4.1"
+    },
+    "implementation": "CPython",
+    "installed_research_packages": {
+      "cvxpy": "1.9.3",
+      "highspy": "1.15.1",
+      "matplotlib": "3.11.2",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "plotly": "7.1.0",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "streamlit": "1.65.0",
+      "xgboost": "3.4.1"
+    },
+    "interpreter": "C:\\Users\\arqam\\Documents\\wind-energy-ai-optimisation\\.venv\\Scripts\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.5",
+    "stage1_runtime_dependencies": "Python standard library only"
+  },
+  "local_audit_manifest_sha256": "52ba753906fcc66eac9dce06cd4ada9c3ecb635b475dd908f30166c0e698fc75"
+}
