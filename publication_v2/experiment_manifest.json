@@ -1,0 +1,28 @@
+{
+  "schema_version": "publication_v2.protocol.v1",
+  "stage": 1,
+  "purpose": "Chronology, provenance, preservation and fail-closed audit scaffolding only",
+  "algorithms_implemented": false,
+  "experiment_execution_authorized": false,
+  "seed": 20261101,
+  "python": {"implementation": "CPython", "minor_version": "3.12"},
+  "interval_minutes": 10,
+  "horizons_minutes": [10, 20, 30, 40, 50, 60],
+  "calibration_rule": "target_time < decision_time AND observation_available_at <= residual_available_at <= decision_time",
+  "feature_rule": "source_time <= available_at <= origin_time <= issued_at <= decision_time",
+  "forecast_rule": "origin_time <= issued_at <= decision_time < target_time = origin_time + horizon",
+  "training_rule": "model_latest_training_target < forecast_origin AND model_available_at <= issued_at",
+  "embargo_rule": "Every earlier-role target at each horizon must be strictly before the next role's first decision; equal-time targets rejected",
+  "cross_split_rule": "No shared target timestamp across roles, including different horizons",
+  "missing_data_policy": "Reject missing required records/values, duplicates or undeclared cadence gaps; never impute silently",
+  "timezone_policy": "Require attested event-time/availability semantics and offset-aware timestamps for eligibility; naive historical clocks are audited structurally without invented timezone",
+  "cohort": {
+    "historical_49_blocks": "retrospective_exposed",
+    "scheduled_block_6": "development_excluded_from_evaluation",
+    "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+    "proposed_untouched_split": null,
+    "required_evidence": "Affirmative custodial non-exposure attestation and resolved dataset provenance before split declaration"
+  },
+  "output_policy": "Unique exclusive run directory; atomic authenticated audit completion; no resume or overwrite",
+  "claims": "No new efficacy, confirmatory result, novelty or journal-readiness claim"
+}

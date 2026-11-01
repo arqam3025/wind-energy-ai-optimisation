@@ -1,0 +1,2 @@
+# Provenance hashes authenticate bytes; disable checkout newline conversion.
+** -text

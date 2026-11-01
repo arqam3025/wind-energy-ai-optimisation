@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+# Runs may contain fine-grained data-derived records; retain locally, do not publish.
+runs/

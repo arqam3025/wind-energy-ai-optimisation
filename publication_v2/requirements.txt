@@ -1,0 +1,2 @@
+# Stage 1 uses only the Python 3.12 standard library; no pip packages required.
+# Existing research/dashboard regression tests have their separate requirements.

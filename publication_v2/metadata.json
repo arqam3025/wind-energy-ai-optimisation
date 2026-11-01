@@ -1,0 +1,50 @@
+{
+  "schema_version": "publication_v2.metadata.v1",
+  "status": "INCOMPLETE_PROVENANCE_NOT_CONFIRMATORY_READY",
+  "dataset": {
+    "local_artifact": "data/raw/T1.csv",
+    "source": {
+      "value": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset",
+      "status": "REPOSITORY_DOCUMENTED_ACQUISITION_NOT_ATTESTED",
+      "attribution": "Berker Isen, Wind Turbine SCADA Dataset",
+      "evidence": ["README.md", "docs/RESEARCH_GRADE_REPRODUCIBILITY.md"]
+    },
+    "upstream_dataset_version": {"value": null, "status": "UNKNOWN"},
+    "download_timestamp": {"value": null, "status": "UNKNOWN"},
+    "timezone": {"value": null, "status": "UNKNOWN", "note": "Naive dataset timestamps must not be relabelled UTC."},
+    "measurement_window_semantics": {"value": null, "status": "UNKNOWN"},
+    "measurement_release_latency": {"value": null, "status": "UNKNOWN"},
+    "licensing": {"value": null, "status": "UNKNOWN", "note": "A source URL does not establish redistribution rights."},
+    "units": {
+      "active_power": {"value": "kW", "status": "SOURCE_HEADER_DOCUMENTED", "evidence": "data/raw/T1.csv:LV ActivePower (kW)"},
+      "wind_speed": {"value": "m/s", "status": "SOURCE_HEADER_DOCUMENTED", "evidence": "data/raw/T1.csv:Wind Speed (m/s)"},
+      "wind_direction": {"value": "degrees", "status": "SOURCE_HEADER_DOCUMENTED", "evidence": "data/raw/T1.csv:Wind Direction (degree symbol)"},
+      "theoretical_power_curve": {"value": "KWh in source header; physical meaning not verified", "status": "AMBIGUOUS_NOT_USED_BY_FROZEN_FEATURES"},
+      "battery_energy": {"value": "kWh", "status": "IMPLEMENTATION_DOCUMENTED", "evidence": "docs/methodology.md"},
+      "control_interval": {"value": "10 minutes", "status": "IMPLEMENTATION_DOCUMENTED", "evidence": "scripts/prepare_multistep_ml_data.py"}
+    },
+    "artifact_identity": {"value": "Compute SHA256 from supplied bytes at inventory time", "status": "RUNTIME_CHECKED_NOT_UPSTREAM_VERSION"}
+  },
+  "feature_availability": {
+    "status": "STRUCTURAL_LAG_ALIGNMENT_VERIFIABLE_OPERATIONAL_RELEASE_TIME_UNKNOWN",
+    "known": "Features use timestamp joins for t-10/20/30/60 and a mean of power at t,t-10,t-20,t-30; no later timestamp is required by the implemented formula.",
+    "unknown": "When the SCADA value stamped t became available, its aggregation window and the actual forecast issuance/decision latency are not attested.",
+    "evidence": ["scripts/build_wind_features.py", "scripts/prepare_multistep_ml_data.py", "results/research_grade_v1/forecast_uncertainty/feature_timestamp_audit.csv"],
+    "new_protocol_requirement": "An explicit source/available-at/forecast-origin/decision contract is required; structural timestamp alignment does not certify physical availability."
+  },
+  "models": {
+    "status": "EXISTING_HASHES_CAPTURED_NO_RETRAINING",
+    "current_inference_consistency": "Previously checked; no inference is performed in this Stage 1 inventory.",
+    "historical_training_data_access_attestation": {"value": null, "status": "UNKNOWN"},
+    "historical_hyperparameter_selection_attestation": {"value": null, "status": "UNKNOWN"}
+  },
+  "untouched_test_reservation": {"value": null, "status": "NO_VERIFIABLE_ATTESTATION", "proposed_split": null},
+  "additional_data_needed": [
+    "A genuinely new, independently reserved SCADA outcome period or a new turbine/site with no research-team outcome inspection or controller/model selection exposure.",
+    "A signed or otherwise independently verifiable access/reservation record, exact source release identifier, acquisition dates and hashes, with the outcome custodian and release conditions identified.",
+    "Enough contiguous 10-minute observations for the preregistered exposure, at least 60 minutes of causal feature lookback, all six 10-60-minute targets and a target-level embargo before every scored decision.",
+    "Documented timezone/UTC offset and DST treatment, measurement-window semantics, timestamp synchronization, sensor/quality flags and measurement/forecast release latencies.",
+    "Confirmed units, preprocessing/missing-data rules and access/redistribution licence or explicit permission.",
+    "A separately eligible calibration/development period whose residual target times strictly precede every test decision and whose observation/residual availability times are no later than the decision, with model/controller identities and analysis frozen before outcome access."
+  ]
+}
