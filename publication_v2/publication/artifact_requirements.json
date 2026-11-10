@@ -1,0 +1,24 @@
+{
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "data_admission": "PENDING_REVIEW",
+  "frozen_references_private": 59,
+  "historical_saved_models_private": 7,
+  "original_preservation_manifests_included": false,
+  "original_protected_versions_not_distributed": 2158,
+  "previous_review_export_missing": 1937,
+  "protected_path_count": 2170,
+  "protected_pathnames_present": 15,
+  "protected_paths_absent": 2155,
+  "protected_paths_present_as_public_derivatives": 3,
+  "protected_paths_present_as_unchanged_software": 12,
+  "required_before_research": [
+    "Independent canonical source, acquisition and rights review",
+    "Reviewed clock, availability, lineage and exclusions",
+    "Authorized private historical exposure registry and evaluation schedule",
+    "Original authenticated preservation and freeze manifests with required artifacts",
+    "Independently verified native environment"
+  ],
+  "research_execution_authorized": false,
+  "schema_version": "publication_v2.public.artifact-requirements.v1",
+  "scope": "CODE_ONLY_DEVELOPMENT"
+}

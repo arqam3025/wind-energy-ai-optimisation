@@ -1,0 +1,14 @@
+{
+  "schema_version": "publication_v2.stage21.trust-policy.v1",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "real_data_reviews": {},
+  "review_policy": "Empty until an independently checked acquisition, rights, clock, availability, transformation and authorized-period record is approved. A document's self-asserted ATTESTED status and matching hashes are not external verification.",
+  "known_historical_source": {
+    "identity": "kaggle:berkerisen/wind-turbine-scada-dataset:T1:2018",
+    "path": "data/raw/T1.csv",
+    "sha256": "f92c33c1cc199756b759fec251eeddc506f35d6a9e47ede034fc3e339a7c46d5",
+    "classification": "HISTORICALLY_INSPECTED_NEVER_UNTOUCHED",
+    "native_evaluation_start": "2018-11-05 15:10:00",
+    "native_clock": "opaque original SCADA clock; no timezone assigned"
+  }
+}

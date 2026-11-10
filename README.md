@@ -1,0 +1,93 @@
+# Wind Energy AI Optimisation — Publication V2 code release
+
+Development-only forecasting and uncertainty software for research on 10–60-minute
+wind-generation forecasts and later wind–battery ramp-mitigation MPC integration.
+This curated branch is a new root snapshot. It contains no original research
+data, saved models, experimental result tables, frozen manifests or private audits.
+
+**Data admission: PENDING_REVIEW. Confirmatory status: BLOCKED_CONFIRMATORY_TEST.**
+No new forecast accuracy, coverage improvement, controller efficacy or independent
+validation is claimed. This is not a complete reproduction of historical experiments.
+
+## Implemented code
+
+- Persistence, XGBoost and LightGBM interfaces sharing fourteen causal features,
+  six horizons (10, 20, 30, 40, 50, 60 minutes), cohort rules and scoring contracts.
+- Static, rolling and recency-weighted horizon-specific conformal intervals.
+- Strict chronology, feature/target availability, lineage, exclusion, retrospective
+  study-role and fail-closed admission validators.
+- MAE, RMSE, bias, rapid-event errors, empirical coverage, width, drift and
+  floor-binding accounting. Metrics are implemented; real-data results are absent.
+
+The measured-generation target is `max(0, raw_power_kw)`. It is not a measurement
+of unconstrained theoretically available wind power. No new MPC algorithm or
+historical controller implementation is included in this code-only snapshot.
+
+## Synthetic validation — no dataset or model fitting
+
+Use Python **3.12**; validation was executed with Python 3.12.5. From the repository
+root, these standard-library-only commands work on Windows and POSIX systems:
+
+```text
+python -S -B -m unittest discover -s publication_v2/tests -v
+python -S -B -m unittest discover -s publication_v2/stage2/tests -v
+```
+
+Only the three self-contained Stage 2 test modules are shipped. The tests use
+invented fixtures and mocks, do not train forecasting models, and do not need
+SCADA observations. A Windows account without symlink privileges skips one
+fixture. Private-artifact integration and model-fitting suites are not represented
+as passed by these commands. See [reproducibility](docs/REPRODUCIBILITY.md).
+
+The separate native forecasting dependency declaration is
+`publication_v2/stage2/requirements.txt`. An optional isolated installation is:
+
+```text
+python -m venv .venv
+```
+
+Then select the environment explicitly. On Windows:
+
+```text
+.venv/Scripts/python.exe -m pip install -r publication_v2/stage2/requirements.txt
+```
+
+On POSIX systems:
+
+```text
+.venv/bin/python -m pip install -r publication_v2/stage2/requirements.txt
+```
+
+The dependency installation is not needed for the
+`-S` synthetic tests. A fresh native installation was not validated here.
+Do not invoke research training merely because dependencies install successfully.
+
+## Data source and rights
+
+Historical attribution is Berker Isen's
+[Wind Turbine SCADA Dataset](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset).
+The source URL is attribution, not evidence of an authenticated release, approved
+usage or redistribution permission. Release identity, rights, timezone, interval
+semantics, operational availability and transformation evidence need independent
+review. No dataset is supplied or approved. See [data governance](docs/DATA_GOVERNANCE.md).
+
+## Reproduction limits
+
+The previous 281-file review export lacked 1,937 of 2,170 protected paths.
+This smaller curated release has 2,155 protected pathnames absent. Twelve
+software/configuration/test paths match their original protected bytes; three
+existing pathnames (README and the two Git policies) contain newly derived public
+versions. Thus 2,158 original protected versions are not distributed. No frozen reference or data/model/result payload is
+included. Original preservation manifests remain private and are also absent.
+Missing artifact inventory, rights review and an independently exercised environment
+are required before full execution. Production gates deliberately fail closed.
+
+The original 49 inspected evaluation blocks are retrospective, not untouched
+confirmation. The archived negative finding that uncontrolled wind had fewer
+aggregate ramp violations than the archived MPC controllers remains unchanged
+in private evidence. No historical measurements or results were recalculated.
+
+See [methods](docs/METHODS.md), [release audit](docs/RELEASE_AUDIT_SUMMARY.md) and
+the machine-readable release manifest under `publication_v2/publication/`.
+Public synthetic tests do not establish operational deployability, grid compliance,
+battery lifetime improvement or journal readiness. No new data licence is assigned.

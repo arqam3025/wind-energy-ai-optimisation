@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+**/runs/
+**/inputs/
+data/
+models/
+results/
+private/
+*.bundle
+.env
+.env.*
