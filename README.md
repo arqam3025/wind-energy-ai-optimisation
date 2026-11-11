@@ -1,4 +1,31 @@
-# Wind Energy AI Optimisation — Publication V2 code release
+# Wind Energy AI Optimisation - Stage 3.1 local synthetic MPC development
+
+This research source adds a six-step battery MILP and five
+synthetic controller comparators. See [the Stage 3.1 design, results and test report](docs/PUBLICATION_V2_STAGE31_MPC_DESIGN.md).
+The inherited published code is the base at `968773d8`; its release manifest
+continues to authenticate that historical parent, not this expanded Stage 3.1/3.1.1 source version.
+
+**Synthetic data only. PENDING_REVIEW. BLOCKED_CONFIRMATORY_TEST.**
+Local source history and remote publication are separate approval steps. Run the synthetic tests with
+`python -B -m unittest discover -s publication_v2/stage31/tests -v` after selecting
+an environment with `publication_v2/stage31/requirements.txt` installed.
+
+## Scientific audit and local freeze
+
+The [Stage 3.1.1 scientific audit](docs/PUBLICATION_V2_STAGE311_MPC_SCIENTIFIC_AUDIT.md)
+records certificate and run-verifier corrections, negative baseline findings and
+the 242-case synthetic suite (241 passed, one Windows privilege skip). Versioned
+reports retain their status at preparation, including preapproval no-commit
+wording; they are preserved research records. Generated runs and private source
+snapshots are excluded from source commits. New manifests record the synthetic
+development stage without making a hardcoded Git dirty/clean claim.
+
+## Archived description of the published Stage 2.9 parent
+
+The following text describes that parent release, including its narrower scope;
+it is retained for context rather than asserted as a current Stage 3.1 inventory.
+
+### Published Publication V2 baseline
 
 Development-only forecasting and uncertainty software for research on 10–60-minute
 wind-generation forecasts and later wind–battery ramp-mitigation MPC integration.
