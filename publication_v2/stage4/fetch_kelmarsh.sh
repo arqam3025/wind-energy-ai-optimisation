@@ -10,7 +10,14 @@ fetch() {  # dir file md5
   if [ -f "$dir/$file" ] && [ "$(md5sum "$dir/$file" | cut -d' ' -f1)" = "$md5" ]; then
     echo "ok (cached) $1/$file"; return
   fi
-  curl -fsSL --retry 5 --retry-delay 10 -o "$dir/$file.part" "$BASE/$file?download=1"
+  # Resume partial downloads and retry every error class (TLS resets occur on large files).
+  local attempt
+  for attempt in 1 2 3 4 5 6 7 8; do
+    if curl -fsSL -C - --retry 5 --retry-all-errors --retry-delay 10 -o "$dir/$file.part" "$BASE/$file?download=1"; then
+      break
+    fi
+    echo "retrying $file (attempt $attempt)" >&2; sleep 15
+  done
   local got; got="$(md5sum "$dir/$file.part" | cut -d' ' -f1)"
   if [ "$got" != "$md5" ]; then echo "MD5 MISMATCH $file: $got != $md5" >&2; rm -f "$dir/$file.part"; exit 1; fi
   mv "$dir/$file.part" "$dir/$file"; echo "ok $1/$file"
