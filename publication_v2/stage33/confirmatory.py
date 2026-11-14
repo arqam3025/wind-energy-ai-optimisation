@@ -17,7 +17,7 @@ import subprocess
 from .experiment import CONTROLLER_NAMES, DEVELOPMENT_SEEDS, environment, make_spec, run_matrix
 
 PROTOCOL_PATH = Path(__file__).resolve().parents[2] / 'docs' / 'STAGE33_CONFIRMATORY_PROTOCOL.md'
-PROTOCOL_SHA256 = None  # set when the protocol is frozen; None = not yet frozen (runner refuses)
+PROTOCOL_SHA256 = 'bed65ff8d1c82b282068237071338599d33e80bb6d8e02addb4a832177c72cec'  # frozen 2026-11-14
 
 HELD_OUT_SEEDS = tuple(range(700000, 700050))          # disjoint from development seeds 1000-1099
 VOLATILITIES = (0.7, 1.0, 1.5)

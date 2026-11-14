@@ -62,6 +62,7 @@ class ConfirmatoryTests(unittest.TestCase):
             self.assertTrue(tests[('H3', f)]['supported'])      # |noise| < 5% margin
         self.assertFalse(tests[('H3', 'damped_trend')]['supported'])  # harm 200 > margin
         self.assertAlmostEqual(tests[('H3', 'persistence')]['margin'], .05 * (400 + 13 * 14.5))
+        self.assertAlmostEqual(tests[('H2b', 'oracle25')]['margin'], .10 * (400 + 13 * 14.5))
 
 
 if __name__ == '__main__':
