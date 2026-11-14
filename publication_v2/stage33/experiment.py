@@ -29,13 +29,16 @@ STOCHASTIC_VARIANTS = {
     'stochastic_no_gate': StochasticMPCConfig(gate_kw=0.),
     'stochastic_terminal': StochasticMPCConfig(soc_mode='terminal'),
     'point_band_gate': StochasticMPCConfig(scenarios='point'),
+    'stochastic_increments': StochasticMPCConfig(dependence='independent_increments'),
 }
 CONTROLLER_NAMES = STAGE31_CONTROLLERS + tuple(STOCHASTIC_VARIANTS)
 FORECASTS = {  # label -> (forecast_mode, forecast_noise_kw)
     'perfect': ('announced_perfect', 0.), 'oracle25': ('announced_noisy', 25.),
     'oracle50': ('announced_noisy', 50.), 'oracle75': ('announced_noisy', 75.),
-    'oracle100': ('announced_noisy', 100.), 'damped_trend': ('damped_trend', 0.),
-    'persistence': ('persistence', 0.),
+    'oracle100': ('announced_noisy', 100.), 'oracle150': ('announced_noisy', 150.),
+    'oracle200': ('announced_noisy', 200.), 'damped_trend': ('damped_trend', 0.),
+    'persistence': ('persistence', 0.), 'mean_reversion': ('mean_reversion', 0.),
+    'skill_combo': ('skill_combo', 0.),
 }
 
 

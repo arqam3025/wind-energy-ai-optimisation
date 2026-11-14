@@ -22,7 +22,9 @@ from .adapter import SCHEMA, TARGET_SEMANTICS, SyntheticRegistry, canonical_sha2
 START = datetime(2032, 1, 1, tzinfo=timezone.utc)
 STEP = timedelta(minutes=10)
 CUTOFF_SEMANTICS = 'SIMULATED_RULE_SPECIFICATION_CUTOFF_NOT_TRAINING'
-MODES = ('announced_perfect', 'persistence', 'biased', 'noisy', 'announced_noisy', 'damped_trend')
+MODES = ('announced_perfect', 'persistence', 'biased', 'noisy', 'announced_noisy', 'damped_trend',
+         'mean_reversion', 'skill_combo')
+WINDOW_MODES = ('mean_reversion', 'skill_combo')
 ANNOUNCED_MODES = ('announced_perfect', 'announced_noisy')
 PROFILES = ('stable', 'gradual', 'rapid', 'oscillatory', 'stochastic')
 # Legacy deterministic profiles keep a FLAT pre-start history (forcing(i<0)=1000),
@@ -35,6 +37,12 @@ STOCHASTIC_MODEL = {'version': 'STOCHASTIC_WIND_V1', 'rated_kw': 2000., 'cut_in_
                     'front_probability': .04, 'front_low_ms': 5., 'front_high_ms': 13.,
                     'initial_ms': 8., 'burn_in': 200, 'margin': 16}
 TREND_DAMPING = .7
+# Causal window rules (fixed a priori, not tuned on scored outcomes). Every value a
+# rule reads must lie in [index - SUPPORT_WINDOW, index] and be already released.
+MEAN_REVERSION_WINDOW = 24   # 4 h of released interval means
+COMBINATION_WINDOW = 24      # recent released targets per horizon for skill weights
+COMBINATION_MIN_SAMPLES = 8
+SUPPORT_WINDOW = 60
 FAULTS = ('missing', 'stale', 'future_generation', 'future_availability',
           'unsupported_model', 'invalid_calibration', 'stale_calibration',
           'invalid_bounds', 'invalid_horizon')
@@ -191,12 +199,21 @@ class SyntheticStream:
             'drift_bias_kw':spec.drift_bias_kw,'forcing_recipe':self._source_descriptor if spec.forecast_mode in ANNOUNCED_MODES else None}
         if spec.forecast_mode=='damped_trend':
             parameters['trend_damping']=TREND_DAMPING
+        if spec.forecast_mode in WINDOW_MODES:
+            parameters.update(trend_damping=TREND_DAMPING,mean_reversion_window=MEAN_REVERSION_WINDOW,
+                support_window=SUPPORT_WINDOW,
+                rule_description='online mean reversion: local mean and lag-1 coefficient estimated from released data'
+                    if spec.forecast_mode=='mean_reversion' else
+                    'per-horizon inverse-MSE combination of persistence, damped trend and mean reversion on released residuals')
+            if spec.forecast_mode=='skill_combo':
+                parameters.update(combination_window=COMBINATION_WINDOW,combination_min_samples=COMBINATION_MIN_SAMPLES)
         if spec.forecast_mode=='announced_noisy':
             parameters['error_model']='GAUSSIAN_RANDOM_WALK_ACROSS_HORIZONS_PRIVILEGED_BENCHMARK'
         self.model_id='SIMULATED_RULE_'+canonical_sha256([parameters,self.source_id,self.rule_cutoff.isoformat()])[:16]
         self.model_version='1'
         required=([] if spec.forecast_mode in ANNOUNCED_MODES else
                   ['last_released_generation_kw','previous_released_generation_kw'] if spec.forecast_mode=='damped_trend'
+                  else ['released_generation_window'] if spec.forecast_mode in WINDOW_MODES
                   else ['last_released_generation_kw'])
         self._required_inputs=tuple(required)
         self.model_descriptor={'id':self.model_id,'version':self.model_version,
@@ -253,6 +270,10 @@ class SyntheticStream:
             # Causal: uses only the two most recently released interval means.
             slope=last-self._observed[index-1]
             base=[last+slope*sum(TREND_DAMPING**k for k in range(1,j+2)) for j in range(6)]
+        elif self.spec.forecast_mode=='mean_reversion':
+            base=list(self._candidate(index,index)['mean_reversion'])
+        elif self.spec.forecast_mode=='skill_combo':
+            base=list(self._combination(index))
         else:
             base=[last]*6
         bias=self.spec.bias_kw
@@ -260,6 +281,55 @@ class SyntheticStream:
             bias+=self.spec.drift_bias_kw
         rng=random.Random(self.spec.seed+104729*(index+self.spec.warmup_origins+1))
         return tuple(max(0.,b+bias+rng.gauss(0.,self.spec.forecast_noise_kw)) for b in base)
+
+    def _obs(self,k,index):
+        """Read a released interval mean, enforcing the declared causal support."""
+        if not index-SUPPORT_WINDOW<=k<=index:
+            raise ValueError('Forecast rule read outside its declared causal support window')
+        return self._observed[k]
+
+    def _candidate(self,origin,index):
+        """Candidate point forecasts issued at ``origin`` (each reads only values <= origin)."""
+        cache=self.__dict__.setdefault('_candidate_cache',{})
+        if origin in cache:
+            return cache[origin]
+        last=self._obs(origin,index)
+        slope=last-self._obs(origin-1,index)
+        trend=tuple(last+slope*sum(TREND_DAMPING**k for k in range(1,j+2)) for j in range(6))
+        values=[self._obs(k,index) for k in range(origin-MEAN_REVERSION_WINDOW+1,origin+1) if k in self._observed]
+        if len(values)<12:
+            reversion=(last,)*6
+        else:
+            level=sum(values)/len(values)
+            dev=[v-level for v in values]
+            denominator=sum(x*x for x in dev[:-1])
+            phi=1. if denominator<=0 else min(1.,max(0.,sum(a*b for a,b in zip(dev[1:],dev[:-1]))/denominator))
+            reversion=tuple(level+phi**(j+1)*(last-level) for j in range(6))
+        cache[origin]={'persistence':(last,)*6,'damped_trend':trend,'mean_reversion':reversion}
+        return cache[origin]
+
+    def _combination(self,index):
+        now=self._candidate(index,index)
+        names=tuple(now)
+        points=[]
+        for j in range(6):
+            squared={n:[] for n in names}
+            for origin in range(index-j-1,index-j-1-COMBINATION_WINDOW,-1):
+                target=origin+j+1  # released at START+STEP*target <= issue
+                if target not in self._observed or origin-1 not in self._observed:
+                    continue
+                actual=self._obs(target,index)
+                candidates=self._candidate(origin,index)
+                for n in names:
+                    squared[n].append((candidates[n][j]-actual)**2)
+            if len(squared[names[0]])<COMBINATION_MIN_SAMPLES:
+                weights={n:1./len(names) for n in names}
+            else:
+                inverse={n:1./(sum(v)/len(v)+1e-9) for n,v in squared.items()}
+                total=sum(inverse.values())
+                weights={n:w/total for n,w in inverse.items()}
+            points.append(sum(weights[n]*now[n][j] for n in names))
+        return tuple(points)
 
     def _queue(self,index,points,*,record):
         origin=START+STEP*index
@@ -325,7 +395,11 @@ class SyntheticStream:
                   'previous_released_generation_kw':(self._observed[index-1],issue-STEP)}
         feature_inputs=[{'name':name,'value':released[name][0],
              'source_times':[released[name][1].isoformat()],'source_available_ats':[released[name][1].isoformat()],
-             'available_at':released[name][1].isoformat()} for name in self._required_inputs]
+             'available_at':released[name][1].isoformat()} for name in self._required_inputs if name in released]
+        if 'released_generation_window' in self._required_inputs:
+            support=[(START+STEP*k).isoformat() for k in range(index-SUPPORT_WINDOW,index+1) if k in self._observed]
+            feature_inputs.append({'name':'released_generation_window','value':float(len(support)),
+                'source_times':support,'source_available_ats':support,'available_at':issue.isoformat()})
         model_fields=('id','version','identity_kind','available_at','rule_specification_cutoff',
             'fitting_status','actual_fitting_cutoff','residual_cutoff_semantics')
         packet={'schema':SCHEMA,'packet_id':'SIMULATED_PACKET_'+canonical_sha256([self.model_sha256,self.spec.calibration_method,index])[:24],
