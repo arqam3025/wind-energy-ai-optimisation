@@ -11,6 +11,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 import math
 import random
 
@@ -21,8 +22,19 @@ from .adapter import SCHEMA, TARGET_SEMANTICS, SyntheticRegistry, canonical_sha2
 START = datetime(2032, 1, 1, tzinfo=timezone.utc)
 STEP = timedelta(minutes=10)
 CUTOFF_SEMANTICS = 'SIMULATED_RULE_SPECIFICATION_CUTOFF_NOT_TRAINING'
-MODES = ('announced_perfect', 'persistence', 'biased', 'noisy')
-PROFILES = ('stable', 'gradual', 'rapid', 'oscillatory')
+MODES = ('announced_perfect', 'persistence', 'biased', 'noisy', 'announced_noisy', 'damped_trend')
+ANNOUNCED_MODES = ('announced_perfect', 'announced_noisy')
+PROFILES = ('stable', 'gradual', 'rapid', 'oscillatory', 'stochastic')
+# Legacy deterministic profiles keep a FLAT pre-start history (forcing(i<0)=1000),
+# so conformal calibration on them sees ~zero residuals: use them for interface
+# and fault tests only. 'stochastic' is one seeded process spanning warm-up and
+# scored intervals: calibration and scoring are different realisations of the
+# same dynamics, without reusing any scored value.
+STOCHASTIC_MODEL = {'version': 'STOCHASTIC_WIND_V1', 'rated_kw': 2000., 'cut_in_ms': 3.,
+                    'rated_ms': 12., 'cut_out_ms': 25., 'speed_ar': .85, 'speed_sigma_ms': .6,
+                    'front_probability': .04, 'front_low_ms': 5., 'front_high_ms': 13.,
+                    'initial_ms': 8., 'burn_in': 200, 'margin': 16}
+TREND_DAMPING = .7
 FAULTS = ('missing', 'stale', 'future_generation', 'future_availability',
           'unsupported_model', 'invalid_calibration', 'stale_calibration',
           'invalid_bounds', 'invalid_horizon')
@@ -43,6 +55,7 @@ class ScenarioSpec:
     drift_bias_kw: float = 0.
     faults: tuple[tuple[int, str], ...] = ()
     warmup_origins: int = 64
+    volatility: float = 1.
 
     def __post_init__(self):
         if not isinstance(self.episode_name, str) or not self.episode_name or self.episode_name.strip() != self.episode_name:
@@ -60,6 +73,13 @@ class ScenarioSpec:
             raise ValueError('Drift index must be a prespecified scored interval')
         if self.forecast_mode == 'announced_perfect' and (self.bias_kw != 0 or self.forecast_noise_kw != 0 or self.drift_bias_kw != 0):
             raise ValueError('Announced-perfect benchmark cannot contain forecast perturbations')
+        if self.forecast_mode == 'announced_noisy' and (self.forecast_noise_kw <= 0 or self.bias_kw != 0 or self.drift_bias_kw != 0 or self.drift_at is not None):
+            raise ValueError('Announced-noisy benchmark needs positive noise only (random-walk increment per horizon)')
+        v = self.volatility
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0:
+            raise ValueError('Volatility must be a finite positive scale')
+        if self.profile != 'stochastic' and v != 1:
+            raise ValueError('Volatility applies only to the stochastic profile')
         if type(self.faults) is not tuple:
             raise ValueError('Immutable prespecified fault schedule required')
         seen=set()
@@ -87,6 +107,11 @@ def forcing(spec: ScenarioSpec, interval_index: int) -> float:
     """
     if not isinstance(spec,ScenarioSpec) or type(interval_index) is not int:
         raise ValueError('Explicit synthetic source specification and integer index required')
+    if spec.profile == 'stochastic':
+        lo, values = _stochastic_series(spec.seed, float(spec.volatility), spec.warmup_origins, spec.steps)
+        if not 0 <= interval_index - lo < len(values):
+            raise ValueError('Interval outside the prespecified stochastic recipe range')
+        return values[interval_index - lo]
     if interval_index < 0:
         return 1000.
     if spec.profile == 'stable':
@@ -96,6 +121,38 @@ def forcing(spec: ScenarioSpec, interval_index: int) -> float:
     if spec.profile == 'rapid':
         return (1000.,1800.,400.,1500.)[min(3,interval_index//max(2,spec.steps//4))]
     return max(0.,1000.+500.*math.sin(interval_index*.9))
+
+
+def power_curve_kw(speed_ms: float) -> float:
+    """Generic cubic turbine curve (simulation assumption, not a certified curve)."""
+    m = STOCHASTIC_MODEL
+    if speed_ms < m['cut_in_ms'] or speed_ms >= m['cut_out_ms']:
+        return 0.
+    if speed_ms >= m['rated_ms']:
+        return m['rated_kw']
+    return m['rated_kw']*(speed_ms**3-m['cut_in_ms']**3)/(m['rated_ms']**3-m['cut_in_ms']**3)
+
+
+@lru_cache(maxsize=128)
+def _stochastic_series(seed, volatility, warmup_origins, steps):
+    """Seeded AR(1) wind speed around a regime mean with random weather fronts.
+
+    Generated sequentially from a burn-in before the earliest warm-up interval,
+    so warm-up and scored intervals share one stationary process. Returns
+    (first interval index, interval-mean kW tuple).
+    """
+    m = STOCHASTIC_MODEL
+    lo, hi = -(warmup_origins + m['margin']), steps + m['margin']
+    rng = random.Random(f'stage32-stochastic:{seed}:{volatility!r}')
+    speed = mean = m['initial_ms']
+    values = []
+    for k in range(m['burn_in'] + hi - lo):
+        if rng.random() < m['front_probability']*volatility:
+            mean = rng.uniform(m['front_low_ms'], m['front_high_ms'])
+        speed = max(0., mean + m['speed_ar']*(speed-mean) + m['speed_sigma_ms']*volatility*rng.gauss(0., 1.))
+        if k >= m['burn_in']:
+            values.append(power_curve_kw(speed))
+    return lo, tuple(values)
 
 
 def _serial(value):
@@ -122,6 +179,8 @@ class SyntheticStream:
             'profile':spec.profile,'seed':spec.seed,'steps':spec.steps,
             'start':START.isoformat(),'step_minutes':10,'warmup_origins':spec.warmup_origins,
             'scoring_tail_intervals':5,'units':'kW'}
+        if spec.profile=='stochastic':  # legacy descriptors (and hashes) stay byte-identical
+            self._source_descriptor.update(volatility=float(spec.volatility),wind_model=dict(STOCHASTIC_MODEL))
         self.scenario_sha256=canonical_sha256(self._source_descriptor)
         self.source_id='SIMULATED_FORCING_'+self.scenario_sha256[:16]
         self.cohort_id='SIMULATED_COHORT_'+self.scenario_sha256[:16]
@@ -129,14 +188,21 @@ class SyntheticStream:
         self.model_available_at=self.rule_cutoff
         parameters={'forecast_mode':spec.forecast_mode,'seed':spec.seed,'bias_kw':spec.bias_kw,
             'forecast_noise_kw':spec.forecast_noise_kw,'drift_at':spec.drift_at,
-            'drift_bias_kw':spec.drift_bias_kw,'forcing_recipe':self._source_descriptor if spec.forecast_mode=='announced_perfect' else None}
+            'drift_bias_kw':spec.drift_bias_kw,'forcing_recipe':self._source_descriptor if spec.forecast_mode in ANNOUNCED_MODES else None}
+        if spec.forecast_mode=='damped_trend':
+            parameters['trend_damping']=TREND_DAMPING
+        if spec.forecast_mode=='announced_noisy':
+            parameters['error_model']='GAUSSIAN_RANDOM_WALK_ACROSS_HORIZONS_PRIVILEGED_BENCHMARK'
         self.model_id='SIMULATED_RULE_'+canonical_sha256([parameters,self.source_id,self.rule_cutoff.isoformat()])[:16]
         self.model_version='1'
-        required=[] if spec.forecast_mode=='announced_perfect' else ['last_released_generation_kw']
+        required=([] if spec.forecast_mode in ANNOUNCED_MODES else
+                  ['last_released_generation_kw','previous_released_generation_kw'] if spec.forecast_mode=='damped_trend'
+                  else ['last_released_generation_kw'])
+        self._required_inputs=tuple(required)
         self.model_descriptor={'id':self.model_id,'version':self.model_version,
             'identity_kind':'SYNTHETIC_RULE_DESCRIPTOR','rule':'synthetic_rule_v1',
             'parameters':parameters,'required_inputs':required,
-            'access_mode':'PREANNOUNCED_DETERMINISTIC_FORCING' if spec.forecast_mode=='announced_perfect' else 'PAST_RELEASED_OBSERVATIONS_ONLY',
+            'access_mode':'PREANNOUNCED_DETERMINISTIC_FORCING' if spec.forecast_mode in ANNOUNCED_MODES else 'PAST_RELEASED_OBSERVATIONS_ONLY',
             'source_id':self.source_id,'cohort_id':self.cohort_id,'scenario_sha256':self.scenario_sha256,
             'units':'kW','quantity':'measured_wind_generation','target_semantics':TARGET_SEMANTICS,
             'available_at':self.model_available_at.isoformat(),'rule_specification_cutoff':self.rule_cutoff.isoformat(),
@@ -173,12 +239,27 @@ class SyntheticStream:
     def _points(self,index):
         if self.spec.forecast_mode=='announced_perfect':
             return tuple(forcing(self.spec,index+j) for j in range(6))
+        if self.spec.forecast_mode=='announced_noisy':
+            # Privileged controlled-skill benchmark: announced recipe plus an error
+            # that accumulates with horizon. Never realisable by a causal forecaster.
+            rng=random.Random(f'stage32-oracle:{self.spec.seed}:{index}')
+            error,points=0.,[]
+            for j in range(6):
+                error+=rng.gauss(0.,self.spec.forecast_noise_kw)
+                points.append(max(0.,forcing(self.spec,index+j)+error))
+            return tuple(points)
         last=self._observed[index]
+        if self.spec.forecast_mode=='damped_trend':
+            # Causal: uses only the two most recently released interval means.
+            slope=last-self._observed[index-1]
+            base=[last+slope*sum(TREND_DAMPING**k for k in range(1,j+2)) for j in range(6)]
+        else:
+            base=[last]*6
         bias=self.spec.bias_kw
         if self.spec.drift_at is not None and index>=self.spec.drift_at:
             bias+=self.spec.drift_bias_kw
         rng=random.Random(self.spec.seed+104729*(index+self.spec.warmup_origins+1))
-        return tuple(max(0.,last+bias+rng.gauss(0.,self.spec.forecast_noise_kw)) for _ in HORIZONS)
+        return tuple(max(0.,b+bias+rng.gauss(0.,self.spec.forecast_noise_kw)) for b in base)
 
     def _queue(self,index,points,*,record):
         origin=START+STEP*index
@@ -240,10 +321,11 @@ class SyntheticStream:
                 'point_kw':float(p),'lower_kw':float(lower),'upper_kw':float(upper),
                 'calibration':{**artifact,'artifact_sha256':artifact_hash}})
         self.registry=SyntheticRegistry(self._models,self._cohorts,self._configs,self._artifacts)
-        feature_inputs=[] if self.spec.forecast_mode=='announced_perfect' else [
-            {'name':'last_released_generation_kw','value':self._observed[index],
-             'source_times':[issue.isoformat()],'source_available_ats':[issue.isoformat()],
-             'available_at':issue.isoformat()}]
+        released={'last_released_generation_kw':(self._observed[index],issue),
+                  'previous_released_generation_kw':(self._observed[index-1],issue-STEP)}
+        feature_inputs=[{'name':name,'value':released[name][0],
+             'source_times':[released[name][1].isoformat()],'source_available_ats':[released[name][1].isoformat()],
+             'available_at':released[name][1].isoformat()} for name in self._required_inputs]
         model_fields=('id','version','identity_kind','available_at','rule_specification_cutoff',
             'fitting_status','actual_fitting_cutoff','residual_cutoff_semantics')
         packet={'schema':SCHEMA,'packet_id':'SIMULATED_PACKET_'+canonical_sha256([self.model_sha256,self.spec.calibration_method,index])[:24],
