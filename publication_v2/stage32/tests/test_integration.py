@@ -295,5 +295,41 @@ class ForecastModeTests(unittest.TestCase):
                          'INPUT_ACCESS_REJECTED')
 
 
+class WindowForecasterTests(unittest.TestCase):
+    def test_support_guard_rejects_reads_outside_window(self):
+        stream = SyntheticStream(stochastic(forecast_mode='mean_reversion'))
+        with self.assertRaises(ValueError):
+            stream._obs(-61, 0)
+        with self.assertRaises(ValueError):
+            stream._obs(1, 0)  # not yet released
+
+    def test_packets_accepted_with_auditable_support(self):
+        for mode in ('mean_reversion', 'skill_combo'):
+            stream, packet = first_packet(profile='stochastic', forecast_mode=mode, forecast_noise_kw=0.)
+            self.assertTrue(adapt_forecast(packet, START, stream.registry).accepted, mode)
+            (feature,) = packet['feature_inputs']
+            self.assertEqual(feature['name'], 'released_generation_window')
+            self.assertEqual(feature['value'], 61.)
+            self.assertTrue(all(t <= START.isoformat() for t in feature['source_times']))
+
+    def test_skill_combo_counterfactual_leakage(self):
+        s = stochastic(forecast_mode='skill_combo', steps=8)
+        k = 3
+        a = run_episode(s, 'adaptive')
+        b = run_episode(s, 'adaptive', wind=lambda i: forcing(s, i) + (400. if i >= k else 0.))
+        for i in range(k + 1):
+            self.assertEqual(a['rows'][i]['forecast_sha256'], b['rows'][i]['forecast_sha256'])
+        self.assertNotEqual(a['rows'][k + 1]['forecast_sha256'], b['rows'][k + 1]['forecast_sha256'])
+
+    def test_mean_reversion_on_flat_history_is_persistence(self):
+        stream, packet = first_packet(profile='stable', forecast_mode='mean_reversion', forecast_noise_kw=0.)
+        self.assertEqual([r['point_kw'] for r in packet['horizons']], [1000.] * 6)
+
+    def test_skill_weights_favour_the_better_candidate(self):
+        mae = lambda mode: run_episode(spec(profile='gradual', forecast_mode=mode, forecast_noise_kw=0., steps=20),
+                                       'uncontrolled')['forecast_diagnostics']['per_horizon']['30']['mae_kw']
+        self.assertLess(mae('skill_combo'), mae('persistence'))
+
+
 if __name__ == '__main__':
     unittest.main()

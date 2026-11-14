@@ -54,6 +54,7 @@ class StochasticMPCConfig:
     terminal_soc: float = .65
     terminal_weight: float = .1
     gate_kw: float = 10.              # minimum expected ramp-exceedance-equivalent benefit; 0 disables
+    dependence: str = 'comonotone'    # or 'independent_increments' (see ramp_scenarios)
     solver_time_limit_s: float = 5.
     solver_mip_rel_gap: float = 1e-8
 
@@ -62,6 +63,8 @@ class StochasticMPCConfig:
             raise ValueError('Six horizon steps required (Stage 2 compatibility)')
         if self.scenarios not in SCENARIO_SETS:
             raise ValueError('Unknown scenario set')
+        if self.dependence not in ('comonotone', 'independent_increments'):
+            raise ValueError('Unknown cross-horizon dependence model')
         if self.soc_mode not in ('band', 'terminal'):
             raise ValueError('soc_mode must be band or terminal')
         for name in ('ramp_limit_kw', 'ramp_weight', 'solver_time_limit_s'):
@@ -90,6 +93,40 @@ def scenario_wind(forecast: ForecastBundle, config: StochasticMPCConfig):
     return np.asarray(rows), np.asarray(probabilities, dtype=float)
 
 
+def ramp_scenarios(forecast: ForecastBundle, previous_grid: float, config: StochasticMPCConfig):
+    """Uncontrolled ramp scenarios R (K x H, kW) and probabilities.
+
+    Realised grid ramp at step t = R[k, t] + (net_t - net_{t-1}), net_{-1} = 0,
+    because the previous grid export already contains the previous battery net.
+    Expected total exceedance is a sum of per-step expectations, so only each
+    step's MARGINAL ramp distribution matters (no joint scenario tree needed).
+
+    * comonotone: one common standardised shock across horizons; the ramp
+      spread is z * (sigma_t - sigma_{t-1}), i.e. later-step ramps look nearly
+      certain whenever interval widths grow slowly.
+    * independent_increments: forecast errors accumulate as independent steps
+      (random-walk error); ramp spread s_0 = sigma_0, s_t = sqrt(sigma_t^2 -
+      sigma_{t-1}^2) (floored at 0). Assumed, not provided by conformal theory.
+    """
+    nodes, probabilities = SCENARIO_SETS[config.scenarios]
+    probabilities = np.asarray(probabilities, dtype=float)
+    if config.dependence == 'comonotone':
+        wind, _ = scenario_wind(forecast, config)
+        anchor = np.c_[np.full(len(nodes), float(previous_grid)), wind[:, :-1]]
+        return wind - anchor, probabilities
+    point = np.asarray(forecast.point_kw, dtype=float)
+    edge = NormalDist().inv_cdf(1 - forecast.alpha / 2)
+    sigma_up = (np.asarray(forecast.upper_kw, dtype=float) - point) / edge
+    sigma_down = (point - np.asarray(forecast.lower_kw, dtype=float)) / edge
+    centre = np.diff(np.r_[float(previous_grid), point])
+    rows = []
+    for z in nodes:
+        sigma = sigma_up if z > 0 else sigma_down
+        spread = np.sqrt(np.maximum(np.diff(np.r_[0., sigma ** 2]), 0.))
+        rows.append(centre + z * spread)
+    return np.asarray(rows), probabilities
+
+
 def _layout(h, k):
     names = ('charge', 'discharge', 'energy', 'mode', 'low', 'high')
     groups = {name: np.arange(i * h, (i + 1) * h) for i, name in enumerate(names)}
@@ -97,8 +134,8 @@ def _layout(h, k):
     return groups, 6 * h + k * h + 1  # final variable: terminal deviation
 
 
-def _formulate(wind, probabilities, energy, previous_grid, battery, config):
-    k, h = wind.shape
+def _formulate(ramps, probabilities, energy, battery, config):
+    k, h = ramps.shape
     groups, size = _layout(h, k)
     terminal = size - 1
     c, lb, ub = np.zeros(size), np.zeros(size), np.full(size, np.inf)
@@ -146,7 +183,7 @@ def _formulate(wind, probabilities, energy, previous_grid, battery, config):
             delta[groups['discharge'][t - 1]] = -1.
             delta[groups['charge'][t - 1]] = 1.
         for s in range(k):
-            constant = wind[s, t] - (wind[s, t - 1] if t else previous_grid)
+            constant = ramps[s, t]
             variable = groups['excess'][s, t]
             row = {i: -v for i, v in delta.items()}; row[variable] = 1.
             add(row, low=constant - limit)            # s >= +ramp - L
@@ -159,13 +196,12 @@ def _formulate(wind, probabilities, energy, previous_grid, battery, config):
     return c, integrality, Bounds(lb, ub), LinearConstraint(np.asarray(rows), lows, highs), groups
 
 
-def plan_cost(charges, discharges, energies, wind, probabilities, previous_grid, battery, config):
+def plan_cost(charges, discharges, energies, ramps, probabilities, battery, config):
     """Independent recomputation of the expected-cost objective from physical quantities."""
-    k, h = wind.shape
-    net = np.asarray(discharges) - np.asarray(charges)
-    grid = wind + net                                     # K x H scenario grid export
-    ramps = np.diff(np.c_[np.full(k, previous_grid), grid], axis=1)
-    excess = np.maximum(0., np.abs(ramps) - config.ramp_limit_kw)
+    k, h = ramps.shape
+    net = np.asarray(discharges, dtype=float) - np.asarray(charges, dtype=float)
+    realised = ramps + np.diff(np.r_[0., net])            # K x H scenario grid ramps
+    excess = np.maximum(0., np.abs(realised) - config.ramp_limit_kw)
     usable = battery.usable_energy_kwh
     components = {
         'expected_ramp_exceedance': float(probabilities @ excess.sum(axis=1)) / (h * config.ramp_limit_kw),
@@ -213,10 +249,10 @@ def decide_stochastic(controller: str, forecast: ForecastBundle | None, decision
         forecast.validate(decision_time, step_minutes=battery.step_minutes, horizon=config.horizon_steps)
     except (TypeError, ValueError, AttributeError) as error:
         return fallback('invalid_forecast: ' + str(error), False)
-    wind, probabilities = scenario_wind(forecast, config)
+    ramps, probabilities = ramp_scenarios(forecast, previous_grid_kw, config)
     try:
         objective, integers, bounds, constraints, groups = _formulate(
-            wind, probabilities, energy_kwh, previous_grid_kw, battery, config)
+            ramps, probabilities, energy_kwh, battery, config)
         solution = milp(objective, integrality=integers, bounds=bounds, constraints=constraints,
                         options={'disp': False, 'presolve': True, 'time_limit': config.solver_time_limit_s,
                                  'mip_rel_gap': config.solver_mip_rel_gap})
@@ -239,14 +275,14 @@ def decide_stochastic(controller: str, forecast: ForecastBundle | None, decision
         if not np.allclose(energies[1:], x[groups['energy']], atol=1e-5, rtol=0.):
             raise PhysicalError('Solver states do not match the physical energy trajectory')
         cost, components, weighted, expected_excess = plan_cost(
-            charges, discharges, energies, wind, probabilities, previous_grid_kw, battery, config)
+            charges, discharges, energies, ramps, probabilities, battery, config)
         if not math.isclose(cost, float(solution.fun), rel_tol=1e-5, abs_tol=1e-5):
             raise PhysicalError('Physical objective does not agree with solver objective')
     except (ValueError, TypeError, AttributeError, OverflowError) as error:
         return fallback('invalid_solver_plan: ' + str(error), True, status, message)
     zero = _zero_plan(energy_kwh, config.horizon_steps)
     zero_cost, zero_components, _, zero_excess = plan_cost(
-        *zero, wind, probabilities, previous_grid_kw, battery, config)
+        *zero, ramps, probabilities, battery, config)
     threshold = config.ramp_weight * config.gate_kw / (config.horizon_steps * config.ramp_limit_kw)
     benefit = zero_cost - cost
     gated = config.gate_kw > 0 and benefit < threshold
@@ -260,7 +296,7 @@ def decide_stochastic(controller: str, forecast: ForecastBundle | None, decision
                           'expected_ramp_exceedance_kw': expected_excess},
             'zero_dispatch': {'objective': zero_cost, 'objective_components': zero_components,
                               'expected_ramp_exceedance_kw': zero_excess},
-            'scenario_wind_kw': wind.tolist(), 'scenario_probabilities': probabilities.tolist(),
+            'scenario_ramp_kw': ramps.tolist(), 'scenario_probabilities': probabilities.tolist(),
             'config': asdict(config), **certificate,
             'risk_interpretation': 'SAA of expected ramp exceedance under assumed Gaussian-shaped, '
                                    'comonotone scenarios scaled from marginal conformal intervals'}

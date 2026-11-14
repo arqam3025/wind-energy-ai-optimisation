@@ -10,7 +10,7 @@ from publication_v2.stage31.forecast import ForecastBundle
 from publication_v2.stage32.episode import run_episode
 from publication_v2.stage32.synthetic import ScenarioSpec, forcing
 from publication_v2.stage33.controller import (SCENARIO_SETS, StochasticMPCConfig, decide_stochastic,
-                                               plan_cost, scenario_wind)
+                                               plan_cost, ramp_scenarios, scenario_wind)
 
 T0 = datetime(2032, 1, 1, tzinfo=timezone.utc)
 BATTERY = BatteryConfig()
@@ -50,6 +50,36 @@ class ConfigAndScenarioTests(unittest.TestCase):
             self.assertAlmostEqual(sum(n * q for n, q in zip(nodes, probabilities)), 0.)
 
 
+class RampScenarioTests(unittest.TestCase):
+    def test_comonotone_ramps_match_level_scenarios(self):
+        b = bundle([1100, 1300, 1200, 1500, 1400, 1600], half=120.)
+        ramps, _ = ramp_scenarios(b, 1000., StochasticMPCConfig())
+        wind, _ = scenario_wind(b, StochasticMPCConfig())
+        np.testing.assert_allclose(ramps, np.diff(np.c_[np.full(5, 1000.), wind], axis=1))
+
+    def test_independent_increment_spreads(self):
+        point = [1000.] * 6
+        sigmas = np.array([50., 70., 85., 100., 110., 120.])
+        edge = 1.6448536269514722
+        b = ForecastBundle(T0, tuple(point), tuple(p - s * edge for p, s in zip(point, sigmas)),
+                           tuple(p + s * edge for p, s in zip(point, sigmas)), .1, 'unit', T0,
+                           tuple(T0 + timedelta(minutes=10 * (i + 1)) for i in range(6)), T0 - timedelta(hours=1))
+        ramps, p = ramp_scenarios(b, 1000., StochasticMPCConfig(dependence='independent_increments'))
+        spread = ramps[-1] / 1.2815515655446004  # top node, zero centre
+        np.testing.assert_allclose(spread, np.sqrt(np.diff(np.r_[0., sigmas ** 2])), rtol=1e-9)
+        np.testing.assert_allclose(p @ ramps, 0., atol=1e-9)
+        comonotone, _ = ramp_scenarios(b, 1000., StochasticMPCConfig())
+        self.assertTrue(np.all(np.abs(ramps[-1, 1:]) > np.abs(comonotone[-1, 1:])))
+        with self.assertRaises(ValueError):
+            StochasticMPCConfig(dependence='x')
+
+    def test_independent_increments_decision_is_certified(self):
+        d = decide(bundle([1000, 1500, 900, 1400, 1000, 1300], half=80.), gate_kw=0.,
+                   dependence='independent_increments')
+        self.assertEqual(d.status, 'optimal')
+        self.assertEqual(d.plan['config']['dependence'], 'independent_increments')
+
+
 class DecisionTests(unittest.TestCase):
     def test_missing_and_invalid_forecasts_fall_back_to_zero(self):
         d = decide(None)
@@ -80,9 +110,15 @@ class DecisionTests(unittest.TestCase):
             self.assertFalse(c > 1e-6 and x > 1e-6)
             energies.append(transition(BATTERY, energies[-1], c, x))
         np.testing.assert_allclose(energies, opt['energy_kwh'], atol=1e-6)
-        wind = np.asarray(d.plan['scenario_wind_kw'])
-        cost = plan_cost(opt['charge_kw'], opt['discharge_kw'], opt['energy_kwh'], wind,
-                         np.asarray(d.plan['scenario_probabilities']), 1000., BATTERY, StochasticMPCConfig(gate_kw=0.))[0]
+        ramps = np.asarray(d.plan['scenario_ramp_kw'])
+        cost = plan_cost(opt['charge_kw'], opt['discharge_kw'], opt['energy_kwh'], ramps,
+                         np.asarray(d.plan['scenario_probabilities']), BATTERY, StochasticMPCConfig(gate_kw=0.))[0]
+        # independent check through explicit grid trajectories (comonotone scenarios)
+        wind, p = scenario_wind(bundle([1000, 1500, 900, 1400, 1000, 1300], half=80.), StochasticMPCConfig())
+        net = np.asarray(opt['discharge_kw']) - np.asarray(opt['charge_kw'])
+        grid_ramps = np.diff(np.c_[np.full(5, 1000.), wind + net], axis=1)
+        expected = float(p @ np.maximum(0., np.abs(grid_ramps) - 200.).sum(axis=1)) / (6 * 200.)
+        self.assertAlmostEqual(expected, opt['objective_components']['expected_ramp_exceedance'], places=9)
         self.assertAlmostEqual(cost, opt['objective'], places=6)
         self.assertLessEqual(d.plan['solver_maximum_constraint_violation'], 1e-5)
 
