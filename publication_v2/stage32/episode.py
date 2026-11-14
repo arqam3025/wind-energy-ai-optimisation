@@ -31,8 +31,13 @@ def _realised(spec, wind, index):
 
 
 def run_episode(spec: ScenarioSpec, controller: str, *, battery: BatteryConfig | None = None,
-                config: MPCConfig | None = None, wind=None, policy=None):
+                config: MPCConfig | None = None, wind=None, policy=None,
+                decider=None, decider_config=None):
     """Run one causal episode.
+
+    ``decider`` optionally replaces the Stage 3.1 ``decide`` (same signature,
+    called with ``decider_config``); scoring always uses ``config`` (an
+    MPCConfig) so every controller is measured against one ramp definition.
 
     ``wind`` optionally replaces the realised outcome source (index -> kW) for
     counterfactual leakage tests; it is only ever called AFTER the decision for
@@ -40,10 +45,12 @@ def run_episode(spec: ScenarioSpec, controller: str, *, battery: BatteryConfig |
     """
     if not isinstance(spec, ScenarioSpec):
         raise ValueError('ScenarioSpec required')
-    if controller not in CONTROLLERS:
+    if decider is None and controller not in CONTROLLERS:
         raise ValueError('Unknown controller')
     battery = BatteryConfig(initial_soc=spec.initial_soc) if battery is None else battery
     config = MPCConfig() if config is None else config
+    if decider is None:
+        decider, decider_config = decide, config
     stream = SyntheticStream(spec)
     energy = battery.initial_energy_kwh
     previous_grid = stream.initial_history_kw[-1]
@@ -60,7 +67,7 @@ def run_episode(spec: ScenarioSpec, controller: str, *, battery: BatteryConfig |
         adapter_log.append({'decision_time': decision_time.isoformat(), 'accepted': bundle is not None,
                             'rejection_code': fault,
                             'packet_sha256': None if packet is None else canonical_sha256(packet)})
-        action = decide(controller, bundle, decision_time, energy, previous_grid, battery, config)
+        action = decider(controller, bundle, decision_time, energy, previous_grid, battery, decider_config)
         plan_residual = validate_plan(action.plan, battery, energy, 1 if controller == 'heuristic' else config.horizon_steps)
         if action.plan is not None and (abs(action.charge_kw - action.plan['charge_kw'][0]) > TOLERANCE
                                         or abs(action.discharge_kw - action.plan['discharge_kw'][0]) > TOLERANCE):
@@ -103,7 +110,7 @@ def run_episode(spec: ScenarioSpec, controller: str, *, battery: BatteryConfig |
             'scenario': spec.name, 'controller': controller, 'seed': spec.seed,
             'spec': jsonable(spec), 'scenario_sha256': stream.scenario_sha256,
             'wind_sha256': canonical_sha256([rows[i]['wind_kw'] for i in range(len(rows))]),
-            'battery': jsonable(battery), 'mpc_config': jsonable(config), 'metrics': metrics,
+            'battery': jsonable(battery), 'mpc_config': jsonable(config), 'controller_config': jsonable(decider_config), 'metrics': metrics,
             'forecast_diagnostics': forecast_diagnostics(issued, realised),
             'adapter_log': adapter_log, 'rows': rows, 'plans': plans}
 
