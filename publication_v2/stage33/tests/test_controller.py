@@ -1,14 +1,16 @@
 """Stage 3.3 stochastic MPC: formulation, certification, gate and closed-loop invariants."""
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
+import json
 import unittest
 
 import numpy as np
 
 from publication_v2.stage31.battery import BatteryConfig, transition
 from publication_v2.stage31.forecast import ForecastBundle
+from publication_v2.stage32.adapter import adapt_forecast, released_skill
 from publication_v2.stage32.episode import run_episode
-from publication_v2.stage32.synthetic import ScenarioSpec, forcing
+from publication_v2.stage32.synthetic import ScenarioSpec, SyntheticStream, forcing
 from publication_v2.stage33.controller import (SCENARIO_SETS, StochasticMPCConfig, decide_stochastic,
                                                plan_cost, ramp_scenarios, scenario_wind)
 
@@ -78,6 +80,54 @@ class RampScenarioTests(unittest.TestCase):
                    dependence='independent_increments')
         self.assertEqual(d.status, 'optimal')
         self.assertEqual(d.plan['config']['dependence'], 'independent_increments')
+
+
+class SkillGateTests(unittest.TestCase):
+    def with_skill(self, score):
+        b = bundle([1600] * 6, half=20.)
+        return replace(b, provenance=json.dumps({'released_skill': {'pooled_skill_score': score}}))
+
+    def test_released_skill_from_ledger(self):
+        o = [T0 - timedelta(minutes=10 * k) for k in range(4, 0, -1)]
+        def rec(origin, minutes, prediction, observed):
+            return {'origin_time': origin.isoformat(), 'target_time': (origin + timedelta(minutes=minutes)).isoformat(),
+                    'prediction_kw': prediction, 'observed_kw': observed}
+        h10 = [rec(o[0] - timedelta(minutes=10), 10, 0., 100.), rec(o[0], 10, 110., 120.), rec(o[1], 10, 120., 140.)]
+        ledgers = [h10] + [[] for _ in range(5)]
+        result = released_skill(ledgers, T0)
+        # origins o[0] (anchor 100) and o[1] (anchor 120); first record's origin has no anchor
+        self.assertEqual(result['pairs'], 2)
+        self.assertAlmostEqual(result['pooled_skill_score'], 1 - (10 ** 2 + 20 ** 2) / (20 ** 2 + 20 ** 2))
+        future = [rec(T0, 10, 0., 1.)]  # target after decision is ignored
+        self.assertEqual(released_skill([h10 + future] + [[] for _ in range(5)], T0)['pairs'], 2)
+
+    def test_adapter_reports_skill(self):
+        stream = SyntheticStream(ScenarioSpec('k', profile='stochastic', forecast_mode='persistence', seed=1000))
+        audit = adapt_forecast(stream.packet(0), T0, stream.registry).audit
+        self.assertEqual(audit['released_skill']['pooled_skill_score'], 0.)
+        self.assertGreater(audit['released_skill']['pairs'], 300)
+
+    def test_gate_closed_without_or_below_skill(self):
+        for score in (None, -.5, .1):
+            d = decide(self.with_skill(score), skill_gate=.1)
+            self.assertEqual(d.status, 'skill_gated')
+            self.assertEqual((d.charge_kw, d.discharge_kw), (0., 0.))
+            self.assertFalse(d.fallback)
+        self.assertEqual(decide(bundle([1600] * 6, half=20.), skill_gate=.1).status, 'skill_gated')
+
+    def test_gate_open_above_skill_and_disabled_by_default(self):
+        self.assertEqual(decide(self.with_skill(.5), skill_gate=.1).status, 'optimal')
+        self.assertEqual(decide(self.with_skill(None)).status, 'optimal')
+        for bad in (1., -2., True, float('nan')):
+            with self.assertRaises(ValueError):
+                StochasticMPCConfig(skill_gate=bad)
+
+    def test_closed_loop_skill_gate_blocks_biased_forecaster(self):
+        spec = ScenarioSpec('k', profile='stochastic', forecast_mode='damped_trend', seed=1000, steps=8)
+        run = run_episode(spec, 'stochastic', decider=decide_stochastic,
+                          decider_config=StochasticMPCConfig(skill_gate=.1))
+        self.assertEqual(run['metrics']['total_throughput_kwh'], 0.)
+        self.assertTrue(all(r['status'] == 'skill_gated' for r in run['rows']))
 
 
 class DecisionTests(unittest.TestCase):
