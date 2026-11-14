@@ -200,5 +200,100 @@ class EpisodeTests(unittest.TestCase):
         self.assertEqual(run['metrics']['adapter_rejections'], 0)
 
 
+LEGACY_HASHES = {  # recorded before the stochastic profile was added (commit 460bc20)
+    ('rapid', 'persistence'): ('6d85e47e19692ed75105704827dc175437caa560ca26a09253472364ccc28b0a',
+                               '21c20da46fe4bb097f5b6c4c7245802c36048c75faf054a4d4338726d71e1e90'),
+    ('oscillatory', 'announced_perfect'): ('998bae596ec68f2dd14b0f03d24d1e071e415c4713111e2d9dd3b76546e9d46b',
+                                           'ae0a82e2301bb969c655b5be38929f478e4970aab5670c26a59f268bd4f359e1'),
+}
+
+
+def stochastic(**kwargs):
+    base = dict(episode_name='s', profile='stochastic', seed=1000, steps=24)
+    base.update(kwargs)
+    return ScenarioSpec(**base)
+
+
+class StochasticProfileTests(unittest.TestCase):
+    def test_legacy_identities_unchanged(self):
+        for (profile, mode), (scenario, model) in LEGACY_HASHES.items():
+            stream = SyntheticStream(ScenarioSpec('h', profile=profile, forecast_mode=mode))
+            self.assertEqual((stream.scenario_sha256, stream.model_sha256), (scenario, model))
+
+    def test_series_is_deterministic_bounded_and_seeded(self):
+        s = stochastic()
+        values = [forcing(s, i) for i in range(-70, 30)]
+        self.assertEqual(values, [forcing(stochastic(), i) for i in range(-70, 30)])
+        self.assertTrue(all(0. <= v <= 2000. for v in values))
+        self.assertNotEqual(values, [forcing(stochastic(seed=1001), i) for i in range(-70, 30)])
+        with self.assertRaises(ValueError):
+            forcing(s, 10_000)
+
+    def test_warmup_is_not_flat(self):
+        s = stochastic()
+        warm = [forcing(s, i) for i in range(-64, 0)]
+        self.assertGreater(max(warm) - min(warm), 200.)
+
+    def test_volatility_increases_ramping_and_enters_identity(self):
+        def ramps(vol):
+            total = 0
+            for seed in range(1000, 1006):
+                s = stochastic(seed=seed, volatility=vol, steps=48)
+                v = [forcing(s, i) for i in range(48)]
+                total += sum(abs(b - a) > 200 for a, b in zip(v, v[1:]))
+            return total
+        self.assertGreater(ramps(1.5), ramps(.7))
+        self.assertNotEqual(SyntheticStream(stochastic(volatility=1.5)).scenario_sha256,
+                            SyntheticStream(stochastic()).scenario_sha256)
+        with self.assertRaises(ValueError):
+            ScenarioSpec('x', profile='rapid', volatility=2.)
+
+    def test_calibration_residuals_are_nonzero_on_stochastic_profile(self):
+        stream = SyntheticStream(stochastic())
+        packet = stream.packet(0)
+        self.assertTrue(all(row['upper_kw'] - row['lower_kw'] > 0 for row in packet['horizons']))
+
+
+class ForecastModeTests(unittest.TestCase):
+    def test_damped_trend_is_causal_and_beats_persistence_on_linear_ramp(self):
+        trend = run_episode(spec(profile='gradual', forecast_mode='damped_trend', forecast_noise_kw=0.), 'uncontrolled')
+        flat = run_episode(spec(profile='gradual', forecast_mode='persistence', forecast_noise_kw=0.), 'uncontrolled')
+        self.assertLess(trend['forecast_diagnostics']['per_horizon']['30']['mae_kw'],
+                        flat['forecast_diagnostics']['per_horizon']['30']['mae_kw'])
+        stream, packet = first_packet(profile='stochastic', forecast_mode='damped_trend', forecast_noise_kw=0.)
+        names = {f['name']: f for f in packet['feature_inputs']}
+        self.assertEqual(set(names), {'last_released_generation_kw', 'previous_released_generation_kw'})
+        self.assertEqual(names['previous_released_generation_kw']['available_at'], (START - STEP).isoformat())
+        self.assertTrue(adapt_forecast(packet, START, stream.registry).accepted)
+
+    def test_damped_trend_counterfactual_leakage(self):
+        s = stochastic(forecast_mode='damped_trend', steps=8)
+        k = 3
+        a = run_episode(s, 'adaptive')
+        b = run_episode(s, 'adaptive', wind=lambda i: forcing(s, i) + (500. if i >= k else 0.))
+        for i in range(k + 1):
+            self.assertEqual(a['rows'][i]['forecast_sha256'], b['rows'][i]['forecast_sha256'])
+            self.assertEqual(a['rows'][i]['charge_kw'], b['rows'][i]['charge_kw'])
+            self.assertEqual(a['rows'][i]['discharge_kw'], b['rows'][i]['discharge_kw'])
+
+    def test_announced_noisy_error_grows_with_horizon_and_noise(self):
+        def mae(noise):
+            d = run_episode(stochastic(forecast_mode='announced_noisy', forecast_noise_kw=noise, steps=30),
+                            'uncontrolled')['forecast_diagnostics']['per_horizon']
+            return d['10']['mae_kw'], d['60']['mae_kw']
+        low10, low60 = mae(20.)
+        high10, high60 = mae(80.)
+        self.assertLess(low10, low60)
+        self.assertLess(low60, high60)
+        with self.assertRaises(ValueError):
+            ScenarioSpec('x', forecast_mode='announced_noisy')
+        stream, packet = first_packet(profile='stochastic', forecast_mode='announced_noisy', forecast_noise_kw=30.)
+        self.assertEqual(packet['feature_inputs'], [])
+        self.assertTrue(adapt_forecast(packet, START, stream.registry).accepted)
+        self.assertEqual(adapt_forecast(packet, START, stream.registry,
+                                        policy=AdapterPolicy(allow_preannounced_forcing=False)).rejection_code,
+                         'INPUT_ACCESS_REJECTED')
+
+
 if __name__ == '__main__':
     unittest.main()
