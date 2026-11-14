@@ -20,6 +20,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from datetime import datetime
+import json
 import math
 from statistics import NormalDist
 from time import perf_counter
@@ -55,12 +56,16 @@ class StochasticMPCConfig:
     terminal_weight: float = .1
     gate_kw: float = 10.              # minimum expected ramp-exceedance-equivalent benefit; 0 disables
     dependence: str = 'comonotone'    # or 'independent_increments' (see ramp_scenarios)
+    skill_gate: float | None = None   # dispatch only if released skill score vs persistence > this
     solver_time_limit_s: float = 5.
     solver_mip_rel_gap: float = 1e-8
 
     def __post_init__(self):
         if type(self.horizon_steps) is not int or self.horizon_steps != 6:
             raise ValueError('Six horizon steps required (Stage 2 compatibility)')
+        if self.skill_gate is not None and (isinstance(self.skill_gate, bool) or not isinstance(self.skill_gate, (int, float))
+                                            or not math.isfinite(self.skill_gate) or not -1 <= self.skill_gate < 1):
+            raise ValueError('skill_gate must be None or a finite skill score in [-1, 1)')
         if self.scenarios not in SCENARIO_SETS:
             raise ValueError('Unknown scenario set')
         if self.dependence not in ('comonotone', 'independent_increments'):
@@ -220,6 +225,17 @@ def plan_cost(charges, discharges, energies, ramps, probabilities, battery, conf
     return sum(weighted.values()), components, weighted, (probabilities @ excess).tolist()
 
 
+def released_skill_score(forecast: ForecastBundle):
+    """Pooled skill score the adapter derived from verified released residuals, or None."""
+    try:
+        score = json.loads(forecast.provenance)['released_skill']['pooled_skill_score']
+    except (ValueError, KeyError, TypeError):
+        return None
+    if isinstance(score, bool) or not isinstance(score, (int, float)) or not math.isfinite(score):
+        return None
+    return float(score)
+
+
 def _zero_plan(energy, h):
     return [0.] * h, [0.] * h, [float(energy)] * (h + 1)
 
@@ -249,6 +265,16 @@ def decide_stochastic(controller: str, forecast: ForecastBundle | None, decision
         forecast.validate(decision_time, step_minutes=battery.step_minutes, horizon=config.horizon_steps)
     except (TypeError, ValueError, AttributeError) as error:
         return fallback('invalid_forecast: ' + str(error), False)
+    if config.skill_gate is not None:
+        score = released_skill_score(forecast)
+        if score is None or score <= config.skill_gate:
+            zero = _zero_plan(energy_kwh, config.horizon_steps)
+            return Decision(0., 0., controller, 'skill_gated', None,
+                            'Released forecast skill does not exceed the prespecified threshold',
+                            perf_counter() - start, False, False, None,
+                            {'horizon_steps': config.horizon_steps, 'charge_kw': zero[0], 'discharge_kw': zero[1],
+                             'energy_kwh': zero[2], 'skill_gated': True, 'released_skill_score': score,
+                             'skill_gate': config.skill_gate, 'config': asdict(config)})
     ramps, probabilities = ramp_scenarios(forecast, previous_grid_kw, config)
     try:
         objective, integers, bounds, constraints, groups = _formulate(

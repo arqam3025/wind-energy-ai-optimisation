@@ -310,6 +310,41 @@ def _calibration(raw, document, model, cutoff, horizon, point, issue, registry, 
     return lower, upper, recomputed.newest_target_time, available, summary
 
 
+def released_skill(ledgers, decision):
+    """Skill versus persistence from the VERIFIED, released calibration residual ledgers.
+
+    Persistence's prediction for origin o is the released interval mean ending at o,
+    read from the 10-minute ledger (target_time == o). Only pairs whose targets and
+    persistence anchors precede ``decision`` are used (already enforced upstream;
+    re-checked here). SS = 1 - sum(forecast error^2) / sum(persistence error^2),
+    pooled over horizons. Descriptive; no guarantee of future skill.
+    """
+    anchor = {}
+    for record in ledgers[0]:
+        anchor[_time(record['target_time'], 'residual target')] = _number(record['observed_kw'], 'observed')
+    per, forecast_total, persistence_total = {}, 0., 0.
+    for horizon, ledger in zip(HORIZONS, ledgers):
+        n, f_sq, p_sq = 0, 0., 0.
+        for record in ledger:
+            origin = _time(record['origin_time'], 'residual origin')
+            target = _time(record['target_time'], 'residual target')
+            if origin not in anchor or not origin < target < decision:
+                continue
+            observed = _number(record['observed_kw'], 'observed')
+            f_sq += (_number(record['prediction_kw'], 'prediction') - observed) ** 2
+            p_sq += (anchor[origin] - observed) ** 2
+            n += 1
+        per[str(horizon)] = {'n': n, 'mse_forecast': f_sq / n if n else None,
+                             'mse_persistence': p_sq / n if n else None}
+        forecast_total += f_sq
+        persistence_total += p_sq
+    pairs = sum(v['n'] for v in per.values())
+    score = None if not pairs or persistence_total <= 0 else 1. - forecast_total / persistence_total
+    return {'reference': 'persistence (released value at origin)', 'pairs': pairs,
+            'pooled_skill_score': score, 'per_horizon': per,
+            'interpretation': 'descriptive skill on released residuals; not a guarantee of future skill'}
+
+
 def _adapt(document, decision_time, registry, policy):
     _keys(document, PACKET_KEYS, 'packet')
     _same(document['schema'], SCHEMA, 'packet schema', 'SCHEMA_UNSUPPORTED')
@@ -362,7 +397,8 @@ def _adapt(document, decision_time, registry, policy):
                  clock_assumption=document['clock_assumption'], units='kW',
                  quantity='measured_wind_generation', target_semantics=TARGET_SEMANTICS,
                  alpha=alpha, coverage_interpretation='marginal descriptive; not joint trajectory coverage',
-                 calibrations=summaries)
+                 calibrations=summaries,
+                 released_skill=released_skill([row['calibration']['residuals'] for row in rows], decision))
     provenance = json.dumps(audit, sort_keys=True, separators=(',', ':'), allow_nan=False)
     bundle = ForecastBundle(decision, tuple(points), tuple(lowers), tuple(uppers), alpha,
                             provenance, decision, tuple(targets),

@@ -30,6 +30,10 @@ STOCHASTIC_VARIANTS = {
     'stochastic_terminal': StochasticMPCConfig(soc_mode='terminal'),
     'point_band_gate': StochasticMPCConfig(scenarios='point'),
     'stochastic_increments': StochasticMPCConfig(dependence='independent_increments'),
+    'stochastic_skill': StochasticMPCConfig(skill_gate=.10),       # prespecified threshold
+    'stochastic_skill00': StochasticMPCConfig(skill_gate=0.),      # sensitivity
+    'stochastic_skill05': StochasticMPCConfig(skill_gate=.05),     # sensitivity
+    'stochastic_skill20': StochasticMPCConfig(skill_gate=.20),     # sensitivity
 }
 CONTROLLER_NAMES = STAGE31_CONTROLLERS + tuple(STOCHASTIC_VARIANTS)
 FORECASTS = {  # label -> (forecast_mode, forecast_noise_kw)
