@@ -62,6 +62,35 @@ Empirical conformal coverage: marginal 0.91–0.92 (nominal 0.90); joint all-six
    (adaptive MPC used 538 kWh for a slight increase in exceedance).
 7. **Marginal coverage does not mean joint coverage:** about 92% marginal but about 80% joint.
 
+## Round 2: causal forecasters and ramp-dependence model (commit `13070b1`)
+
+Same seeds (1000–1005). Run: `--seeds 1000 1001 1002 1003 1004 1005 --out .../dev_full_v3.json`.
+
+**Causal forecasters** (30-minute MAE in kW; persistence 234): damped trend 316, mean reversion 234
+(285 vs 302 at 60 minutes), skill combination 237. In the `stochastic` simulator, weather fronts are
+unpredictable jumps, so forecasters using past data only gain little over persistence.
+
+| Forecast | Uncontrolled | Deterministic | Adaptive (3.1) | Stochastic | Stochastic (increments) |
+|---|---|---|---|---|---|
+| Oracle σ=100 | 2641 / 0 | 429 / 1510 | 346 / 5159 | 327 / 3535 | 137 / 3843 |
+| Oracle σ=150 (MAE30 186) | 2641 / 0 | 901 / 2346 | 1276 / 6059 | 1112 / 6359 | 1026 / 6311 |
+| Oracle σ=200 (MAE30 244) | 2641 / 0 | 2109 / 3438 | 3437 / 6578 | 2727 / 6019 | 2798 / 6181 |
+| Mean reversion | 2641 / 0 | 2558 / 14 | 3417 / 3639 | 3009 / 1490 | 3064 / 1740 |
+| Skill combination | 2641 / 0 | 2641 / 0 | 2868 / 2420 | 2641 / 27 | 2747 / 116 |
+
+8. **Break-even forecast skill.** The benefit over no battery disappears between a 30-minute MAE of
+   186 kW (−269 kW per scenario) and 244 kW (no benefit), which is about persistence-level error.
+   At high oracle error, the simpler deterministic and heuristic controllers beat stochastic MPC
+   on exceedance.
+9. **The hypothesis was rejected.** Comonotone scenarios were suspected of causing harm with causal
+   forecasts. Independent increments did not reduce that harm (mean reversion +71 vs +61 kW per
+   scenario; persistence +23 vs 0). Its gain under oracle forecasts is partly by construction,
+   because oracle errors are generated as a random walk.
+10. **Pre-held-out decision:** `stochastic` (comonotone) remains the primary controller;
+    `stochastic_increments` is a secondary analysis.
+11. With mean reversion, stochastic MPC harms less than adaptive MPC (+61 vs +129 kW per scenario)
+    but does not avoid harm. Deterministic MPC barely acts (14 kWh) and helps slightly.
+
 ## Limitations
 
 6 scenarios per cell, so the smallest attainable two-sided Wilcoxon p is 0.031: these are

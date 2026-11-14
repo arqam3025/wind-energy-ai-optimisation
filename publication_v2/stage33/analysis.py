@@ -18,7 +18,9 @@ from scipy.stats import wilcoxon
 METRICS = ('total_ramp_exceedance_kw', 'ramp_violations', 'total_throughput_kwh')
 CONTRASTS = (('stochastic', 'uncontrolled'), ('stochastic', 'adaptive'), ('stochastic', 'fixed_margin'),
              ('stochastic', 'deterministic'), ('stochastic', 'stochastic_no_gate'),
-             ('stochastic', 'stochastic_terminal'), ('stochastic', 'point_band_gate'))
+             ('stochastic', 'stochastic_terminal'), ('stochastic', 'point_band_gate'),
+             ('stochastic_increments', 'uncontrolled'), ('stochastic_increments', 'stochastic'),
+             ('stochastic_increments', 'adaptive'), ('stochastic_increments', 'deterministic'))
 
 
 def bootstrap_ci(values, *, draws=10000, seed=20261114):
