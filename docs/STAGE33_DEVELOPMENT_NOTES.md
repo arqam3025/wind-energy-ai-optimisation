@@ -91,6 +91,37 @@ unpredictable jumps, so forecasters using past data only gain little over persis
 11. With mean reversion, stochastic MPC harms less than adaptive MPC (+61 vs +129 kW per scenario)
     but does not avoid harm. Deterministic MPC barely acts (14 kWh) and helps slightly.
 
+## Round 3: forecast-skill safety switch (commit `c7595d0`)
+
+The adapter derives SS = 1 − SSE(forecast) / SSE(persistence), pooled over horizons, from the
+verified released residual ledgers. `stochastic_skill` dispatches only if SS > 0.10. This
+threshold was fixed **before** the run; 0, 0.05 and 0.20 are reported as sensitivity analyses.
+Mean released SS: perfect 1.00, oracle σ=25/50/75/100/150/200: 0.95/0.82/0.62/0.37/−0.29/−1.13;
+damped trend −0.81; persistence 0.00; mean reversion −0.03; skill combination +0.04.
+
+| Forecast | Uncontrolled | Stochastic | Stochastic + switch (0.10) | Switch 0.20 |
+|---|---|---|---|---|
+| Oracle σ=25 | 2641 / 0 | 15 / 730 | 15 / 730 | 15 / 730 |
+| Oracle σ=75 | 2641 / 0 | 6 / 2371 | 6 / 2371 | 6 / 2371 |
+| Oracle σ=100 | 2641 / 0 | 327 / 3535 | 533 / 3377 | 662 / 3253 |
+| Oracle σ=150 | 2641 / 0 | 1112 / 6359 | 1518 / 4417 | 1521 / 3346 |
+| Oracle σ=200 | 2641 / 0 | 2727 / 6019 | 2308 / 1089 | 2308 / 1089 |
+| Damped trend | 2641 / 0 | 4384 / 1996 | **2641 / 0** | 2641 / 0 |
+| Mean reversion | 2641 / 0 | 3009 / 1490 | 2866 / 370 | **2641 / 0** |
+| Persistence / skill combination | 2641 / 0 | 2641 / 0–27 | 2641 / 0 | 2641 / 0 |
+
+12. **The switch removes the largest harm** (damped trend: +290 kW per scenario → 0) and turns
+    oracle σ=200 from no benefit into a benefit over no battery (2308 vs 2641 kW, with 82% less
+    throughput). With mean reversion it reduces harm by 37% at 0.10 and removes it at 0.20.
+13. **The cost:** at intermediate skill (oracle σ=100–150) the switch closes in some windows that
+    were in fact useful (exceedance 327→533 and 1112→1518 kW, still far below no battery's
+    2641). Pooled level-MSE skill is dominated by long-horizon errors, so it is a
+    **conservative** proxy for value to control.
+14. **Pre-held-out decision:** the primary controller for the confirmatory evaluation is
+    `stochastic_skill` (threshold 0.10, prespecified), with `stochastic` (no switch) as the
+    key secondary comparison and the thresholds 0, 0.05 and 0.20 as sensitivity analyses.
+    No further design changes before the frozen protocol.
+
 ## Limitations
 
 6 scenarios per cell, so the smallest attainable two-sided Wilcoxon p is 0.031: these are
