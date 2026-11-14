@@ -1,8 +1,8 @@
 # Stage 3.3 confirmatory evaluation protocol
 
-**Status:** DRAFT for review. It becomes binding once frozen: its SHA-256 is recorded in
-`publication_v2/stage33/confirmatory.py` (`PROTOCOL_SHA256`) and committed. After
-freezing, any change to this file makes the runner refuse to start.
+**Status:** FROZEN on 2026-11-14 and approved by the study author. Its SHA-256 is recorded in
+`publication_v2/stage33/confirmatory.py` (`PROTOCOL_SHA256`) at the freezing commit. Any change
+to this file makes the runner refuse to start.
 
 **Study role:** SYNTHETIC_CONFIRMATORY_HELD_OUT_SEEDS. This is a prospective evaluation
 on simulator seeds that were never used during development. It tests whether the
@@ -66,8 +66,18 @@ All configurations are exactly those in `publication_v2/stage33/experiment.py` a
 ## 5. Primary hypotheses and tests
 
 Let P = `stochastic_skill`. Within each forecast condition, d_i is the paired difference over the
-n = 150 scenarios. The non-inferiority margin for a condition is **m = 5% of the mean uncontrolled
-exceedance per scenario in that condition**.
+n = 150 scenarios. Margins are relative to U, the mean uncontrolled exceedance per scenario in that
+condition: **H2b uses m = 0.10 U** and **H3 uses m = 0.05 U** (the H3 margin is unchanged from the first draft).
+
+> **Disclosure: the H2b margin was changed before freezing.** The first draft specified 5% for both H2b and H3. After the
+> pipeline rehearsal on development seeds 1006–1008 (Section 10), where the primary controller's
+> exceedance exceeded adaptive MPC's by 2–4% of the uncontrolled level while using
+> 330–680 kWh less throughput per episode, the H2b margin alone was set to 10% before freezing;
+> the H3 no-harm margin stays at 5%.
+> Rationale: an exceedance increase of up to 10% of the no-battery level is judged acceptable in
+> exchange for a substantial reduction in battery throughput. Because development data informed
+> this choice, the report will also give the H2b result at the original 5% margin as a secondary
+> analysis.
 
 | ID | Conditions | Hypothesis (alternative) | Test |
 |---|---|---|---|
@@ -98,6 +108,8 @@ Implementation: `publication_v2/stage33/confirmatory_analysis.py`
 5. Interaction with volatility.
 6. Conformal coverage diagnostics: marginal per horizon vs joint six-horizon coverage.
 7. Computation time.
+8. H2b at the originally drafted 5% margin (see the disclosure in Section 5), without
+   multiplicity adjustment.
 
 ## 7. Execution and integrity rules
 

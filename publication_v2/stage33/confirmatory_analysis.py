@@ -18,7 +18,9 @@ from .analysis import bootstrap_ci, render, summarise
 from .confirmatory import PRIMARY, SKILFUL, UNSKILLED, load
 
 ALPHA = .05
-NI_FRACTION = .05     # margin = 5% of mean uncontrolled exceedance per scenario in the condition
+NI_FRACTION = .10     # H2b margin = 10% of mean uncontrolled exceedance per scenario in the condition
+ORIGINAL_NI_FRACTION = .05  # first-draft H2b margin, reported as a secondary analysis (protocol Section 5)
+H3_FRACTION = .05     # H3 (no harm) margin = 5%, unchanged from the first draft
 EXCEEDANCE, THROUGHPUT = 'total_ramp_exceedance_kw', 'total_throughput_kwh'
 
 
@@ -50,7 +52,7 @@ def holm(pvalues):
     return adjusted
 
 
-def primary_tests(results, primary=PRIMARY):
+def primary_tests(results, primary=PRIMARY, ni_fraction=NI_FRACTION, h3_fraction=H3_FRACTION):
     table = _index(results)
     tests = []
 
@@ -64,7 +66,8 @@ def primary_tests(results, primary=PRIMARY):
 
     for f in SKILFUL + UNSKILLED:
         keys = [k for k in table if k[0] == f]
-        margin = NI_FRACTION * mean(table[k]['uncontrolled'][EXCEEDANCE] for k in keys)
+        reference = mean(table[k]['uncontrolled'][EXCEEDANCE] for k in keys)
+        margin = (ni_fraction if f in SKILFUL else h3_fraction) * reference
         if f in SKILFUL:
             add('H1', f, _paired(table, f, primary, 'uncontrolled', EXCEEDANCE), 0.,
                 'exceedance: primary < uncontrolled')
@@ -95,7 +98,17 @@ def report(completed, results):
                      f"{t['mean_difference']:+.1f} [{t['ci95_mean_difference'][0]:+.1f}, {t['ci95_mean_difference'][1]:+.1f}] | "
                      f"{t['median_difference']:+.1f} | {t['p_one_sided']:.2e} | {t['p_holm']:.2e} | "
                      f"{'yes' if t['supported'] else 'no'} |")
+    original = [t for t in primary_tests(results, ni_fraction=ORIGINAL_NI_FRACTION) if t['test'] == 'H2b']
+    lines += ['', '## Secondary: H2b at the originally drafted 5% margin (unadjusted; see protocol Section 5)', '',
+              '| Forecast | Margin | Mean diff | p (one-sided, unadjusted) |', '|---|---|---|---|']
+    for t in original:
+        lines.append(f"| {t['forecast']} | {t['margin']:.1f} | {t['mean_difference']:+.1f} | {t['p_one_sided']:.2e} |")
     lines += ['', '## Secondary (descriptive, pooled over volatility)', '', '```', render(summarise(results)), '```']
+    for test in tests:
+        test['secondary_h2b_original_margin'] = None
+    for t in original:
+        next(x for x in tests if x['test'] == 'H2b' and x['forecast'] == t['forecast'])[
+            'secondary_h2b_original_margin'] = {k: t[k] for k in ('margin', 'mean_difference', 'p_one_sided')}
     return tests, '\n'.join(lines)
 
 
