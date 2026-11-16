@@ -101,7 +101,7 @@ def fig_break_even(table, results, out):
                     mew=1.2, elinewidth=1, capsize=2, label=label)
     ax.set_xlabel('Forecast error, 30-minute MAE (kW)  [oracle σ = 25, 50, 100, 150, 200 kW]')
     ax.set_ylabel('Change in ramp exceedance\nvs no battery (%)')
-    ax.legend(loc='upper left', fontsize=8)
+    ax.legend(loc='upper center', bbox_to_anchor=(.5, -.2), ncol=2, fontsize=8)
     ax.set_title('Battery benefit shrinks as forecast error grows', loc='left', color=INK, fontsize=10)
     _save(fig, out, 'fig1_break_even')
 
