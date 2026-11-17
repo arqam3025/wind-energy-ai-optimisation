@@ -1,4 +1,33 @@
-# Wind Energy AI Optimisation - Stage 3.1 local synthetic MPC development
+# Wind Energy AI Optimisation: skill-gated stochastic MPC for wind–battery ramp control
+
+MSc research project. A battery smooths short-term wind-power ramps using 10–60-minute forecasts
+with conformal uncertainty, a scenario-based stochastic MPC, and a forecast-skill safety switch
+that keeps the battery idle unless recent released forecasts beat persistence.
+
+**Current status (branch `research/stage4-real-data`).**
+
+| Study | Design | Outcome |
+|---|---|---|
+| Simulation (Stage 3.3) | Pre-registered; held-out seeds; 18,900 episodes | 13/13 primary hypotheses supported |
+| Real data (Stage 4) | Pre-registered; Kelmarsh SCADA, sealed 2023–2024; 2,048 paired episodes | 4/4 primary hypotheses supported |
+
+Real-data headline: −3.2% ramp exceedance with 73% less battery throughput than adaptive MPC, and
+no harm with weak forecasts. A perfect forecast would give −99.8%, so forecast quality is the
+bottleneck.
+
+- **Run it:** [docs/HOW_TO_RUN.md](docs/HOW_TO_RUN.md). 320 automated tests.
+- **Paper draft:** [docs/PAPER_DRAFT.md](docs/PAPER_DRAFT.md).
+- **Results:** [simulation](docs/STAGE33_CONFIRMATORY_RESULTS.md) · [real data](docs/STAGE4_REAL_DATA_RESULTS.md).
+- **Protocols:** [simulation](docs/STAGE33_CONFIRMATORY_PROTOCOL.md) · [real data](docs/STAGE4_CONFIRMATORY_PROTOCOL.md).
+  Deviations are logged with each result set.
+- **Data:** Kelmarsh wind farm data, Plumley & Takeuchi, Zenodo DOI 10.5281/zenodo.16807551
+  (CC-BY-4.0). It is not redistributed here.
+
+The sections below are the earlier README, kept unchanged as a historical record.
+
+---
+
+## Earlier README: Stage 3.1 local synthetic MPC development
 
 This research source adds a six-step battery MILP and five
 synthetic controller comparators. See [the Stage 3.1 design, results and test report](docs/PUBLICATION_V2_STAGE31_MPC_DESIGN.md).
