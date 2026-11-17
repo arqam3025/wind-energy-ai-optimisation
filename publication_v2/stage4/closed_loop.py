@@ -110,10 +110,14 @@ def eligible(series: Series, k0: int) -> bool:
 
 
 def run_episode(series: Series, k0: int, controller: str, *, battery: BatteryConfig | None = None,
-                config: MPCConfig | None = None):
+                config: MPCConfig | None = None, decider=None, decider_config=None):
+    """One closed-loop episode. ``decider`` optionally supplies a controller with the Stage 3.1
+    interface (added after the Stage 4 sealed test; default behaviour is unchanged)."""
     battery = BatteryConfig() if battery is None else battery
     config = MPCConfig() if config is None else config
-    if controller in STOCHASTIC_VARIANTS:
+    if decider is not None:
+        pass
+    elif controller in STOCHASTIC_VARIANTS:
         decider, decider_config = decide_stochastic, STOCHASTIC_VARIANTS[controller]
     else:
         decider, decider_config = decide, config
@@ -124,7 +128,7 @@ def run_episode(series: Series, k0: int, controller: str, *, battery: BatteryCon
         decision = series.times[k].to_pydatetime()
         bundle = bundle_at(series, k)
         action = decider(controller, bundle, decision, energy, previous_grid, battery, decider_config)
-        plan_residual = validate_plan(action.plan, battery, energy, 1 if controller == 'heuristic' else config.horizon_steps)
+        plan_residual = validate_plan(action.plan, battery, energy, 1 if controller == 'heuristic' or getattr(decider, 'one_step', False) else config.horizon_steps)
         actual = float(series.realised[k + 1])  # released only after the action is sealed
         next_energy = transition(battery, energy, action.charge_kw, action.discharge_kw)
         grid = grid_export(actual, action.charge_kw, action.discharge_kw)
