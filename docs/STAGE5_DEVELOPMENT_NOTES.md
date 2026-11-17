@@ -92,3 +92,43 @@ the forecast.
 - **Required comparator:** the forecast-driven low-pass filter.
 - **Forecaster:** keep the Stage 4 design (Stage 2 features plus neighbour features, default
   LightGBM). The extended model adds only about 0.01 skill and would add site-specific tuning.
+
+## Week 2: Penmanshiel (second site)
+
+The data was admitted, with the split fixed before download (`docs/DATA_ADMISSION_PENMANSHIEL.md`).
+- **Control unit:** WT11, with neighbours WT12–WT15.
+- **Data facts, 2018–2021, WT11:** complete 10-minute grid; no duplicate rows; 0.3–5.6% missing;
+  maximum about 2,075 kW; 12–14% of intervals ramp by more than 200 kW.
+- **Code check:** the site-generic loader and features reproduce Kelmarsh exactly (test).
+
+### Development, 2021 (fit 2018–2020; 1,034 paired episodes in 53 weeks)
+
+With the neighbour forecast (skill vs persistence +0.142; Stage 2 LightGBM +0.112):
+
+| Controller | Change | Throughput | Reduction per 100 kWh |
+|---|---|---|---|
+| Adaptive MPC | −7.03% | 498 | 1.41% |
+| Stochastic MPC | −5.20% | 224 | 2.33% |
+| P (binary switch) | −3.29% | 146 | 2.25% |
+| **G (graded switch)** | **−3.63%** | **77** | **4.70%** |
+| Low-pass filter | −5.81% | 132 | 4.41% |
+| Graded low-pass | −3.65% | 55 | 6.68% |
+
+The draft S1–S6 would all be supported. There is no harm with persistence (0.0) and no safety
+violations.
+
+### Pre-freeze validation check, 2022 (fit 2018–2021; 968 paired episodes in 50 weeks), run once
+
+| Test | Result |
+|---|---|
+| S1 | −37.3 kW [−50.8, −25.3] |
+| S2 | −89.5 kWh [−105.8, −74.5] versus P |
+| S3 | −1.2 kW [−7.5, +5.4] (margin 11.7) |
+| S4 | −520 kWh versus adaptive |
+| S5 | 0.0 |
+| S6 | −12.8 kW (margin 58.5) |
+
+- All draft tests would be supported.
+- G −3.19% at 97 kWh, against P −3.08% at 186 kWh; low-pass −5.24% at 155 kWh.
+- Forecast skill +0.143.
+- **No defects found; nothing was changed after this check.**
