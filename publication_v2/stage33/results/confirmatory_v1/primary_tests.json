@@ -1,0 +1,248 @@
+[
+ {
+  "test": "H1",
+  "forecast": "oracle25",
+  "n": 150,
+  "description": "exceedance: primary < uncontrolled",
+  "margin": 0.0,
+  "mean_difference": -1470.533250953777,
+  "median_difference": -1064.1307865952135,
+  "ci95_mean_difference": [
+   -1720.6933354583787,
+   -1240.8301849080528
+  ],
+  "left_better": 138,
+  "p_one_sided": 1.0781938686179285e-24,
+  "p_holm": 6.469163211707571e-24,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2a",
+  "forecast": "oracle25",
+  "n": 150,
+  "description": "throughput: primary < Stage 3.1 adaptive",
+  "margin": 0.0,
+  "mean_difference": -286.0544271556667,
+  "median_difference": -276.9894282380644,
+  "ci95_mean_difference": [
+   -311.3741569919313,
+   -261.2664263466106
+  ],
+  "left_better": 149,
+  "p_one_sided": 1.6784509522955273e-26,
+  "p_holm": 1.5106058570659745e-25,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2b",
+  "forecast": "oracle25",
+  "n": 150,
+  "description": "exceedance non-inferiority: primary - adaptive < margin",
+  "margin": 148.3915935121039,
+  "mean_difference": 8.142838597377645,
+  "median_difference": 3.92926564137872,
+  "ci95_mean_difference": [
+   -0.6609205576404399,
+   14.404206076285487
+  ],
+  "left_better": 6,
+  "p_one_sided": 6.485512118023652e-27,
+  "p_holm": 6.485512118023652e-26,
+  "supported": true,
+  "secondary_h2b_original_margin": {
+   "margin": 74.19579675605195,
+   "mean_difference": 8.142838597377645,
+   "p_one_sided": 2.2350272179739375e-25
+  }
+ },
+ {
+  "test": "H1",
+  "forecast": "oracle50",
+  "n": 150,
+  "description": "exceedance: primary < uncontrolled",
+  "margin": 0.0,
+  "mean_difference": -1450.6082867284772,
+  "median_difference": -1060.902835825426,
+  "ci95_mean_difference": [
+   -1699.0809699776771,
+   -1221.9079027802284
+  ],
+  "left_better": 137,
+  "p_one_sided": 1.5743597212143496e-24,
+  "p_holm": 7.871798606071748e-24,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2a",
+  "forecast": "oracle50",
+  "n": 150,
+  "description": "throughput: primary < Stage 3.1 adaptive",
+  "margin": 0.0,
+  "mean_difference": -561.0518480307433,
+  "median_difference": -572.3919441248182,
+  "ci95_mean_difference": [
+   -592.1676479318551,
+   -529.1653057413259
+  ],
+  "left_better": 148,
+  "p_one_sided": 2.4137125696272016e-26,
+  "p_holm": 1.9309700557017613e-25,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2b",
+  "forecast": "oracle50",
+  "n": 150,
+  "description": "exceedance non-inferiority: primary - adaptive < margin",
+  "margin": 148.3915935121039,
+  "mean_difference": 22.978187547963195,
+  "median_difference": 9.852318736717848,
+  "ci95_mean_difference": [
+   15.082112300086735,
+   32.42804122798739
+  ],
+  "left_better": 18,
+  "p_one_sided": 2.8030941304137826e-25,
+  "p_holm": 1.962165891289648e-24,
+  "supported": true,
+  "secondary_h2b_original_margin": {
+   "margin": 74.19579675605195,
+   "mean_difference": 22.978187547963195,
+   "p_one_sided": 1.9711114569227556e-21
+  }
+ },
+ {
+  "test": "H1",
+  "forecast": "oracle100",
+  "n": 150,
+  "description": "exceedance: primary < uncontrolled",
+  "margin": 0.0,
+  "mean_difference": -1286.1252070947612,
+  "median_difference": -821.4585166288099,
+  "ci95_mean_difference": [
+   -1530.9402543674364,
+   -1061.3425982600743
+  ],
+  "left_better": 125,
+  "p_one_sided": 2.5608454612134953e-23,
+  "p_holm": 1.0243381844853981e-22,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2a",
+  "forecast": "oracle100",
+  "n": 150,
+  "description": "throughput: primary < Stage 3.1 adaptive",
+  "margin": 0.0,
+  "mean_difference": -393.0383185994699,
+  "median_difference": -356.4687593425713,
+  "ci95_mean_difference": [
+   -458.1677522099592,
+   -329.81465748944345
+  ],
+  "left_better": 126,
+  "p_one_sided": 1.4491635674183402e-20,
+  "p_holm": 4.3474907022550207e-20,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H2b",
+  "forecast": "oracle100",
+  "n": 150,
+  "description": "exceedance non-inferiority: primary - adaptive < margin",
+  "margin": 148.3915935121039,
+  "mean_difference": 44.33508755603058,
+  "median_difference": 23.45612623765328,
+  "ci95_mean_difference": [
+   19.842737174403062,
+   69.55868549394044
+  ],
+  "left_better": 56,
+  "p_one_sided": 2.039805704629823e-14,
+  "p_holm": 4.079611409259646e-14,
+  "supported": true,
+  "secondary_h2b_original_margin": {
+   "margin": 74.19579675605195,
+   "mean_difference": 44.33508755603058,
+   "p_one_sided": 3.4940646223106345e-05
+  }
+ },
+ {
+  "test": "H3",
+  "forecast": "persistence",
+  "n": 150,
+  "description": "no harm: primary - uncontrolled < margin",
+  "margin": 74.19579675605195,
+  "mean_difference": 0.0,
+  "median_difference": 0.0,
+  "ci95_mean_difference": [
+   0.0,
+   0.0
+  ],
+  "left_better": 0,
+  "p_one_sided": 8.668216228589008e-35,
+  "p_holm": 1.126868109716571e-33,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H3",
+  "forecast": "mean_reversion",
+  "n": 150,
+  "description": "no harm: primary - uncontrolled < margin",
+  "margin": 74.19579675605195,
+  "mean_difference": 37.794797698821895,
+  "median_difference": 0.0,
+  "ci95_mean_difference": [
+   17.62643901080105,
+   59.515056951351795
+  ],
+  "left_better": 5,
+  "p_one_sided": 1.0422786667619782e-10,
+  "p_holm": 1.0422786667619782e-10,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H3",
+  "forecast": "skill_combo",
+  "n": 150,
+  "description": "no harm: primary - uncontrolled < margin",
+  "margin": 74.19579675605195,
+  "mean_difference": 4.242642322407884,
+  "median_difference": 0.0,
+  "ci95_mean_difference": [
+   -0.1911417530221782,
+   11.584148586315228
+  ],
+  "left_better": 2,
+  "p_one_sided": 6.450073773569888e-32,
+  "p_holm": 7.095081150926877e-31,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ },
+ {
+  "test": "H3",
+  "forecast": "damped_trend",
+  "n": 150,
+  "description": "no harm: primary - uncontrolled < margin",
+  "margin": 74.19579675605195,
+  "mean_difference": 0.6046609122531902,
+  "median_difference": 0.0,
+  "ci95_mean_difference": [
+   0.0,
+   1.8139827367595707
+  ],
+  "left_better": 0,
+  "p_one_sided": 1.4531167252390724e-34,
+  "p_holm": 1.743740070286887e-33,
+  "supported": true,
+  "secondary_h2b_original_margin": null
+ }
+]

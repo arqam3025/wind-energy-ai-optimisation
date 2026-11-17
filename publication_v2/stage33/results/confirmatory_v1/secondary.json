@@ -1,0 +1,445 @@
+{
+ "volatility_mean_exceedance_kw": {
+  "oracle25|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 34.54656339622838,
+   "adaptive": 0.33784255099517396,
+   "stochastic": 6.68282879413644,
+   "stochastic_skill": 9.875676102496227
+  },
+  "oracle25|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 61.64180950132432,
+   "adaptive": 2.123007222683533,
+   "stochastic": 10.434316999353932,
+   "stochastic_skill": 10.434316999353932
+  },
+  "oracle25|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 116.43652830485851,
+   "adaptive": 13.258686935973861,
+   "stochastic": 19.838059399935347,
+   "stochastic_skill": 19.838059399935347
+  },
+  "oracle50|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 68.51139160047508,
+   "adaptive": 6.385125398763769,
+   "stochastic": 17.24159997960737,
+   "stochastic_skill": 30.39078050439701
+  },
+  "oracle50|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 129.07582650056062,
+   "adaptive": 10.653657166665285,
+   "stochastic": 25.939361532853795,
+   "stochastic_skill": 25.939361532853795
+  },
+  "oracle50|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 213.20310098291185,
+   "adaptive": 13.949599968366792,
+   "stochastic": 43.59280314043463,
+   "stochastic_skill": 43.59280314043463
+  },
+  "oracle100|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 183.630817040258,
+   "adaptive": 131.37675797365105,
+   "stochastic": 133.28379603489842,
+   "stochastic_skill": 198.33855180637684
+  },
+  "oracle100|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 325.57987295984657,
+   "adaptive": 154.52697795822772,
+   "stochastic": 178.96692482214596,
+   "stochastic_skill": 176.61759883354836
+  },
+  "oracle100|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 435.50133969788544,
+   "adaptive": 174.46318547886295,
+   "stochastic": 218.41603343890827,
+   "stochastic_skill": 218.41603343890827
+  },
+  "oracle150|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 436.37646042680325,
+   "adaptive": 595.8903669016729,
+   "stochastic": 635.2652960309022,
+   "stochastic_skill": 537.4258619962818
+  },
+  "oracle150|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 612.0334993115307,
+   "adaptive": 626.695936296187,
+   "stochastic": 680.636932172602,
+   "stochastic_skill": 726.1262220029316
+  },
+  "oracle150|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 770.1069301979273,
+   "adaptive": 663.1670258317712,
+   "stochastic": 747.8238957068945,
+   "stochastic_skill": 831.4446865040051
+  },
+  "oracle200|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 995.7982999877981,
+   "adaptive": 1320.1499932122638,
+   "stochastic": 1134.6974631766557,
+   "stochastic_skill": 549.9778353691149
+  },
+  "oracle200|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 1236.5925461104323,
+   "adaptive": 1343.6890371676448,
+   "stochastic": 1208.8875795969848,
+   "stochastic_skill": 1182.4591338454472
+  },
+  "oracle200|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 1342.4405851215583,
+   "adaptive": 1451.3753166686638,
+   "stochastic": 1381.6256710178961,
+   "stochastic_skill": 1611.4546277817744
+  },
+  "persistence|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 526.6102839212423,
+   "adaptive": 527.491575209066,
+   "stochastic": 527.9687510686624,
+   "stochastic_skill": 526.6102839212423
+  },
+  "persistence|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 1187.678002687886,
+   "adaptive": 1189.6980648791487,
+   "stochastic": 1194.933324523567,
+   "stochastic_skill": 1187.678002687886
+  },
+  "persistence|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 2737.4595187539885,
+   "adaptive": 2748.899001415386,
+   "stochastic": 2769.8223552156583,
+   "stochastic_skill": 2737.4595187539885
+  },
+  "mean_reversion|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 545.5131092724512,
+   "adaptive": 637.2794961556492,
+   "stochastic": 585.5249874463053,
+   "stochastic_skill": 540.710846316764
+  },
+  "mean_reversion|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 1199.0180676068398,
+   "adaptive": 1347.5091503362116,
+   "stochastic": 1295.91743998163,
+   "stochastic_skill": 1217.653486259015
+  },
+  "mean_reversion|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 2879.6123951498216,
+   "adaptive": 3050.060052345966,
+   "stochastic": 3037.3370384566115,
+   "stochastic_skill": 2806.767865883803
+  },
+  "skill_combo|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 526.5234055060533,
+   "adaptive": 549.695624569424,
+   "stochastic": 539.7143179452175,
+   "stochastic_skill": 526.6102839212423
+  },
+  "skill_combo|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 1187.678002687886,
+   "adaptive": 1262.7245907237668,
+   "stochastic": 1215.1220338642236,
+   "stochastic_skill": 1187.6770814720649
+  },
+  "skill_combo|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 2736.3380102241395,
+   "adaptive": 2881.677802675668,
+   "stochastic": 2842.8552947453445,
+   "stochastic_skill": 2750.1883669370336
+  },
+  "damped_trend|0.7": {
+   "uncontrolled": 526.6102839212423,
+   "deterministic": 581.8099376074258,
+   "adaptive": 866.6874087885983,
+   "stochastic": 796.5868499493365,
+   "stochastic_skill": 526.6102839212423
+  },
+  "damped_trend|1.0": {
+   "uncontrolled": 1187.678002687886,
+   "deterministic": 1351.6491892787215,
+   "adaptive": 1748.299127537873,
+   "stochastic": 1712.1485225250312,
+   "stochastic_skill": 1189.4919854246455
+  },
+  "damped_trend|1.5": {
+   "uncontrolled": 2737.4595187539885,
+   "deterministic": 3281.0396811026703,
+   "adaptive": 3484.079827383424,
+   "stochastic": 3631.8232772041065,
+   "stochastic_skill": 2737.4595187539885
+  }
+ },
+ "computation_time": {
+  "uncontrolled": {
+   "median_ms": 0.017618745914660394,
+   "mean_ms": 0.03244289832185606,
+   "p95_ms": 0.11895625063213323,
+   "max_ms": 1.1782437504734844
+  },
+  "deterministic": {
+   "median_ms": 12.722165625215592,
+   "mean_ms": 1284.1835117635617,
+   "p95_ms": 34.29328312640789,
+   "max_ms": 1358041.3657770834
+  },
+  "fixed_margin": {
+   "median_ms": 17.689243750282913,
+   "mean_ms": 22.30321445075358,
+   "p95_ms": 44.24027177025588,
+   "max_ms": 114.26044791854413
+  },
+  "adaptive": {
+   "median_ms": 19.12868124054512,
+   "mean_ms": 282.8437159878483,
+   "p95_ms": 49.08546666574693,
+   "max_ms": 349809.7021437502
+  },
+  "heuristic": {
+   "median_ms": 0.05157708334972237,
+   "mean_ms": 0.10324148612720271,
+   "p95_ms": 0.3277560420428926,
+   "max_ms": 1.5866624999034684
+  },
+  "stochastic": {
+   "median_ms": 16.001061458749653,
+   "mean_ms": 185.490175733543,
+   "p95_ms": 45.08972000003267,
+   "max_ms": 223009.1600041668
+  },
+  "stochastic_no_gate": {
+   "median_ms": 15.757532292241194,
+   "mean_ms": 19.95609606956849,
+   "p95_ms": 44.13226322785704,
+   "max_ms": 98.66624166534166
+  },
+  "stochastic_terminal": {
+   "median_ms": 16.694513541657706,
+   "mean_ms": 288.69736976371274,
+   "p95_ms": 45.56515749945901,
+   "max_ms": 361223.98767916724
+  },
+  "point_band_gate": {
+   "median_ms": 10.86103437612233,
+   "mean_ms": 14.128960740931667,
+   "p95_ms": 29.136948541751426,
+   "max_ms": 114.1730687522795
+  },
+  "stochastic_increments": {
+   "median_ms": 17.371181250974622,
+   "mean_ms": 22.27422280396159,
+   "p95_ms": 49.19999874091443,
+   "max_ms": 164.71967083149744
+  },
+  "stochastic_skill": {
+   "median_ms": 0.990887500544583,
+   "mean_ms": 267.9195050585845,
+   "p95_ms": 31.80954469450322,
+   "max_ms": 349800.0505791667
+  },
+  "stochastic_skill00": {
+   "median_ms": 9.800060419365764,
+   "mean_ms": 10.501049396606447,
+   "p95_ms": 33.52364541636537,
+   "max_ms": 67.68442916654749
+  },
+  "stochastic_skill05": {
+   "median_ms": 6.10415729139883,
+   "mean_ms": 9.582165015648483,
+   "p95_ms": 33.71653520271137,
+   "max_ms": 68.13043750298675
+  },
+  "stochastic_skill20": {
+   "median_ms": 0.49694896097207675,
+   "mean_ms": 7.960993110001511,
+   "p95_ms": 27.103320214033953,
+   "max_ms": 65.4392104188446
+  }
+ },
+ "skill_gated_fraction_of_decisions": {
+  "stochastic_skill|oracle25": 0.0049,
+  "stochastic_skill|oracle50": 0.0183,
+  "stochastic_skill|oracle100": 0.115,
+  "stochastic_skill|oracle150": 0.3539,
+  "stochastic_skill|oracle200": 0.6317,
+  "stochastic_skill|persistence": 1.0,
+  "stochastic_skill|mean_reversion": 0.8708,
+  "stochastic_skill|skill_combo": 0.9507,
+  "stochastic_skill|damped_trend": 0.9938,
+  "stochastic_skill00|oracle25": 0.0049,
+  "stochastic_skill00|oracle50": 0.014,
+  "stochastic_skill00|oracle100": 0.1074,
+  "stochastic_skill00|oracle150": 0.3036,
+  "stochastic_skill00|oracle200": 0.5757,
+  "stochastic_skill00|persistence": 1.0,
+  "stochastic_skill00|mean_reversion": 0.6929,
+  "stochastic_skill00|skill_combo": 0.5558,
+  "stochastic_skill00|damped_trend": 0.9744,
+  "stochastic_skill05|oracle25": 0.0049,
+  "stochastic_skill05|oracle50": 0.0161,
+  "stochastic_skill05|oracle100": 0.1104,
+  "stochastic_skill05|oracle150": 0.3289,
+  "stochastic_skill05|oracle200": 0.6033,
+  "stochastic_skill05|persistence": 1.0,
+  "stochastic_skill05|mean_reversion": 0.7885,
+  "stochastic_skill05|skill_combo": 0.8042,
+  "stochastic_skill05|damped_trend": 0.984,
+  "stochastic_skill20|oracle25": 0.0049,
+  "stochastic_skill20|oracle50": 0.0228,
+  "stochastic_skill20|oracle100": 0.1343,
+  "stochastic_skill20|oracle150": 0.4207,
+  "stochastic_skill20|oracle200": 0.7039,
+  "stochastic_skill20|persistence": 1.0,
+  "stochastic_skill20|mean_reversion": 0.9558,
+  "stochastic_skill20|skill_combo": 1.0,
+  "stochastic_skill20|damped_trend": 1.0
+ },
+ "safety_totals": {
+  "uncontrolled": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 0,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 0.0
+  },
+  "deterministic": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 10,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.595346242946107e-12
+  },
+  "fixed_margin": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 7,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.794298208958935e-12
+  },
+  "adaptive": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 37,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.716138508025324e-12
+  },
+  "heuristic": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 0,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 4.057199021190172e-12
+  },
+  "stochastic": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 80,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  },
+  "stochastic_no_gate": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 69,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  },
+  "stochastic_terminal": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 24,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.964828465541359e-12
+  },
+  "point_band_gate": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 10,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.11928260998684e-12
+  },
+  "stochastic_increments": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 54,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.808509063674137e-12
+  },
+  "stochastic_skill": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 26,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  },
+  "stochastic_skill00": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 31,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  },
+  "stochastic_skill05": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 31,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  },
+  "stochastic_skill20": {
+   "soc_constraint_violations": 0,
+   "power_constraint_violations": 0,
+   "simultaneous_charge_discharge_events": 0,
+   "grid_limit_violations": 0,
+   "optimisation_failures": 23,
+   "adapter_rejections": 0,
+   "max_energy_residual_kwh": 3.211653165635653e-12
+  }
+ }
+}
