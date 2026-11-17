@@ -1,0 +1,14 @@
+{
+ "stage": "sealed",
+ "protocol_sha256": "d8337ad97bfd55fdffd368002fc8ffe61a94afb5ccdcc5e9ea1b1b771d84bda7",
+ "git_head": "ae6f85eec21dbb477fcfe645f161d94c00c5a6d5",
+ "started_utc": "2026-11-17T14:24:06.041371+00:00",
+ "environment": {
+  "python": "3.12.5",
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0",
+  "platform": "Windows-11-10.0.26200-SP0"
+ }
+}

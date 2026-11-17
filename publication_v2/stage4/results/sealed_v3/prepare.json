@@ -1,0 +1,69 @@
+{
+ "stage": "sealed",
+ "fit_years": [
+  2018,
+  2019,
+  2020,
+  2021
+ ],
+ "eval_years": [
+  2023,
+  2024
+ ],
+ "training_rows": 206811,
+ "training_features_sha256": "b4e1adbfdce6035450345513438989650a4fcbba6a244620b943622e0504af23",
+ "versions": {
+  "numpy": "2.5.4",
+  "scikit-learn": "1.9.1",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0"
+ },
+ "hyperparameters": {
+  "n_estimators": 100,
+  "max_depth": 4,
+  "num_leaves": 15,
+  "learning_rate": 0.05,
+  "subsample": 1.0,
+  "subsample_freq": 0,
+  "colsample_bytree": 1.0,
+  "reg_alpha": 0.0,
+  "reg_lambda": 1.0,
+  "min_child_samples": 20,
+  "objective": "regression",
+  "n_jobs": 1,
+  "random_state": 20261101,
+  "deterministic": true,
+  "force_col_wise": true,
+  "verbosity": -1,
+  "data_random_seed": 20261101,
+  "feature_fraction_seed": 20261101,
+  "bagging_seed": 20261101
+ },
+ "spatial_training_rows": 204964,
+ "spatial_hyperparameters": {
+  "n_estimators": 100,
+  "max_depth": 4,
+  "num_leaves": 15,
+  "learning_rate": 0.05,
+  "subsample": 1.0,
+  "subsample_freq": 0,
+  "colsample_bytree": 1.0,
+  "reg_alpha": 0.0,
+  "reg_lambda": 1.0,
+  "min_child_samples": 20,
+  "objective": "regression",
+  "n_jobs": 4,
+  "random_state": 20261101,
+  "deterministic": true,
+  "force_col_wise": true,
+  "verbosity": -1
+ },
+ "sources": [
+  "Kelmarsh_SCADA_2018_3084.zip",
+  "Kelmarsh_SCADA_2019_3085.zip",
+  "Kelmarsh_SCADA_2020_3086.zip",
+  "Kelmarsh_SCADA_2021_4456.zip",
+  "Kelmarsh_SCADA_2023_5961.zip",
+  "Kelmarsh_SCADA_2024_5962.zip"
+ ]
+}

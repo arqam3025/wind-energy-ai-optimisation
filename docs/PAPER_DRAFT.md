@@ -21,7 +21,12 @@ battery throughput. With causal forecasts that lack ramp skill, unswitched MPC i
 by up to 38%; the safety switch keeps the harm within a 5% margin in all four such conditions.
 Control value depends on ramp skill rather than MAE, and below a forecast-quality threshold a
 simple rule-based controller performs best. Marginal conformal coverage holds (0.90–0.91), but
-joint six-horizon coverage does not (0.74–0.78). All code, protocol, development history and checksummed results are released.
+joint six-horizon coverage does not (0.74–0.78). A second pre-registered test on real SCADA data
+(Kelmarsh wind farm, sealed years 2023–2024, 2,048 paired episodes) confirms all four real-data
+hypotheses. The controller reduces ramp exceedance by 3.2% with 73% less battery throughput than
+adaptive MPC, and does no harm with weak forecasts. A perfect forecast would remove 99.8%,
+identifying short-term ramp forecasting as the bottleneck. All code, protocols, development
+history and checksummed results are released.
 
 ## 1. Introduction (outline with key claims)
 
@@ -245,6 +250,56 @@ every condition (nominal 0.90). Joint coverage of all six horizons is 0.74–0.7
 P and 16 and 45 ms for unswitched stochastic MPC. Both are far below the 10-minute control
 interval.
 
+### 3.8 Real-data validation (Kelmarsh, sealed 2023–2024)
+
+To test whether the findings transfer to real wind, we ran a second pre-registered study on the
+public Kelmarsh SCADA dataset (6 × 2.05 MW turbines, UK; DOI 10.5281/zenodo.16807551, CC-BY-4.0)
+[CITE: dataset].
+
+- **Control unit:** turbine 1, with the battery, ramp limit and controllers unchanged from
+  simulation.
+- **Forecasters:** trained on 2018–2021 with fixed hyperparameters. The Stage 2 feature set
+  (LightGBM) and an extension with causal neighbour-turbine features, which was selected on an
+  inner development split.
+- **Design choices:** made on 2018–2021 and checked once on 2022 before the protocol was frozen.
+- **Test:** 2023–2024 was sealed until the frozen runner opened it. It contains 2,048 paired
+  8-hour episodes over 105 weeks.
+- **Inference:** weekly units, which allow for serial dependence, with week-block bootstrap CIs.
+
+**All four primary hypotheses are supported** (Table 2).
+
+**Table 2.** Real-data primary tests: P minus comparator, Holm-adjusted, n = 105 weeks.
+
+| Test | Forecast | Mean difference [95% CI] | p (Holm) |
+|---|---|---|---|
+| R1: exceedance < no battery | neighbour LightGBM | −30.6 kW [−39.7, −21.9] (−3.2%) | 1.5e−10 |
+| R2: throughput < adaptive MPC | neighbour LightGBM | −429 kWh [−458, −399] | 8.8e−19 |
+| R3: no harm (m = 47.9 kW) | persistence | 0.0 kW | 2.4e−24 |
+| R4: no harm (m = 47.9 kW) | Stage 2 LightGBM | −3.2 kW [−9.1, +2.7] | 1.5e−18 |
+
+The real-data benefit is small but robust. P reduces exceedance by 3.2% [2.4, 4.0], consistent
+with the development year (3.1%) and the validation year (2.6%) (Figure 6).
+- **Throughput:** P uses 73% less than adaptive MPC.
+- **Efficiency:** the stochastic controllers achieve the highest reduction per MWh, 194–210 kW
+  against 107–121 kW for margin-based MPC.
+- **Headroom:** with a perfect (privileged) forecast, the same controller and battery remove
+  99.8%. The gap is therefore due to the forecast, not the controller. SCADA-only forecasts reach
+  a skill of only 0.12–0.15 against persistence, with a ramp correlation of about 0.25.
+- **Safety switch:** unswitched stochastic MPC slightly increases exceedance with persistence
+  forecasts (+0.2% [0.1, 0.4]). P does no harm with either weak forecast.
+- **Cost of the switch:** at the observed skill (≈ 0.15, near the 0.10 threshold) it idles 46%
+  of decisions, so P obtains about 60% of the unswitched reduction at 68% of its throughput. This
+  is the intermediate-skill trade-off already seen in simulation.
+
+No battery safety violation occurred in any of the 57,344 real-data episodes.
+
+**Deviation.** The 2023–2024 files turned out to be cumulative exports with partially blank
+duplicate rows. Two runs from the frozen code stopped at data loading before any outcome was
+computed. A structural inspection approved by the author (row counts and comparisons only)
+showed that the copies differ only by values replaced with NaN. The corrected loader keeps the
+most complete row version and refuses on any conflict. It reproduces the development and
+validation data bit for bit. The protocol and analysis were unchanged.
+
 ## 4. Discussion
 
 **When does forecast-driven storage control pay?** The confirmatory results support a simple
@@ -290,9 +345,12 @@ the literature before submission [CITE: closest related work].
 
 ## 5. Limitations
 
-- All evidence is synthetic. Confirmation is across seeds of one generator, not across
-  data-generating processes or real wind farms. Real-data validation (for example on SCADA records)
-  remains future work and is subject to data-rights review.
+- The large effects are synthetic. Real-data confirmation covers one wind farm (Kelmarsh) with
+  one turbine as the control unit and SCADA-only forecasts. There, the benefit is small (−3.2%)
+  because the forecasts have little ramp skill. Other sites, farm-level control, and forecasts
+  using NWP, lidar or upstream measurements remain to be tested.
+- The 10-minute decision structure represents a dispatch-scheduling layer, not second-scale
+  ramp-rate control, which can act within an interval without forecasts.
 - The skilful conditions are privileged oracles. The causal forecasters studied have little skill
   against this generator, whose fronts are unpredictable jumps.
 - Oracle errors are random walks, which favours the independent-increments ablation by construction.
@@ -300,7 +358,8 @@ the literature before submission [CITE: closest related work].
   marginal and assume exchangeability, which time series violate.
 - The battery, turbine and ramp-limit parameters are illustrative. Battery degradation is
   represented only through throughput.
-- The H2b margin was informed by development data (disclosed).
+- The H2b margin was informed by development data (disclosed). In the real-data study, the
+  sealed files required a post-freeze loader fix before any outcome was computed (disclosed).
 
 ## 6. Reproducibility statement
 
