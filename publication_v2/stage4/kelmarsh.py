@@ -92,6 +92,11 @@ def load_development(turbine: int = 1, *, root: Path = ROOT):
     return pd.concat(frames)
 
 
+def load_development_farm(*, root: Path = ROOT):
+    """All six turbines for the development years, keyed by turbine number."""
+    return {t: load_development(t, root=root) for t in range(1, 7)}
+
+
 def summary(frame: pd.DataFrame) -> dict:
     y = frame['realised_kw']
     ramp = y.diff().abs()

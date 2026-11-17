@@ -9,6 +9,8 @@ built from out-of-sample 2021 residuals only.
 Forecasts:
 * ``persistence``: causal baseline;
 * ``lightgbm``: Stage 2 forecaster with its default hyperparameters (not tuned on Kelmarsh);
+* ``lightgbm_spatial``: the same learner and hyperparameters with causal neighbour-turbine
+  features, selected in round 2 on an inner split (fit 2018-2019, select on 2020);
 * ``perfect``: PRIVILEGED reference that uses realised future values. It is an upper bound, not
   a deployable forecaster.
 """
@@ -24,19 +26,25 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from publication_v2.stage2.forecasting import fit_forecaster
+import lightgbm
+
+from publication_v2.stage2.forecasting import DEFAULT_HYPERPARAMETERS, fit_forecaster
 from .closed_loop import CONTROLLERS, STEPS, Series, eligible, run_episode
-from .features import FEATURES, LABELS, build, complete
-from .kelmarsh import load_development
+from .features import FEATURES, LABELS, SPATIAL_FEATURES, build, build_spatial, complete
+from .kelmarsh import load_development_farm
 
 FIT_YEARS, EVAL_YEAR = (2018, 2019, 2020), 2021
-FORECASTS = ('persistence', 'lightgbm', 'perfect')
+FORECASTS = ('persistence', 'lightgbm', 'lightgbm_spatial', 'perfect')
+LGBM = dict(DEFAULT_HYPERPARAMETERS['lightgbm'], objective='regression', n_jobs=4, random_state=20261101,
+            deterministic=True, force_col_wise=True, verbosity=-1)
 _SERIES: dict[str, Series] = {}
 
 
 def prepare(out: Path) -> dict:
-    frame = load_development()
+    frames = load_development_farm()
+    frame = frames[1]
     table = build(frame)
+    spatial = build_spatial(frames)
     train = complete(table[table.index.year.isin(FIT_YEARS)])
     model = fit_forecaster('lightgbm', train[FEATURES].to_numpy(), train[LABELS].to_numpy())
     evaluation = table[table.index.year == EVAL_YEAR]
@@ -45,13 +53,21 @@ def prepare(out: Path) -> dict:
     x = evaluation.loc[features_ok, FEATURES].to_numpy()
     predictions['lightgbm'][features_ok] = model.predict(x)
     predictions['persistence'][features_ok] = np.repeat(x[:, :1], len(LABELS), axis=1)
+    s_train = spatial[spatial.index.year.isin(FIT_YEARS)].dropna(subset=SPATIAL_FEATURES + LABELS)
+    s_eval = spatial[spatial.index.year == EVAL_YEAR]
+    s_ok = s_eval[SPATIAL_FEATURES].notna().all(axis=1).to_numpy()
+    spatial_models = [lightgbm.LGBMRegressor(**LGBM).fit(s_train[SPATIAL_FEATURES].to_numpy(), s_train[label].to_numpy())
+                      for label in LABELS]
+    predictions['lightgbm_spatial'][s_ok] = np.maximum(0., np.column_stack(
+        [m.predict(s_eval.loc[s_ok, SPATIAL_FEATURES].to_numpy()) for m in spatial_models]))
     predictions['perfect'] = evaluation[LABELS].to_numpy()  # PRIVILEGED: realised future values
     out.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out / 'series.npz', times=evaluation.index.as_unit('ns').asi8, realised=evaluation['power_kw'].to_numpy(),
                         **{f'pred_{k}': v for k, v in predictions.items()})
     meta = {'fit_years': FIT_YEARS, 'eval_year': EVAL_YEAR, 'training_rows': model.training_rows,
             'training_features_sha256': model.training_features_sha256, 'versions': model.versions,
-            'hyperparameters': model.hyperparameters, 'sources': sorted({f.attrs.get('source', '') for f in [frame]})}
+            'hyperparameters': model.hyperparameters, 'spatial_training_rows': int(len(s_train)), 'spatial_hyperparameters': LGBM,
+            'sources': sorted({f.attrs.get('source', '') for f in frames.values()})}
     (out / 'prepare.json').write_text(json.dumps(meta, indent=1, default=str) + '\n', encoding='utf-8')
     return meta
 
