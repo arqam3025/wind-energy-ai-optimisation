@@ -104,3 +104,26 @@ class Economics(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class Sites(unittest.TestCase):
+    def test_sealed_years_refused(self):
+        from publication_v2.stage4.kelmarsh import DataAccessError
+        from publication_v2.stage5.sites import SITES, load_turbine
+        for name in ('kelmarsh', 'penmanshiel'):
+            for year in (2023, 2024):
+                with self.assertRaises(DataAccessError):
+                    load_turbine(SITES[name], year, SITES[name].target)
+
+    def test_generic_path_reproduces_kelmarsh_exactly(self):
+        from publication_v2.stage4 import kelmarsh
+        from publication_v2.stage4.features import build_spatial as stage4_spatial
+        from publication_v2.stage5.sites import SITES, build_spatial, load_frames
+        if not (kelmarsh.ROOT / 'development' / kelmarsh.ARCHIVES[2019][1]).exists():
+            self.skipTest('Kelmarsh data not present')
+        site = SITES['kelmarsh']
+        generic = load_frames(site, (2019,))
+        original = {t: kelmarsh.load_turbine(2019, t) for t in range(1, 7)}
+        self.assertTrue(all(generic[t].equals(original[t]) for t in range(1, 7)))
+        self.assertTrue(np.array_equal(build_spatial(generic, site).to_numpy(), stage4_spatial(original).to_numpy(),
+                                       equal_nan=True))
