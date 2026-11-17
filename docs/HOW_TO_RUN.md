@@ -19,14 +19,13 @@ pip install numpy==2.5.4 scipy==1.18.1 pandas==3.0.6 scikit-learn==1.9.1 \
 ## 2. Check that everything works (about 1 minute)
 
 ```bash
-for s in stage2 stage31 stage32 stage33 stage4 tests; do
-  python -B -m unittest discover -s publication_v2/$s/tests 2>/dev/null || \
-  python -B -m unittest discover -s publication_v2/$s
+for d in stage2/tests stage31/tests stage32/tests stage33/tests stage4/tests tests; do
+  python -B -m unittest discover -s publication_v2/$d
 done
 ```
 
-Expected: 320 tests pass and 1 is skipped. One of the 19 Stage 4 tests is skipped automatically
-when the Kelmarsh data is not present.
+Expected: 320 tests (48 + 135 + 32 + 27 + 19 + 59), all passing, with 1 skipped (a Windows
+privilege test). Without the Kelmarsh data, one more Stage 4 test is skipped automatically.
 
 ## 3. Look at the results (no computation needed)
 
