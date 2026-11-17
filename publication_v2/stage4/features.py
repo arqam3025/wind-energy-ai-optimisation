@@ -10,6 +10,7 @@ Rows with any missing feature or label are dropped. Nothing is imputed.
 """
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from publication_v2.protocol import FEATURE_SUPPORT, HORIZONS
@@ -41,3 +42,38 @@ def build(frame: pd.DataFrame) -> pd.DataFrame:
 
 def complete(table: pd.DataFrame) -> pd.DataFrame:
     return table.dropna(subset=FEATURES + LABELS)
+
+
+NEIGHBOURS = (2, 3, 4, 5, 6)
+SPATIAL = [f't{t}_{k}' for t in NEIGHBOURS for k in ('p', 'dp', 'dp3', 'w', 'dw')] + [
+    'farm_dp', 'farm_dp3', 'dir_sin', 'dir_cos', 'p_std_60']
+SPATIAL_FEATURES = FEATURES + SPATIAL
+
+
+def build_spatial(frames: dict[int, pd.DataFrame]) -> pd.DataFrame:
+    """Stage 2 features of turbine 1 plus causal neighbour-turbine features (selected in round 2).
+
+    Every added feature uses values whose interval ends at or before the decision time:
+    neighbour power, wind and their 10/30-minute changes, farm-total power changes, the wind
+    direction of turbine 1 (sin/cos) and the 60-minute standard deviation of turbine 1 power.
+    A missing value in any turbine makes the row incomplete; nothing is imputed.
+    """
+    target = frames[1]
+    out = build(target)
+    labels = out[LABELS]
+    out = out.drop(columns=LABELS)
+    for t in NEIGHBOURS:
+        f = frames[t]
+        if not f.index.equals(target.index):
+            raise ValueError('turbine frames must share one grid')
+        p, w = f['realised_kw'], f['wind_ms']
+        out[f't{t}_p'], out[f't{t}_dp'], out[f't{t}_dp3'] = p, p - p.shift(1), p - p.shift(3)
+        out[f't{t}_w'], out[f't{t}_dw'] = w, w - w.shift(1)
+    farm = sum(frames[t]['realised_kw'] for t in (1, *NEIGHBOURS))
+    out['farm_dp'], out['farm_dp3'] = farm - farm.shift(1), farm - farm.shift(3)
+    direction = np.deg2rad(target['wind_dir_deg'])
+    out['dir_sin'], out['dir_cos'] = np.sin(direction), np.cos(direction)
+    out['p_std_60'] = target['realised_kw'].rolling(6, min_periods=6).std()
+    if list(out.columns) != SPATIAL_FEATURES:
+        raise AssertionError('spatial feature order changed')
+    return pd.concat([out, labels], axis=1)

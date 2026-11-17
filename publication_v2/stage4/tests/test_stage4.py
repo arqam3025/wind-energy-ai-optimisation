@@ -9,7 +9,7 @@ import pandas as pd
 
 from publication_v2.stage4 import kelmarsh
 from publication_v2.stage4.closed_loop import STEPS, TAIL, WINDOW, Series, bundle_at, eligible, run_episode
-from publication_v2.stage4.features import FEATURES, LABELS, build
+from publication_v2.stage4.features import FEATURES, LABELS, SPATIAL_FEATURES, build, build_spatial
 
 
 def frame(n=600, seed=0):
@@ -67,6 +67,15 @@ class Features(unittest.TestCase):
         t = build(f)
         for i, label in enumerate(LABELS):
             self.assertAlmostEqual(t[label].iloc[100], f['realised_kw'].iloc[101 + i])
+
+    def test_spatial_features_do_not_use_future_values(self):
+        frames = {t: frame(seed=t) for t in range(1, 7)}
+        base = build_spatial(frames)
+        changed = {t: f.copy() for t, f in frames.items()}
+        for f in changed.values():
+            f.iloc[301:, :] = f.iloc[301:, :] * 2 + 5
+        alt = build_spatial(changed)
+        pd.testing.assert_frame_equal(base.iloc[:301][SPATIAL_FEATURES], alt.iloc[:301][SPATIAL_FEATURES])
 
     def test_gaps_are_not_imputed(self):
         f = frame()
