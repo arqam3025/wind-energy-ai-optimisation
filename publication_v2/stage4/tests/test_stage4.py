@@ -66,6 +66,18 @@ class Deduplication(unittest.TestCase):
         self.assertEqual(list(f['Power (kW)']), [300., 400.])
         self.assertGreater(f.attrs['resolved_duplicate_rows'], 0)
 
+    def test_partially_blank_copies_keep_most_complete_version(self):
+        rows = ['2023-01-01 00:00:00,5,1,200,300,0,7', '2023-01-01 00:00:00,NaN,NaN,NaN,NaN,NaN,7',
+                '2023-01-01 00:00:00,5,1,200,300,0,7']
+        f = kelmarsh._read_deduplicated(self.text(rows), 'x')
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f['Power (kW)'].iloc[0], 300.)
+
+    def test_mutually_incomplete_versions_refused(self):
+        rows = ['2023-01-01 00:00:00,5,NaN,200,300,0,7', '2023-01-01 00:00:00,NaN,1,200,300,0,7']
+        with self.assertRaises(kelmarsh.DataAccessError):
+            kelmarsh._read_deduplicated(self.text(rows), 'x')
+
     def test_only_blank_rows_mean_missing(self):
         f = kelmarsh._read_deduplicated(self.text(['2023-01-01 00:00:00,NaN,NaN,NaN,NaN,NaN,NaN']), 'x')
         self.assertTrue(np.isnan(f['Power (kW)'].iloc[0]))
