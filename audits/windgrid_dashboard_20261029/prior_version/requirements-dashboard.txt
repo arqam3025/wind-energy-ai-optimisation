@@ -1,0 +1,5 @@
+# Small direct dependency set for the historical local dashboard.
+# Numerical replay additionally requires CVXPY/HiGHS and all local research artifacts.
+streamlit==1.65.0
+pandas==3.0.6
+numpy==2.5.4

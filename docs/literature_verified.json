@@ -1,0 +1,149 @@
+{
+  "scope": "Focused literature review; no exhaustive novelty or plagiarism certification",
+  "references": [
+    {
+      "id": "R01",
+      "title": "XGBoost: A Scalable Tree Boosting System.",
+      "doi": "10.1145/2939672.2939785",
+      "reference_markdown": "Chen, T., and Guestrin, C. (2016). **XGBoost: A Scalable Tree Boosting System.** Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 785–794. [Published DOI: 10.1145/2939672.2939785](https://doi.org/10.1145/2939672.2939785). [Author manuscript and published-DOI record](https://arxiv.org/abs/1603.02754).",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R02",
+      "title": "TS_XGB: Ultra-Short-Term Wind Power Forecasting Method Based on Fusion of Time-Spatial Data and XGBoost Algorithm.",
+      "doi": "10.1016/j.procs.2022.01.140",
+      "reference_markdown": "Jiang, J., Wang, F., Tang, R., Zhang, L., and Xu, X. (2022). **TS_XGB: Ultra-Short-Term Wind Power Forecasting Method Based on Fusion of Time-Spatial Data and XGBoost Algorithm.** Procedia Computer Science, 199, 1103–1111 (ITQM conference proceedings). [Published DOI: 10.1016/j.procs.2022.01.140](https://doi.org/10.1016/j.procs.2022.01.140). [Publisher record](https://www.sciencedirect.com/science/article/pii/S1877050922001417). [Official ITQM 2020/2021 programme, corroborating author set and conference context](https://www.hse.ru/data/2021/08/25/1414853066/ITQM%20Program.pdf). The programme and final indexed article use different author ordering; the bibliography here follows the final article's Jiang-first record, corroborated in published citations. Full publisher PDF access was restricted during verification; no unobserved implementation detail is asserted.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Publisher abstract/title/DOI/year accessible in indexed publisher record; exact author order remains bounded-verification caveat: official conference programme differs from final indexed record; direct publisherPDF/CrossrefAPI inaccessible. Retain caveat before submission."
+    },
+    {
+      "id": "R03",
+      "title": "Distribution-Free Predictive Inference for Regression.",
+      "doi": "10.1080/01621459.2017.1307116",
+      "reference_markdown": "Lei, J., G'Sell, M., Rinaldo, A., Tibshirani, R. J., and Wasserman, L. (2018). **Distribution-Free Predictive Inference for Regression.** Journal of the American Statistical Association, 113(523), 1094–1111. [Published DOI: 10.1080/01621459.2017.1307116](https://doi.org/10.1080/01621459.2017.1307116). [Author-hosted published article](https://www.stat.cmu.edu/~ryantibs/papers/conformal-jasa.pdf). Online-first records can show 2017; 2018 is the journal-issue year.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R04",
+      "title": "Conformal prediction beyond exchangeability.",
+      "doi": "10.1214/23-AOS2276",
+      "reference_markdown": "Barber, R. F., Candès, E. J., Ramdas, A., and Tibshirani, R. J. (2023). **Conformal prediction beyond exchangeability.** The Annals of Statistics, 51(2), 816–845. [Published DOI: 10.1214/23-AOS2276](https://doi.org/10.1214/23-AOS2276). [Publisher article](https://projecteuclid.org/journals/annals-of-statistics/volume-51/issue-2/Conformal-prediction-beyond-exchangeability/10.1214/23-AOS2276.pdf).",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R05",
+      "title": "Adaptive Conformal Inference Under Distribution Shift.",
+      "doi": null,
+      "reference_markdown": "Gibbs, I., and Candès, E. (2021). **Adaptive Conformal Inference Under Distribution Shift.** Advances in Neural Information Processing Systems, 34. [Official peer-reviewed proceedings record and paper](https://papers.nips.cc/paper/2021/hash/0d441de75945e5acbc865406fc9a2559-Abstract.html). No proceedings DOI identified. The arXiv DOI identifies a preprint and is intentionally not presented as the published DOI.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R06",
+      "title": "Conformalized temporal convolutional quantile regression networks for wind power interval forecasting.",
+      "doi": "10.1016/j.energy.2022.123497",
+      "reference_markdown": "Hu, J., Luo, Q., Tang, J., Heng, J., and Deng, Y. (2022). **Conformalized temporal convolutional quantile regression networks for wind power interval forecasting.** Energy, 248, 123497. [Published DOI and publisher record: 10.1016/j.energy.2022.123497](https://doi.org/10.1016/j.energy.2022.123497). Author roles are visible in the publisher's credit statement; the abstract and experimental description support the comparison above.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R07",
+      "title": "Conformal asymmetric multi-quantile generative transformer for day-ahead wind power interval prediction.",
+      "doi": "10.1016/j.apenergy.2022.120634",
+      "reference_markdown": "Wang, W., Feng, B., Huang, G., Guo, C., Liao, W., and Chen, Z. (2023). **Conformal asymmetric multi-quantile generative transformer for day-ahead wind power interval prediction.** Applied Energy, 333, 120634. [Published DOI: 10.1016/j.apenergy.2022.120634](https://doi.org/10.1016/j.apenergy.2022.120634). [Author-institution metadata](https://vbn.aau.dk/en/publications/conformal-asymmetric-multi-quantile-generative-transformer-for-da/), [publisher abstract/method record](https://www.sciencedirect.com/science/article/abs/pii/S0306261922018918). The DOI contains 2022; the journal issue is 2023.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R08",
+      "title": "Enhancing the reliability of probabilistic PV power forecasts using conformal prediction.",
+      "doi": "10.1016/j.seja.2024.100059",
+      "reference_markdown": "Renkema, Y., Visser, L., and AlSkaif, T. (2024). **Enhancing the reliability of probabilistic PV power forecasts using conformal prediction.** Solar Energy Advances, 4, 100059. [Published DOI: 10.1016/j.seja.2024.100059](https://doi.org/10.1016/j.seja.2024.100059). [Author-institution published PDF](https://dbc.library.uu.nl/bitstream/handle/1874/451621/1-s2.0-S2667113124000093-main.pdf?isAllowed=y&sequence=1), [publisher record](https://www.sciencedirect.com/science/article/pii/S2667113124000093).",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R09",
+      "title": "A model predictive control approach to the problem of wind power smoothing with controlled battery storage.",
+      "doi": "10.1016/j.renene.2009.11.030",
+      "reference_markdown": "Khalid, M., and Savkin, A. V. (2010). **A model predictive control approach to the problem of wind power smoothing with controlled battery storage.** Renewable Energy, 35(7), 1520–1526. [Published DOI: 10.1016/j.renene.2009.11.030](https://doi.org/10.1016/j.renene.2009.11.030). [Author-institution record](https://pure.kfupm.edu.sa/en/publications/a-model-predictive-control-approach-to-the-problem-of-wind-power-/). The DOI contains 2009; the issue is July 2010.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R10",
+      "title": "Stochastic predictive control of battery energy storage for wind farm dispatching: Using probabilistic wind power forecasts.",
+      "doi": "10.1016/j.renene.2015.02.001",
+      "reference_markdown": "Kou, P., Gao, F., and Guan, X. (2015). **Stochastic predictive control of battery energy storage for wind farm dispatching: Using probabilistic wind power forecasts.** Renewable Energy, 80, 286–300. [Published DOI: 10.1016/j.renene.2015.02.001](https://doi.org/10.1016/j.renene.2015.02.001). [Publisher record](https://www.sciencedirect.com/science/article/pii/S0960148115000919). The retrieved publisher abstract supports chance constraints, non-Gaussian forecasts and constrained BESS dispatch; it does not establish applicability to this project's exact ramp objective.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R11",
+      "title": "Model predictive control for wind power gradients.",
+      "doi": "10.1002/we.1742",
+      "reference_markdown": "Hovgaard, T. G., Boyd, S., and Jørgensen, J. B. (2015). **Model predictive control for wind power gradients.** Wind Energy, 18(6), 991–1006. [Published DOI: 10.1002/we.1742](https://doi.org/10.1002/we.1742). [Author-institution record](https://orbit.dtu.dk/en/publications/model-predictive-control-for-wind-power-gradients/), [author manuscript](https://stanford.edu/~boyd/papers/pdf/wind_gradients_cvx.pdf). Do not confuse this three-author journal article with the four-author 2013 ECC paper of a related title.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R12",
+      "title": "Energy Management and Control of a Flywheel Storage System for Peak Shaving Applications.",
+      "doi": "10.1109/TSG.2021.3084814",
+      "reference_markdown": "Tziovani, L., Hadjidemetriou, L., Charalampous, C., Tziakouri, M., Timotheou, S., and Kyriakides, E. (2021). **Energy Management and Control of a Flywheel Storage System for Peak Shaving Applications.** IEEE Transactions on Smart Grid, 12(5), 4195–4207. [Published DOI: 10.1109/TSG.2021.3084814](https://doi.org/10.1109/TSG.2021.3084814). [Author-deposited published-version record](https://zenodo.org/records/4888894), [European Commission OneNet project publication record](https://cordis.europa.eu/project/id/957739/results). The author deposit establishes the method and author set; the project's official funder record independently confirms the final 2021 volume/issue, pages, full author order and DOI. The Crossref API and direct IEEE export were inaccessible to this browsing tool; those failures are not represented as successful verification.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Final author order, volume12 issue5 pages4195–4207 year2021 and DOI confirmed by official EC CORDIS project publication record; method/authors corroborated by author-deposited Zenodo record; Crossref API/directIEEE export inaccessible",
+      "journal": "IEEE Transactions on Smart Grid",
+      "year": 2021,
+      "volume": 12,
+      "issue": 5,
+      "pages": "4195–4207",
+      "verification_sources": [
+        "https://cordis.europa.eu/project/id/957739/results",
+        "https://zenodo.org/records/4888894"
+      ]
+    },
+    {
+      "id": "R13",
+      "title": "Model predictive control and improved low-pass filtering strategies based on wind power fluctuation mitigation.",
+      "doi": "10.1007/s40565-018-0474-5",
+      "reference_markdown": "Sun, Y., Tang, X., Sun, X., Jia, D., Cao, Z., Pan, J., and Xu, B. (2019). **Model predictive control and improved low-pass filtering strategies based on wind power fluctuation mitigation.** Journal of Modern Power Systems and Clean Energy, 7, 512–524. [Published DOI and publisher record: 10.1007/s40565-018-0474-5](https://doi.org/10.1007/s40565-018-0474-5). Online publication was 26 December 2018; 2019 is the issue year.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R14",
+      "title": "Battery Energy Storage Models for Optimal Control.",
+      "doi": "10.1109/ACCESS.2019.2957698",
+      "reference_markdown": "Rosewater, D. M., Copp, D. A., Nguyen, T. A., Byrne, R. H., and Santoso, S. (2019). **Battery Energy Storage Models for Optimal Control.** IEEE Access, 7, 178357–178391. [Published DOI: 10.1109/ACCESS.2019.2957698](https://doi.org/10.1109/ACCESS.2019.2957698). [Author's Sandia dissertation, identifying the article and its model-review contribution](https://www.sandia.gov/ess-ssl/wp-content/uploads/2020/09/DM_Rosewater_Dissertation.pdf), [author laboratory publication record](https://energy.sandia.gov/staff/ray-byrne/). The IEEE DOI endpoint was not fully accessible to the browsing tool; the primary author/laboratory records corroborate the publication.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    },
+    {
+      "id": "R15",
+      "title": "Optimal Battery Control Under Cycle Aging Mechanisms in Pay for Performance Settings.",
+      "doi": "10.1109/TAC.2018.2867507",
+      "reference_markdown": "Shi, Y., Xu, B., Tan, Y., Kirschen, D. S., and Zhang, B. (2019). **Optimal Battery Control Under Cycle Aging Mechanisms in Pay for Performance Settings.** IEEE Transactions on Automatic Control, 64(6), 2324–2339. [Published DOI: 10.1109/TAC.2018.2867507](https://doi.org/10.1109/TAC.2018.2867507). [Author manuscript and publication-status record](https://arxiv.org/abs/1709.05715), [IEEE Control Systems Society's 2019 journal index](https://ieeecss.org/sites/ieeecss/files/2020-08/Index_2019.pdf), [author implementation](https://github.com/Yuanyuan-Shi/Cycle-based-Battery-Controller). The manuscript appeared earlier online; 2019 is the volume year.",
+      "verification_date": "2026-10-29",
+      "publication_status": "published",
+      "verification_note": "Primary publisher/author/institutional record linked in reference; full-text access restrictions noted in review"
+    }
+  ]
+}

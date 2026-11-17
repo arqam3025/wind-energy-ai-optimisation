@@ -1,0 +1,42 @@
+{
+  "status": "pass",
+  "immutable_files_unchanged": 1041,
+  "freeze_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+  "frozen_references": 59,
+  "physical_controller_blocks": 98,
+  "tests_passed": 14,
+  "diagnostic_sources_verified": 151,
+  "references": 15,
+  "headline_throughput_reduction_percent": 27.864427505619094,
+  "headline_exceedance_reduction_percent": 0.7725605651369261,
+  "fewer_violations": 16,
+  "http_status": {},
+  "broken_local_links": [],
+  "secret_pattern_matches": [],
+  "authorised_documentation_changes": {
+    "README.md": {
+      "archived_sha256": "46358e6a1799abbc628ae496ce5c690404499d8016d68ed807203bb7980e8805",
+      "current_sha256": "77c1670304b68ea0d5937368500d11dbf1bb823eb62f178b797dcb1089268e5f"
+    },
+    ".gitignore": {
+      "archived_sha256": "0e5f33c1e29d5270a46f00f756d19859c13b6969461f8a64893a37842a9bcf6d",
+      "current_sha256": "e1f7b2e1c404b2c5624bcf03d9994b0a3a9333017163abac766ec40324266c49"
+    },
+    "docs/methodology.md": {
+      "archived_sha256": "cef8bb0e122d967a15ac0cab0b91c283bc0ccbf646d821600f242645cd3910ed",
+      "current_sha256": "bb67fd11fcb84a88da577679cde3e373104ccc3c5c06935f950ca9be26ca828a"
+    },
+    "docs/reproducibility.md": {
+      "archived_sha256": "eb75d1893e38c1e692a42859912d0b68d728c4938d1e5bd6949090725a4c2fad",
+      "current_sha256": "e7a530b37e70c59b6a2f425e3edfbf3a013f0d95d9e21369133e91a5ae276cf8"
+    }
+  },
+  "limits": [
+    "Retrospective, not untouched confirmatory evaluation",
+    "No clean-machine dependency installation tested",
+    "No browser visual automation; Streamlit AppTest and HTTP smoke only",
+    "Full solver replay not repeated; prior independent first-block replay retained",
+    "No external publication or rights clearance"
+  ],
+  "test_output": "\ntest_next_transition_includes_previous_battery_injection (test_completion_diagnostics.DiagnosticTests.test_next_transition_includes_previous_battery_injection) ... ok\ntest_wind_limited_requests (test_completion_diagnostics.DiagnosticTests.test_wind_limited_requests) ... ok\ntest_initial_render_and_control_changes (test_dashboard.DashboardAppTests.test_initial_render_and_control_changes) ... 2026-10-29 15:37:03.227 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_aggregate_only_without_private_replay (test_dashboard.DashboardDataTests.test_aggregate_only_without_private_replay) ... ok\ntest_display_accounting_matches_saved_block (test_dashboard.DashboardDataTests.test_display_accounting_matches_saved_block) ... ok\ntest_valid_selection_excludes_development (test_dashboard.DashboardDataTests.test_valid_selection_excludes_development) ... ok\ntest_equal_and_future_targets_cannot_change_margin (test_frozen_heldout.CausalityTests.test_equal_and_future_targets_cannot_change_margin) ... ok\ntest_freeze_and_inputs (test_frozen_heldout.CausalityTests.test_freeze_and_inputs) ... ok\ntest_frozen_optimisation_and_fallback_are_identical (test_frozen_heldout.CausalityTests.test_frozen_optimisation_and_fallback_are_identical) ... ok\ntest_rejects_energy_creation (test_heldout_accounting.AccountingTests.test_rejects_energy_creation) ... ok\ntest_rejects_equal_time_residual (test_heldout_accounting.AccountingTests.test_rejects_equal_time_residual) ... ok\ntest_rejects_power_balance_error (test_heldout_accounting.AccountingTests.test_rejects_power_balance_error) ... ok\ntest_terminal_restoration_accounts_for_charge_loss (test_heldout_accounting.AccountingTests.test_terminal_restoration_accounts_for_charge_loss) ... ok\ntest_zero_battery_energy_reference (test_heldout_accounting.AccountingTests.test_zero_battery_energy_reference) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 2.924s\n\nOK\n"
+}

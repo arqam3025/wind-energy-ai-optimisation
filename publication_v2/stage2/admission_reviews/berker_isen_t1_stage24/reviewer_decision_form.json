@@ -1,0 +1,81 @@
+{
+  "schema_version": "publication_v2.stage24.reviewer-form.v1",
+  "status": "PENDING_REVIEW",
+  "proposal_id": "berker-isen-t1-retrospective-stage24",
+  "decision": "NOT_REVIEWED",
+  "reviewer": null,
+  "independence_statement": null,
+  "reviewed_at": null,
+  "approval_at": null,
+  "review_document": null,
+  "allowed_decisions": [
+    "NOT_REVIEWED",
+    "REQUEST_EVIDENCE",
+    "REJECT",
+    "CONDITIONAL_RETROSPECTIVE_REVIEW",
+    "APPROVE_RETROSPECTIVE_ONLY"
+  ],
+  "study_role": "RETROSPECTIVE_DEVELOPMENT",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "form_authorizes_execution": false,
+  "form_authorizes_registry_installation": false,
+  "decision_scope_note": "Decision options are blank-form choices, not approvals. Even a completed form is external review evidence only; code execution and a separately authorized registry installation require complete independently checked inputs and all fail-closed validators.",
+  "prohibited_claims": [
+    "Verified historical operational deployability",
+    "Independent confirmatory validation",
+    "Untouched status for historically inspected observations",
+    "Prospective prespecification established by a retrospective declaration",
+    "Forecast, coverage or grid-control efficacy established by software tests"
+  ],
+  "actual_protocol_timestamps": {
+    "protocol_created_at": null,
+    "protocol_approved_at": null,
+    "planned_execution_not_before": null,
+    "analysis_clock_evidence": null
+  },
+  "actual_access_timestamps": {
+    "acquired_at": null,
+    "first_access_at": null,
+    "recorded_at": null,
+    "access_evidence": null
+  },
+  "proposed_authorized_periods": {
+    "train": {"start": null, "end": null},
+    "calibration": {"start": null, "end": null},
+    "development": {"start": null, "end": null}
+  },
+  "replay_cutoffs": {
+    "model_fitting_cutoff": null,
+    "model_available_at": null,
+    "static_calibration_target_cutoff": null
+  },
+  "availability_mode": null,
+  "assumed_latency_scenario": null,
+  "conditions": null,
+  "unresolved_requirements": null,
+  "reviewer_notes": null,
+  "checklist": [
+    {"id": "C01_INDEPENDENCE", "question": "Has the reviewer documented identity, relevant competence, independence and conflicts of interest?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C02_SOURCE", "question": "Are source attribution, canonical provider/dataset/release and observation namespace independently supported rather than inferred from filenames or study-period labels?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C03_ACQUISITION", "question": "Are archive/raw identities and acquisition/access records reviewed with local corroboration distinguished from authenticated external evidence?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C04_RIGHTS", "question": "Are acquisition-time/current research-use, derivative-work and redistribution permissions supported for this exact source release?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C05_TIMEZONE", "question": "Are source timezone, offsets, DST and clock synchronization supported without silently localizing naive SCADA timestamps?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C06_INTERVAL", "question": "Are timestamp start/end/point meaning, aggregation statistic, sampling cadence and measurement window supported or explicitly limited by the approved design?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C07_UNITS_TARGET", "question": "Are signal units and measured-generation versus available-wind interpretation reviewed, including signed features, max(0,power) targets and unused theoretical-curve ambiguity?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C08_QUALITY", "question": "Are source coverage, gaps, missingness, duplicates, outages, curtailment and quality limitations recorded without treating missing rows as zero generation?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C09_TRANSFORM", "question": "Is a reproducible raw-to-canonical transformation independently reviewed with exact source/output hashes, implementation identity, clock handling and stable observation IDs?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C10_FEATURE_SUPPORT", "question": "Do all fourteen features retain exact current/lag/mean support, correct source receipts and availability no later than the forecast origin?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C11_AVAILABILITY", "question": "Is operational timing genuinely evidenced, or is a named finite nonnegative assumed-latency scenario reviewed and consistently applied to every record without changing receipts to force eligibility?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C12_LATENCY_LIMIT", "question": "Are positive delays incompatible with same-time current features rejected, and are unknown timezone/interval facts kept separate from latency assumptions?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C13_EXPOSURE", "question": "Are actual access history, prior inspection, historical evaluation boundaries and identity collisions preserved, with all archived scored blocks remaining retrospective?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C14_PROTOCOL_CLOCK", "question": "Are actual creation/approval dates bound to independently reviewed clock evidence, cohort declared_at equal to actual creation, and approval before new execution without backdating?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C15_COHORT", "question": "Are measurement and role-origin windows, allowed periods, missing slots, exclusions, reasons and complete denominators declared before new execution with no outcome-driven silent omissions?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C16_BOUNDARIES", "question": "Do full feature/target supports remain inside authorized periods with cross-split target disjointness, horizon embargo and the current historical-evaluation exclusion?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C17_MODEL_CUTOFF", "question": "Are every training label/receipt, replay fitting cutoff and model availability eligible before calibration issuance, with actual new model fit time recorded separately?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C18_CALIBRATION", "question": "Does static calibration strictly precede the first development decision, and do all horizon/model-specific residuals satisfy target_time < decision_time and observation/residual availability by each decision?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C19_COMPARISON", "question": "Are models, features, horizons, training/scoring observations, alpha, hyperparameters and ablations fixed for a fair descriptive development comparison without outcome-based selection?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C20_ENVIRONMENT", "question": "Are source/configuration/input/model/environment identities and dependency/native-library checks reproducible, with clean-environment limitations disclosed?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C21_CLAIMS", "question": "Are retrospective/scenario limitations, chronological dependence, absence of deployability/confirmation evidence and the negative historical uncontrolled-wind comparison retained?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null},
+    {"id": "C22_DECISION_BINDINGS", "question": "Does a genuine independent decision bind the exact dataset, provenance, source identity, lineage, cohort, study contract, analysis clock, availability mode and authorized periods before any separately authorized registry installation?", "status": "NOT_REVIEWED", "evidence_ids": [], "reviewer_notes": null}
+  ]
+}

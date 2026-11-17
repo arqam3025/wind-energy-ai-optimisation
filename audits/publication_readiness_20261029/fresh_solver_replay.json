@@ -1,0 +1,12 @@
+{
+  "fixed": {
+    "rows": 144,
+    "max_numeric_difference": 0.0,
+    "non_numeric_columns_match": true
+  },
+  "adaptive_one_sided": {
+    "rows": 144,
+    "max_numeric_difference": 0.0,
+    "non_numeric_columns_match": true
+  }
+}

@@ -1,0 +1,10 @@
+metric,lag_blocks,within_segment_pairs,pearson_correlation
+exceedance_kw,1,45,-0.2012019841027232
+exceedance_kw,2,41,0.0818749652216426
+exceedance_kw,3,37,-0.005245458192076835
+violations,1,45,-0.12533390628452112
+violations,2,41,0.060455286828022266
+violations,3,37,-0.35408798964042143
+throughput_kwh,1,45,-0.08626681713539334
+throughput_kwh,2,41,0.14692794041000146
+throughput_kwh,3,37,-0.16308373183983657

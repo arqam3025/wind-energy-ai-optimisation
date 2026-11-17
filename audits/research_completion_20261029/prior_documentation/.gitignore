@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mplconfig/
+
+data/raw/*
+data/processed/*
+models/*
+results/*
+
+.ipynb_checkpoints/
+.env

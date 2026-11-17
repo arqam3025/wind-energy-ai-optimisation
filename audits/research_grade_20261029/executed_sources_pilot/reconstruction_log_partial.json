@@ -1,0 +1,27 @@
+[
+  {
+    "path": "scripts/run_controller_benchmarks_v1.py",
+    "sha256": "95fe577b3e3ea7fc1694f2b6c8dd2763497b1e334caf4306763b7b0fafbeffbe",
+    "provenance": "unchanged executed source copied"
+  },
+  {
+    "path": "src/windresearch/mpc.py",
+    "sha256": "7857eb707821547bfd1b3ddce2ece120c93378b9851a346914f27b54b77cbbca",
+    "provenance": "reconstructed by reversing known postpilot edits; authenticated exact byte digest"
+  },
+  {
+    "path": "src/windresearch/experiments.py",
+    "sha256": "0eed4b4758b543febfd6ba11bc3a14bbcaba2f9ee2949699469ae04a825125d2",
+    "provenance": "reconstructed by reversing known postpilot edits; authenticated exact byte digest"
+  },
+  {
+    "path": "src/windresearch/protocol.py",
+    "sha256": "c140df63be23dec92b8c1f09f3153ca6ebecda1dc7a4a948e54a62bb0be9bc44",
+    "provenance": "unchanged executed source copied"
+  },
+  {
+    "path": "configs/mpc_research_v1.json",
+    "sha256": "12bd39fabe4377a4348ee28fa12cba741dea1cbf73de16f074a9f0293da3b26a",
+    "provenance": "reconstructed by reversing known postpilot edits; authenticated exact byte digest"
+  }
+]

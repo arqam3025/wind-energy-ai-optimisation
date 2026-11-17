@@ -1,0 +1,123 @@
+{
+  "schema_version": "publication_v2.stage24.package-validation.v1",
+  "status": "PACKAGE_PREPARED_PENDING_REVIEW",
+  "validated_at_utc": "2026-11-05T20:13:08.311120+00:00",
+  "branch": "research/publication-v2",
+  "head": "9517ec8bc0caac82774c32409287f449f5ce7923",
+  "evidence_classification": "AUTHOR_CREATED_RECORD",
+  "scientific_admission": false,
+  "experiments_authorized": false,
+  "independent_scientific_authentication": "NOT_ESTABLISHED",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "model_training_executed": false,
+  "model_loading_or_inference_executed": false,
+  "research_experiments_executed": false,
+  "package_check": {
+    "status": "INTERNALLY_CONSISTENT_PENDING_REVIEW",
+    "scientific_admission": false,
+    "experiments_authorized": false,
+    "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+    "evidence_items": 25,
+    "review_checklist_items": 22,
+    "independent_scientific_authentication": "NOT_ESTABLISHED",
+    "local_evidence_files_checked": 29,
+    "model_hashes_checked_without_loading": 7,
+    "installed_registry_empty": true,
+    "archive": {
+      "status": "LOCAL_BYTES_AND_MEMBER_MATCH",
+      "independent_authentication": false
+    },
+    "scope": "READ_ONLY_NON_EXPERIMENTAL_PACKAGE_CHECK"
+  },
+  "tests": [
+    {
+      "suite": "Stage2.4 final package standard-library tests",
+      "run": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.2029999999795109
+    },
+    {
+      "suite": "Stage2 admission and causal guard tests only; no native fitting tests",
+      "modules": [
+        "publication_v2.stage2.tests.test_data",
+        "publication_v2.stage2.tests.test_lineage",
+        "publication_v2.stage2.tests.test_retrospective",
+        "publication_v2.stage2.tests.test_conformal"
+      ],
+      "run": 68,
+      "passed": 68,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 22.5
+    },
+    {
+      "suite": "Stage1 non-experimental standard-library guards",
+      "run": 59,
+      "passed": 58,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skip_reasons": [
+        "Windows account lacks native symlink-creation privilege (WinError 1314); privilege-free rejection cases remain tested."
+      ],
+      "seconds": 5.719000000040978
+    }
+  ],
+  "test_totals": {
+    "run": 147,
+    "passed": 146,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "preservation": {
+    "protected": {
+      "status": "pass",
+      "protected_files": 2170
+    },
+    "freeze": {
+      "status": "pass",
+      "manifest_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+      "references": 59
+    },
+    "existing_scope_count": 2208,
+    "existing_sha256_before": "dcbb37c4c5b6c9285804e50838101d7cf60de758844421691161ef1052752845",
+    "existing_sha256_after": "dcbb37c4c5b6c9285804e50838101d7cf60de758844421691161ef1052752845",
+    "existing_file_changes": [],
+    "staged_working_files_checked": 185,
+    "staged_working_file_changes": [],
+    "index_sha256_before": "131c0b2e149ec81feb7cadcdeeb5115bd25b73b71abacc950a15a5424a711809",
+    "index_sha256_after": "131c0b2e149ec81feb7cadcdeeb5115bd25b73b71abacc950a15a5424a711809",
+    "unexpected_new_files": [],
+    "head_unchanged": true,
+    "stage2_runs_absent": true
+  },
+  "exact_new_files": [
+    "docs/PUBLICATION_V2_REAL_DATA_PROVENANCE_REVIEW.md",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/evidence_register.json",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/proposed_registry_entry.json",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/reviewer_decision_form.json",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/test_validate_package.py",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/validate_package.py",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/validation_report.json"
+  ],
+  "package_file_sha256_excluding_this_report": {
+    "docs/PUBLICATION_V2_REAL_DATA_PROVENANCE_REVIEW.md": "028380b084fa5f3a2986ee8a245dc465769ecba62c762202afebed6ad8120152",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/evidence_register.json": "c6b7c03a843a6216a70c618320cf73f2a8dd4324f04292764c97f6511f29354e",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/proposed_registry_entry.json": "3df1457e8118bf6a0b546e82541104241d3a236699958536d20ea876bb19ec53",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/reviewer_decision_form.json": "5152366849de20b0fc7815060ad8040634df059657dec1546f19d49f6a51f10f",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/test_validate_package.py": "a295e2f1fd13c0d3eb496004f765fa1a82a8dc233f7315d26b9b0b18adfdb405",
+    "publication_v2/stage2/admission_reviews/berker_isen_t1_stage24/validate_package.py": "52f0a216ed2dd7f132128e4cc89f14ce2079166cd9840535ca24b604301dc97e"
+  },
+  "validation_limits": [
+    "Software checks do not authenticate source provenance, rights, clocks, latency or reviewer independence.",
+    "Only selected non-fitting Stage2 guard suites were run; prior full-stage native test counts are historical records.",
+    "No proposed entry was installed in provenance_policy.json.",
+    "No signed acquisition URL query was copied into the package.",
+    "Detailed execution logs and start snapshot remain in a local temporary directory and may expire."
+  ]
+}

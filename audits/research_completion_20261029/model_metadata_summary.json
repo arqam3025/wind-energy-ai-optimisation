@@ -1,0 +1,68 @@
+[
+  {
+    "horizon_minutes": 10,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  },
+  {
+    "horizon_minutes": 20,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  },
+  {
+    "horizon_minutes": 30,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  },
+  {
+    "horizon_minutes": 40,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  },
+  {
+    "horizon_minutes": 50,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  },
+  {
+    "horizon_minutes": 60,
+    "num_features": "14",
+    "num_trees": "300",
+    "objective": "reg:squarederror",
+    "model_serialization_version": [
+      3,
+      4,
+      1
+    ]
+  }
+]

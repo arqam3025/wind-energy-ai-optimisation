@@ -1,0 +1,90 @@
+{
+  "schema_version": "publication_v2.stage24.pending-review.v1",
+  "status": "PENDING_REVIEW",
+  "proposal_id": "berker-isen-t1-retrospective-stage24",
+  "installable": false,
+  "approved": false,
+  "independently_checked": false,
+  "study_role": "RETROSPECTIVE_DEVELOPMENT",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "source_reference": {
+    "attribution": "Berker Isen, Wind Turbine SCADA Dataset; repository attribution corroborated by a local Kaggle download-origin trace, not authenticated operator provenance",
+    "source_url": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset",
+    "local_raw_path": "data/raw/T1.csv",
+    "local_raw_sha256": "f92c33c1cc199756b759fec251eeddc506f35d6a9e47ede034fc3e339a7c46d5",
+    "local_archive_sha256": "a867d34200add600eedb3832540435cf57335ba6374c77b50f90b0ab16553ea1"
+  },
+  "candidate_review_entry": {
+    "reviewer": null,
+    "review_document": null,
+    "authorized_periods": null,
+    "source_identity": null,
+    "lineage_manifest_sha256": null,
+    "cohort_policy_sha256": null,
+    "provenance_sha256": null,
+    "dataset_document_sha256": null,
+    "study_role": "RETROSPECTIVE_DEVELOPMENT",
+    "study_contract_sha256": null,
+    "analysis_clock_evidence_sha256": null,
+    "availability_mode": null,
+    "independently_checked": false
+  },
+  "pending_requirements": [
+    {
+      "id": "P01_SOURCE_RELEASE",
+      "details": "Independently review provider, dataset, upstream release and observation-namespace identity. The T1:2018 study-period label and Kaggle storage bundle identifiers are not authenticated release metadata."
+    },
+    {
+      "id": "P02_ACQUISITION_AND_ACCESS",
+      "details": "Review the matching raw/archive hashes and sanitized local download-origin records. Obtain actual acquisition, first-access and exposure history with independently reviewed evidence; local filesystem times and signed-URL generation times do not prove these facts."
+    },
+    {
+      "id": "P03_RIGHTS",
+      "details": "Establish applicable acquisition-time/current research-use and redistribution terms and the authority of the releasing party. Preserve a versioned licence or provider permission; do not infer rights from public accessibility or a matching hash."
+    },
+    {
+      "id": "P04_CLOCK_AND_INTERVAL",
+      "details": "Resolve source timezone, UTC offset, DST treatment, clock synchronization, timestamp meaning and measurement aggregation-window semantics. The naive raw timestamps must not be assigned UTC or a geographic timezone without evidence."
+    },
+    {
+      "id": "P05_UNITS_AND_TARGET",
+      "details": "Review signal units and the interpretation of clipped active-power targets. Header labels are local evidence; measured generation is not established as unconstrained available wind when curtailment/outage status is unknown. Theoretical-curve KWh semantics remain unresolved and that column is unused by frozen features."
+    },
+    {
+      "id": "P06_AVAILABILITY_SCENARIO",
+      "details": "Supply operational observation/feature/residual receipt evidence or review an explicitly named assumed-latency scenario with finite nonnegative delays and restricted claims. Assumed latency cannot establish timezone, licensing or historical deployability; same-time current features must satisfy the unchanged origin-availability gate."
+    },
+    {
+      "id": "P07_REVIEWED_TRANSFORMATION",
+      "details": "Prepare a separately reviewed raw-to-canonical transformation with source/output hashes, implementation identity and stable observation IDs. The existing one-to-one converter cannot invent offset-aware event times, receipts or IDs absent from T1.csv. No admissible real-data lineage has been instantiated by this proposal."
+    },
+    {
+      "id": "P08_COHORT_AND_EXCLUSIONS",
+      "details": "Review a new prespecified measurement window, role-origin windows, missing slots, feature/target support exclusions, reasons and denominators. Preserve signed input features and declare target clipping. No imputation, silent omission or outcome-driven difficult-period exclusion is authorized."
+    },
+    {
+      "id": "P09_EXPOSURE_AND_AUTHORIZED_PERIODS",
+      "details": "Review complete feature/target support within explicit training, calibration and development periods. Preserve historical exposure and the current exclusion of historically evaluated observations from new development admission. None of the 49 archived scored blocks is untouched."
+    },
+    {
+      "id": "P10_ACTUAL_PROTOCOL_CLOCKS",
+      "details": "Create and independently review actual protocol creation/approval and access-evidence records without backdating. Cohort declared_at must equal actual protocol creation; approval must precede new execution. Earlier data access remains disclosed retrospective exposure."
+    },
+    {
+      "id": "P11_FITTING_CHRONOLOGY",
+      "details": "Review replay model-fitting cutoff, training-label availability and model availability before calibration issuance. Record future actual fitting timestamps separately. Historical script split constants and model-file hashes do not establish a verified fitting cutoff or historical deployability."
+    },
+    {
+      "id": "P12_CALIBRATION_CHRONOLOGY",
+      "details": "Review the static calibration target cutoff and horizon/model-specific residual histories. Every used residual must satisfy target_time < decision_time and observation/residual availability by decision, including equal-time rejection and horizon-specific embargo. Retain documented historical boundary failures."
+    },
+    {
+      "id": "P13_FAIR_COMPARISON_AND_ENVIRONMENT",
+      "details": "Retain common model cohorts, features, horizons, scoring observations and nominal alpha; pin configuration, dependencies and native-library identity before execution. Clean-environment reproduction is not established by the installed-environment fingerprint."
+    },
+    {
+      "id": "P14_INDEPENDENT_DECISION_AND_BINDINGS",
+      "details": "Obtain a genuine independent review decision, reviewer identity and hashed review document. Only a separately authorized future registry change may pin completed source, dataset, provenance, lineage, cohort, study-contract, analysis-clock and availability-mode bindings. This pending proposal and its decision form never authorize admission."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "suite": "Stage2.1 full Stage2 regression",
+  "run": 92,
+  "passed": 91,
+  "failed": 0,
+  "errors": 1,
+  "skipped": 0,
+  "seconds": 21051.48058980005
+}

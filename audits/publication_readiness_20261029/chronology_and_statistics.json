@@ -1,0 +1,67 @@
+{
+  "block6_target_overlap": [
+    {
+      "block": 7,
+      "forecast_target_pairs": 15,
+      "unique_targets": [
+        "2018-11-15 13:10:00",
+        "2018-11-15 13:20:00",
+        "2018-11-15 13:30:00",
+        "2018-11-15 13:40:00",
+        "2018-11-15 13:50:00"
+      ],
+      "scored_h1_targets": [
+        "2018-11-15 13:10:00",
+        "2018-11-15 13:20:00",
+        "2018-11-15 13:30:00",
+        "2018-11-15 13:40:00",
+        "2018-11-15 13:50:00"
+      ]
+    }
+  ],
+  "segment_paired_sums": {
+    "1": {
+      "throughput_kwh": -1853.3251697703683,
+      "ramp_exceedance_kw": 908.1520172338815,
+      "ramp_violations": 2
+    },
+    "2": {
+      "throughput_kwh": -2784.759635764429,
+      "ramp_exceedance_kw": -872.6708584872878,
+      "ramp_violations": 4
+    },
+    "3": {
+      "throughput_kwh": -2740.4758662610448,
+      "ramp_exceedance_kw": -1534.3991107294385,
+      "ramp_violations": -5
+    },
+    "4": {
+      "throughput_kwh": -2509.6602589212507,
+      "ramp_exceedance_kw": -1020.8524226510563,
+      "ramp_violations": -17
+    }
+  },
+  "recomputed_iid_day_bootstrap_bounds": {
+    "throughput_kwh": [
+      -295.17779944095344,
+      -110.66634622552124
+    ],
+    "conversion_losses_kwh": [
+      -15.165780125233093,
+      -5.710541706004659
+    ],
+    "ramp_exceedance_kw": [
+      -140.93516683757966,
+      33.77185107323335
+    ],
+    "ramp_violations": [
+      -0.9795918367346939,
+      0.2857142857142857
+    ],
+    "terminal_adjusted_export_kwh": [
+      6.234563541652183,
+      16.35792942050173
+    ]
+  },
+  "bootstrap_warning": "IID day resampling; not dependence-corrected inference"
+}

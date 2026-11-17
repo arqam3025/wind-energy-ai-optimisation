@@ -1,0 +1,101 @@
+{
+  "status": "pass",
+  "created_utc": "2026-10-29T19:56:31.066592+00:00",
+  "application": "WindGrid AI \u2014 Wind\u2013Battery Digital Twin",
+  "tests_passed": 31,
+  "pages_tested": [
+    "Command Center",
+    "Digital Twin",
+    "AI Forecasting Lab",
+    "MPC Decision Explorer",
+    "Battery Analytics",
+    "Grid Stability Lab",
+    "Research Results",
+    "Reproducibility"
+  ],
+  "physical_frames_checked": 147,
+  "recorded_controller_blocks": 98,
+  "original_totals": {
+    "adaptive_one_sided": {
+      "intervals": 7056,
+      "throughput_kwh": 25598.676938342105,
+      "ramp_exceedance_kw": 323638.52560146264,
+      "ramp_violations": 1486
+    },
+    "fixed": {
+      "intervals": 7056,
+      "throughput_kwh": 35486.89786905919,
+      "ramp_exceedance_kw": 326158.2959760965,
+      "ramp_violations": 1502
+    },
+    "uncontrolled": {
+      "intervals": 7056,
+      "throughput_kwh": 0.0,
+      "ramp_exceedance_kw": 317210.28837823845,
+      "ramp_violations": 1465
+    }
+  },
+  "protected_files_unchanged": 1078,
+  "freeze_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+  "frozen_references_verified": 59,
+  "http_status": {
+    "/": 200,
+    "/_stcore/health": 200
+  },
+  "environment": {
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "streamlit": "1.65.0",
+      "plotly": "7.1.0",
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "cvxpy": "1.9.3",
+      "highspy": "1.15.1",
+      "xgboost": "3.4.1"
+    },
+    "data_root": "C:\\Users\\arqam\\Documents\\wind-energy-ai-optimisation",
+    "mode": "Historical replay / offline demonstration"
+  },
+  "initial_failures_resolved": [
+    "Reserved pages/ folder bypassed shared entry point during AppTest page switching; registered screens/ folder fixes it",
+    "End-of-episode test incorrectly clicked a disabled widget; now verifies disabled Step/Play"
+  ],
+  "limitations": [
+    "Browser visual/accessibility automation unavailable; native AppTest and HTTP smoke only",
+    "No clean-machine package installation performed",
+    "Unlogged six-step solver trajectories, costs, gaps and solve times are unavailable",
+    "Retrospective evaluation and original publication limitations remain"
+  ],
+  "test_output": "\n2026-10-29 19:56:10.247 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager\ntest_next_transition_includes_previous_battery_injection (test_completion_diagnostics.DiagnosticTests.test_next_transition_includes_previous_battery_injection) ... ok\ntest_wind_limited_requests (test_completion_diagnostics.DiagnosticTests.test_wind_limited_requests) ... ok\ntest_initial_render_and_control_changes (test_dashboard.DashboardAppTests.test_initial_render_and_control_changes) ... 2026-10-29 19:56:10.283 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_aggregate_only_without_private_replay (test_dashboard.DashboardDataTests.test_aggregate_only_without_private_replay) ... ok\ntest_display_accounting_matches_saved_block (test_dashboard.DashboardDataTests.test_display_accounting_matches_saved_block) ... ok\ntest_valid_selection_excludes_development (test_dashboard.DashboardDataTests.test_valid_selection_excludes_development) ... ok\ntest_equal_and_future_targets_cannot_change_margin (test_frozen_heldout.CausalityTests.test_equal_and_future_targets_cannot_change_margin) ... ok\ntest_freeze_and_inputs (test_frozen_heldout.CausalityTests.test_freeze_and_inputs) ... ok\ntest_frozen_optimisation_and_fallback_are_identical (test_frozen_heldout.CausalityTests.test_frozen_optimisation_and_fallback_are_identical) ... ok\ntest_rejects_energy_creation (test_heldout_accounting.AccountingTests.test_rejects_energy_creation) ... ok\ntest_rejects_equal_time_residual (test_heldout_accounting.AccountingTests.test_rejects_equal_time_residual) ... ok\ntest_rejects_power_balance_error (test_heldout_accounting.AccountingTests.test_rejects_power_balance_error) ... ok\ntest_terminal_restoration_accounts_for_charge_loss (test_heldout_accounting.AccountingTests.test_terminal_restoration_accounts_for_charge_loss) ... ok\ntest_zero_battery_energy_reference (test_heldout_accounting.AccountingTests.test_zero_battery_energy_reference) ... ok\ntest_aggregate_fallback_root_override_and_schema_rejection (test_platform_data.PlatformDataTests.test_aggregate_fallback_root_override_and_schema_rejection) ... ok\ntest_all_cases_conserve_energy_and_match_saved_metrics (test_platform_data.PlatformDataTests.test_all_cases_conserve_energy_and_match_saved_metrics) ... ok\ntest_file_change_invalidates_cached_table (test_platform_data.PlatformDataTests.test_file_change_invalidates_cached_table) ... ok\ntest_integrity_checks_match_and_do_not_follow_changed_manifest (test_platform_data.PlatformDataTests.test_integrity_checks_match_and_do_not_follow_changed_manifest) ... ok\ntest_no_battery_is_a_measured_reference_with_missing_battery_state (test_platform_data.PlatformDataTests.test_no_battery_is_a_measured_reference_with_missing_battery_state) ... ok\ntest_planning_is_six_recorded_forecast_targets_not_fake_solver_controls (test_platform_data.PlatformDataTests.test_planning_is_six_recorded_forecast_targets_not_fake_solver_controls) ... ok\ntest_rejects_corrupted_timestamps_power_and_soc (test_platform_data.PlatformDataTests.test_rejects_corrupted_timestamps_power_and_soc) ... ok\ntest_rejects_equal_time_causal_target_and_false_horizon_actual (test_platform_data.PlatformDataTests.test_rejects_equal_time_causal_target_and_false_horizon_actual) ... ok\ntest_rejects_simultaneous_operation_even_with_balance_preserved (test_platform_data.PlatformDataTests.test_rejects_simultaneous_operation_even_with_balance_preserved) ... ok\ntest_all_eight_pages_render_and_seven_analytical_pages_have_plotly (test_windgrid_ui.WindGridUITests.test_all_eight_pages_render_and_seven_analytical_pages_have_plotly) ... 2026-10-29 19:56:12.275 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_controller_block_horizon_and_uncontrolled_comparison (test_windgrid_ui.WindGridUITests.test_controller_block_horizon_and_uncontrolled_comparison) ... 2026-10-29 19:56:17.066 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_corrupt_local_trace_is_rejected_instead_of_displayed (test_windgrid_ui.WindGridUITests.test_corrupt_local_trace_is_rejected_instead_of_displayed) ... 2026-10-29 19:56:19.820 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_elapsed_playback_tick_advances_once_and_stops_at_episode_end (test_windgrid_ui.WindGridUITests.test_elapsed_playback_tick_advances_once_and_stops_at_episode_end) ... 2026-10-29 19:56:20.617 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n2026-10-29 19:56:22.355 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n2026-10-29 19:56:22.590 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n2026-10-29 19:56:22.590 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_missing_fixed_calibration_is_disclosed_without_inventing_a_plan (test_windgrid_ui.WindGridUITests.test_missing_fixed_calibration_is_disclosed_without_inventing_a_plan) ... 2026-10-29 19:56:22.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_missing_summary_root_reports_error_without_traceback (test_windgrid_ui.WindGridUITests.test_missing_summary_root_reports_error_without_traceback) ... 2026-10-29 19:56:24.526 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_play_pause_step_reset_and_episode_end (test_windgrid_ui.WindGridUITests.test_play_pause_step_reset_and_episode_end) ... 2026-10-29 19:56:25.034 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\ntest_summary_only_root_keeps_results_available_and_discloses_missing_replay (test_windgrid_ui.WindGridUITests.test_summary_only_root_keeps_results_available_and_discloses_missing_replay) ... 2026-10-29 19:56:29.165 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\nok\n\n----------------------------------------------------------------------\nRan 31 tests in 19.813s\n\nOK\n",
+  "source_sha256": {
+    "app\\context.py": "ce53e75d6cbd1b6fc3e30a699301dde56de052b1a6c17f31687b37a1775e1b08",
+    "app\\dashboard.py": "21e42d6b5e3db51411c8c19d0df7e9a57f6bd08940aa7f38261d3f41aa7ca092",
+    "app\\platform_data.py": "fb204c5c06827c1ec892ee42273ce0da1d76c01422b88c0b6acc8a6adac0dc15",
+    "app\\research_data.py": "94c051558e191a7854cf206c3b807bb515f9da1eb8db13bed55ac19ba2897ac5",
+    "app\\routes.py": "98f56b37d2ba1ffab3c7b24b96ee9fb8fe0ea56ad57e71ac3ac56e944d690594",
+    "app\\ui.py": "c207be45df8789070c3f28cc55fac8a26c328c282c1dc205c2bcbb6deb5b051f",
+    "app\\screens\\battery.py": "1843ec494fddc14d3604074402b21b6595c0b403e7a005d883b67b8db99e9b47",
+    "app\\screens\\command_center.py": "affc7db0d6a4fff0e411979a16607abbb2767af68470146dee420af6e9b4da3f",
+    "app\\screens\\digital_twin.py": "954d6abbe46f4966b6dd6cf2c39b1b97f8de6d43bdad7e80fb4d72b9c8ca7938",
+    "app\\screens\\forecasting.py": "5dd4331a75d30ce18dd5fc06ed07388bd120bce15a28d31a78353cbcb48ea5df",
+    "app\\screens\\grid.py": "36ec3f4a9518f30a0599bb103a10803ebdb1585c1c9b8bcf323d30313942628c",
+    "app\\screens\\mpc.py": "9346a8f9cf68e57a7ec39e41cdc9791a92c43b842f63f9873506de5b945babc4",
+    "app\\screens\\reproducibility.py": "64eccb6b61f2b6e548c871b77dd11fa89f2c7f296ccd729eac266d197b12cd32",
+    "app\\screens\\results.py": "d32bd5093340d393f2c29d4f0b8a000656d99ae211a25161f383529d0d72e3e0",
+    "app\\views\\battery.py": "c3209339d4722e6c0261796a7aff2418935d8c2e6323ddaae55da0b6c1c17aa5",
+    "app\\views\\forecasting.py": "6802634743da3a18a045cf0fbf9531156bf5159e9a5656ef3b878546ee1315cf",
+    "app\\views\\grid.py": "b988d67e923614a23f91fce19ae6557d6ff6c9011e4b9415ec9fe3a7432f4133",
+    "app\\views\\mpc.py": "3653a22acdf974f4915a52131e6dd33fd2bdec561512eebfb09971077a7160e2",
+    "app\\views\\operations.py": "e0290c574e769f37fbfc339df3b334c630cbc60c2013117908fb671f0c67758b",
+    "app\\views\\research.py": "b57b95e74da004f149e109db3aac53dc0d620df149dff8f9a30f3b57079aa384",
+    ".streamlit\\config.toml": "3ead25f8fc8a3d7ae5be21e35d70a2c64a0f71e664bd03b97ed846a5965be2af",
+    "README.md": "6624b35c74af60397e60e4e59f17d9abc46feb31311668be071367c300711cfd",
+    "requirements-dashboard.txt": "2e9ff29acf84468a9855892843a9a5192cc26fdf2d48ac39cb01bc1d02c35ad6",
+    "requirements-research.txt": "1d7b206108325c21374a9ced0dfe43bd310ed663a313a221f7a59b759f8ec8c2",
+    "tests\\test_windgrid_ui.py": "faf04fd8a13b52b60cb0b08545b8e0ec234aef1f5b41d3f32b53b6aa2bd3a32e",
+    "tests\\test_platform_data.py": "17de4abcdc96f46ebc7742e4c4c5bca0ead0ce58f23d3d7ec5a0ce02c9d8561c",
+    "docs\\windgrid_platform_guide.md": "174284544c8d93f48c2beb39b75799783210cb0469a5aab111f28fdb52d6e671",
+    "scripts\\verify_windgrid_platform.py": "04d996e42ac11e03bb5c6b66c8983cd265627ecf433d68551607d19604173586"
+  }
+}

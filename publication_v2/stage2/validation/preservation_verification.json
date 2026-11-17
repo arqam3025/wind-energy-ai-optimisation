@@ -1,0 +1,43 @@
+{
+  "stage": "2.1",
+  "protected_verification": {
+    "status": "pass",
+    "protected": {
+      "status": "pass",
+      "protected_files": 2170
+    },
+    "freeze": {
+      "status": "pass",
+      "manifest_sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+      "references": 59
+    }
+  },
+  "git_index_sha256_before": "131c0b2e149ec81feb7cadcdeeb5115bd25b73b71abacc950a15a5424a711809",
+  "git_index_sha256_after": "131c0b2e149ec81feb7cadcdeeb5115bd25b73b71abacc950a15a5424a711809",
+  "git_index_unchanged": true,
+  "staged_additions": 185,
+  "unrelated_file_count": 2179,
+  "unrelated_sha256_before": "d98000601be4074cb4b7811628fafa982e93753c55edd0c0b5b039f94342a6a2",
+  "unrelated_sha256_after": "d98000601be4074cb4b7811628fafa982e93753c55edd0c0b5b039f94342a6a2",
+  "unrelated_unchanged": true,
+  "research_experiment_executed": false,
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "real_data_reviews": {},
+  "final_stage2_tests": {
+    "suite": "Stage2.1 final full regression",
+    "run": 92,
+    "passed": 92,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 318.7368107000366
+  },
+  "stage1_tests": {
+    "run": 59,
+    "passed": 58,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "head": "9517ec8"
+}

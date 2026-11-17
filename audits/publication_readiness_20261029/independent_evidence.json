@@ -1,0 +1,111 @@
+{
+  "protected_files": 1045,
+  "freeze": {
+    "sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a",
+    "verified_referenced_files": 59,
+    "created_utc": "2026-10-29T13:52:05.192973+00:00"
+  },
+  "manifest_mismatches": {
+    "provenance.json": [],
+    "release_manifest_v1.json": [
+      "docs\\paper_draft.md",
+      "README.md",
+      "scripts\\analyse_frozen_heldout.py",
+      "scripts\\finalise_frozen_research.py"
+    ],
+    "release_manifest_v2.json": []
+  },
+  "independent_recalculation": {
+    "totals": {
+      "adaptive_one_sided": {
+        "throughput_kwh": 25598.67693834211,
+        "ramp_exceedance_kw": 323638.52560146264,
+        "ramp_violations": 1486,
+        "loss_kwh": 1312.9159424734253,
+        "export_kwh": 1800395.6020386363,
+        "adjusted_export_kwh": 1799572.8180300975
+      },
+      "fixed": {
+        "throughput_kwh": 35486.8978690592,
+        "ramp_exceedance_kw": 326158.29597609653,
+        "ramp_violations": 1502,
+        "loss_kwh": 1821.5934849056268,
+        "export_kwh": 1801383.3027225179,
+        "adjusted_export_kwh": 1799021.589482747
+      }
+    },
+    "throughput_reduction_percent": 27.864427505619094,
+    "exceedance_reduction_percent": 0.7725605651369261,
+    "fewer_violations": 16,
+    "raw_target_checks": 42336,
+    "physical_controller_blocks": 98,
+    "margin_max_error_kw": 1.1368683772161603e-13,
+    "no_battery": {
+      "violations": 1465,
+      "exceedance_kw": 317210.28837823845
+    },
+    "adaptive_vs_no_battery_exceedance_increase_percent": 2.0264907724427905,
+    "fixed_vs_no_battery_exceedance_increase_percent": 2.820844066441053
+  },
+  "calibration": {
+    "samples": 4484,
+    "last_h60_target": "2018-10-15 11:50:00",
+    "fixed_reconstructed": [
+      400.01362539061995,
+      536.1203925781201,
+      608.3623749023441,
+      673.9694332031199,
+      727.95680585937,
+      786.612837729493
+    ],
+    "signed_90pct_reconstructed": [
+      246.72416289062994,
+      331.3606156249998,
+      377.49253808594017,
+      421.90207070313,
+      469.508397509766,
+      491.1106054687498
+    ],
+    "adaptive_floors": [
+      358.37981,
+      504.728717,
+      571.614234,
+      630.17642,
+      690.977755,
+      731.661882
+    ]
+  },
+  "current_model_vs_stored_forecast_max_errors_kw": [
+    0.00012109374983992893,
+    0.00012109374983992893,
+    0.00012109374983992893,
+    0.00012109374983992893,
+    0.00012109374983992893,
+    0.00012109374983992893
+  ],
+  "causal_feature_raw_lookup_max_errors": {
+    "power_kw": 0.0,
+    "power_lag_10min": 0.0,
+    "wind_lag_10min": 0.0,
+    "power_lag_20min": 0.0,
+    "wind_lag_20min": 0.0,
+    "power_lag_30min": 0.0,
+    "wind_lag_30min": 0.0,
+    "power_lag_60min": 0.0,
+    "wind_lag_60min": 0.0,
+    "wind_speed": 0.0,
+    "wind_direction": 0.0,
+    "power_change_10min": 1.1368683772161603e-13,
+    "wind_change_10min": 8.881784197001252e-16,
+    "power_mean_40min": 1.3642420526593924e-12
+  },
+  "git": {
+    "head": "2160ff37478a0249046d6ddd975420a32b98aa8c",
+    "untracked_count": 65,
+    "secret_pattern_matches": [],
+    "history_secret_pattern_matches": [],
+    "tracked_data_models_results": [],
+    "historical_sensitive_paths": []
+  },
+  "protected_files_unchanged": true
+}

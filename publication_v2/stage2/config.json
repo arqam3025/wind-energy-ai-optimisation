@@ -1,0 +1,29 @@
+{
+  "schema_version": "publication_v2.stage2.config.v1",
+  "stage": 2,
+  "scope": "DEVELOPMENT_ONLY",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "seed": 20261101,
+  "models": ["persistence", "xgboost", "lightgbm"],
+  "horizons_minutes": [10, 20, 30, 40, 50, 60],
+  "alpha": 0.1,
+  "min_calibration_samples": 30,
+  "rapid_event_threshold_kw": 200.001,
+  "target_definition": "Nonnegative wind generation; signed raw features retained; target transform must be declared by supplied dataset",
+  "comparison_policy": "Identical training, calibration, scoring observations and fourteen features. No tuning, early stopping or controller selection on scoring outcomes.",
+  "model_hyperparameters": {
+    "persistence": {},
+    "xgboost": {"n_estimators": 100, "max_depth": 4, "learning_rate": 0.05},
+    "lightgbm": {"n_estimators": 100, "max_depth": 4, "num_leaves": 15, "learning_rate": 0.05}
+  },
+  "uncertainty_ablations": [
+    {"name": "static_abs", "method": "static", "window": 144, "half_life_minutes": 1440, "floor_kw": 0},
+    {"name": "rolling_abs", "method": "rolling", "window": 144, "half_life_minutes": 1440, "floor_kw": 0},
+    {"name": "weighted_abs", "method": "weighted", "window": 144, "half_life_minutes": 1440, "floor_kw": 0},
+    {"name": "rolling_window72", "method": "rolling", "window": 72, "half_life_minutes": 1440, "floor_kw": 0},
+    {"name": "rolling_window288", "method": "rolling", "window": 288, "half_life_minutes": 1440, "floor_kw": 0},
+    {"name": "weighted_half_life720", "method": "weighted", "window": 144, "half_life_minutes": 720, "floor_kw": 0}
+  ],
+  "uncertainty_claim": "Empirical development coverage only. Recency weights are heuristic under dependence; no exchangeability/conditional/simultaneous coverage guarantee is asserted.",
+  "online_policy": "Frozen model; predeclared residual updates only after target < decision AND actual/residual availability <= decision. No model refitting on scored observations."
+}

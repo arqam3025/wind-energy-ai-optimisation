@@ -1,0 +1,831 @@
+{
+  "schema_version": "publication_v2.stage24.evidence-register.v1",
+  "package_id": "berker-isen-t1-retrospective-stage24",
+  "package_prepared_at_utc": "2026-11-05T20:00:38.346937+00:00",
+  "status": "PENDING_REVIEW",
+  "study_role": "RETROSPECTIVE_DEVELOPMENT",
+  "confirmatory_status": "BLOCKED_CONFIRMATORY_TEST",
+  "real_data_admitted": false,
+  "experiments_authorized": false,
+  "independent_scientific_authentication": {
+    "status": "NOT_ESTABLISHED",
+    "evidence_ids": []
+  },
+  "evidence_taxonomy": {
+    "INDEPENDENTLY_AUTHENTICATED": "Authenticated external evidence, independently reviewed; none established here for scientific provenance.",
+    "LOCAL_CORROBORATION": "Rechecked local bytes/metadata/structure, not external authentication.",
+    "AUTHOR_CREATED_RECORD": "Research/audit/code records created within this project.",
+    "ASSUMPTION": "Explicit convention/scenario; never an authenticated measurement fact.",
+    "MISSING_EVIDENCE": "Unresolved item; value remains null."
+  },
+  "evidence": [
+    {
+      "id": "E01_SOURCE_ATTRIBUTION",
+      "topic": "Source attribution",
+      "category": "LOCAL_CORROBORATION",
+      "status": "CORROBORATED_NOT_INDEPENDENTLY_AUTHENTICATED",
+      "value": {
+        "attribution": "Berker Isen, Wind Turbine SCADA Dataset",
+        "source_url": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset"
+      },
+      "basis": [
+        "publication_v2/metadata.json",
+        "README.md",
+        "local NTFS download-origin records"
+      ],
+      "limitations": "Neither underlying operator identity nor release rights is established.",
+      "required_resolution": "Capture authenticated provider/release metadata and rights chain."
+    },
+    {
+      "id": "E02_LOCAL_RAW",
+      "topic": "Exact local raw artifact",
+      "category": "LOCAL_CORROBORATION",
+      "status": "LOCAL_BYTES_RECHECKED",
+      "value": {
+        "path": "data/raw/T1.csv",
+        "sha256": "f92c33c1cc199756b759fec251eeddc506f35d6a9e47ede034fc3e339a7c46d5",
+        "bytes": 3971851
+      },
+      "basis": [
+        "data/raw/T1.csv"
+      ],
+      "limitations": "A checksum identifies local bytes, not scientific provenance.",
+      "required_resolution": "Bind to a provider-authenticated release or retain unresolved status."
+    },
+    {
+      "id": "E03_LOCAL_ARCHIVE",
+      "topic": "Preserved local archive",
+      "category": "LOCAL_CORROBORATION",
+      "status": "LOCAL_BYTES_AND_MEMBER_MATCH_RECHECKED",
+      "value": {
+        "external_path_hint": "%USERPROFILE%/Downloads/archive.zip",
+        "sha256": "a867d34200add600eedb3832540435cf57335ba6374c77b50f90b0ab16553ea1",
+        "bytes": 1571389,
+        "members": [
+          {
+            "name": "T1.csv",
+            "bytes": 3971851,
+            "sha256": "f92c33c1cc199756b759fec251eeddc506f35d6a9e47ede034fc3e339a7c46d5",
+            "matches_local_raw": true,
+            "zip_member_timestamp": [
+              2019,
+              10,
+              19,
+              17,
+              14,
+              48
+            ],
+            "zip_timestamp_is_not_acquisition_proof": true
+          }
+        ],
+        "filesystem_creation_utc": "2026-10-12T14:17:29.349742+00:00",
+        "filesystem_last_write_utc": "2026-10-12T14:17:30.125943+00:00"
+      },
+      "basis": [
+        "%USERPROFILE%/Downloads/archive.zip"
+      ],
+      "limitations": "Archive and member hashes do not authenticate publisher release or licence. ZIP member timestamp is not acquisition evidence.",
+      "required_resolution": "Preserve original archive and obtain release mapping; do not redistribute before rights review."
+    },
+    {
+      "id": "E04_ACQUISITION_TRACE",
+      "topic": "Acquisition trace",
+      "category": "LOCAL_CORROBORATION",
+      "status": "MUTABLE_LOCAL_RECORD",
+      "value": {
+        "raw": {
+          "stream_sha256": "3c26ff5a9f2d77756cc1b9cb4dcc34cd25bfe919a7ef885a6f80f4f23a8c2e04",
+          "zone_id": "3",
+          "local_mutable_record_not_independent_authentication": true,
+          "referrer": "%USERPROFILE%\\Downloads\\archive.zip"
+        },
+        "archive": {
+          "stream_sha256": "be3f98d920db718ec5e068d9f0c71cafae2779fe2f2b390c0c9de5bc8f1e46a3",
+          "zone_id": "3",
+          "local_mutable_record_not_independent_authentication": true,
+          "referrer": "https://www.kaggle.com/",
+          "host_url_without_query": "https://storage.googleapis.com/kaggle-data-sets/133415/317642/bundle/archive.zip",
+          "signed_url_generation_time": "20261012T141729Z",
+          "query_omitted": true
+        }
+      },
+      "basis": [
+        "NTFS Zone.Identifier streams of T1.csv and archive.zip"
+      ],
+      "limitations": "Consistent with acquisition on 2026-10-12T14:17:29Z. URL generation time is not an independently verified download/first-access time. Query credentials omitted.",
+      "required_resolution": "Independently review browser/download/acquisition records and source version; actual first outcome access remains unknown."
+    },
+    {
+      "id": "E05_RAW_STRUCTURE",
+      "topic": "Clock-naive structural inventory",
+      "category": "LOCAL_CORROBORATION",
+      "status": "RAW_STRUCTURE_RECHECKED",
+      "value": {
+        "rows": 50530,
+        "header": [
+          "Date/Time",
+          "LV ActivePower (kW)",
+          "Wind Speed (m/s)",
+          "Theoretical_Power_Curve (KWh)",
+          "Wind Direction (Â°)"
+        ],
+        "first_naive_timestamp": "2018-01-01 00:00:00",
+        "last_naive_timestamp": "2018-12-31 23:50:00",
+        "duplicated_timestamps": 0,
+        "missing_cells": 0,
+        "gaps": [
+          {
+            "after": "2018-01-04 09:40:00",
+            "before": "2018-01-04 12:40:00",
+            "missing_slots": 17
+          },
+          {
+            "after": "2018-01-06 10:40:00",
+            "before": "2018-01-06 11:30:00",
+            "missing_slots": 4
+          },
+          {
+            "after": "2018-01-12 02:10:00",
+            "before": "2018-01-12 02:30:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-01-26 06:20:00",
+            "before": "2018-01-30 14:40:00",
+            "missing_slots": 625
+          },
+          {
+            "after": "2018-03-10 07:00:00",
+            "before": "2018-03-10 07:20:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-04-04 20:10:00",
+            "before": "2018-04-04 20:30:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-04-17 05:10:00",
+            "before": "2018-04-17 06:50:00",
+            "missing_slots": 9
+          },
+          {
+            "after": "2018-04-17 17:10:00",
+            "before": "2018-04-17 18:10:00",
+            "missing_slots": 5
+          },
+          {
+            "after": "2018-05-04 11:00:00",
+            "before": "2018-05-04 13:10:00",
+            "missing_slots": 12
+          },
+          {
+            "after": "2018-05-27 03:10:00",
+            "before": "2018-05-27 03:50:00",
+            "missing_slots": 3
+          },
+          {
+            "after": "2018-06-04 06:40:00",
+            "before": "2018-06-04 13:10:00",
+            "missing_slots": 38
+          },
+          {
+            "after": "2018-06-05 09:20:00",
+            "before": "2018-06-05 09:40:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-06-16 15:20:00",
+            "before": "2018-06-16 15:40:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-06-22 11:40:00",
+            "before": "2018-06-22 12:00:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-06-26 13:30:00",
+            "before": "2018-06-26 14:10:00",
+            "missing_slots": 3
+          },
+          {
+            "after": "2018-06-27 08:40:00",
+            "before": "2018-06-27 14:00:00",
+            "missing_slots": 31
+          },
+          {
+            "after": "2018-08-02 11:40:00",
+            "before": "2018-08-02 12:00:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-08-03 15:00:00",
+            "before": "2018-08-03 15:30:00",
+            "missing_slots": 2
+          },
+          {
+            "after": "2018-08-16 06:40:00",
+            "before": "2018-08-16 09:10:00",
+            "missing_slots": 14
+          },
+          {
+            "after": "2018-08-17 06:20:00",
+            "before": "2018-08-17 10:10:00",
+            "missing_slots": 22
+          },
+          {
+            "after": "2018-09-06 01:50:00",
+            "before": "2018-09-06 02:10:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-09-13 19:30:00",
+            "before": "2018-09-13 19:50:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-09-14 12:40:00",
+            "before": "2018-09-14 15:20:00",
+            "missing_slots": 15
+          },
+          {
+            "after": "2018-09-28 21:20:00",
+            "before": "2018-10-02 16:30:00",
+            "missing_slots": 546
+          },
+          {
+            "after": "2018-10-02 18:10:00",
+            "before": "2018-10-03 06:30:00",
+            "missing_slots": 73
+          },
+          {
+            "after": "2018-10-03 06:40:00",
+            "before": "2018-10-03 14:10:00",
+            "missing_slots": 44
+          },
+          {
+            "after": "2018-10-30 11:00:00",
+            "before": "2018-10-30 14:30:00",
+            "missing_slots": 20
+          },
+          {
+            "after": "2018-10-31 15:30:00",
+            "before": "2018-10-31 15:50:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-11-10 21:10:00",
+            "before": "2018-11-14 12:00:00",
+            "missing_slots": 520
+          },
+          {
+            "after": "2018-12-04 13:40:00",
+            "before": "2018-12-04 14:50:00",
+            "missing_slots": 6
+          },
+          {
+            "after": "2018-12-04 15:00:00",
+            "before": "2018-12-04 15:20:00",
+            "missing_slots": 1
+          },
+          {
+            "after": "2018-12-17 09:10:00",
+            "before": "2018-12-17 11:00:00",
+            "missing_slots": 10
+          }
+        ],
+        "missing_expected_slots": 2030,
+        "timezone_assigned": false
+      },
+      "basis": [
+        "data/raw/T1.csv"
+      ],
+      "limitations": "Zero blank cells is not zero missing observations. Source quality/outage causes and timezone remain unknown.",
+      "required_resolution": "Review source clock and all32gaps; never impute missing slots as zero output."
+    },
+    {
+      "id": "E06_HEADER_UNITS",
+      "topic": "Header units",
+      "category": "LOCAL_CORROBORATION",
+      "status": "SOURCE_HEADER_DOCUMENTED",
+      "value": {
+        "active_power": "kW",
+        "wind_speed": "m/s",
+        "wind_direction": "degrees",
+        "theoretical_curve": "KWh; physical meaning ambiguous and unused by frozen features"
+      },
+      "basis": [
+        "data/raw/T1.csv"
+      ],
+      "limitations": "Header labels do not establish sensor calibration or operator-confirmed physical interpretation.",
+      "required_resolution": "Obtain signal dictionary/calibration/measurement definitions where available."
+    },
+    {
+      "id": "E07_HISTORICAL_TRANSFORM",
+      "topic": "Historical processing lineage",
+      "category": "AUTHOR_CREATED_RECORD",
+      "status": "PREVIOUS_STRUCTURAL_RECONSTRUCTION_PASS",
+      "value": {
+        "chain": [
+          "data/raw/T1.csv",
+          "scripts/prepare_forecasting_data.py",
+          "scripts/build_wind_features.py",
+          "scripts/prepare_multistep_ml_data.py"
+        ],
+        "feature_rows": 50320,
+        "multistep_rows": 50125,
+        "feature_value_checks": 1406230,
+        "raw_target_checks": 401195,
+        "transform_rules": [
+          "exact ten-minute next-target pair",
+          "exact timestamp lag joins at10/20/30/60minutes",
+          "four-point power mean at t,t-10,t-20,t-30",
+          "six targets at t+10..60minutes",
+          "complete-support filtering without interpolation"
+        ]
+      },
+      "basis": [
+        "publication_v2/evidence/stage1_validation.json",
+        "historical scripts (hashes recorded)"
+      ],
+      "limitations": "These previously completed structural checks are not original acquisition/extraction or operational availability evidence. Historical scripts were not executed.",
+      "required_resolution": "Review a new explicit canonical transformation identity after missing clock/availability evidence is resolved."
+    },
+    {
+      "id": "E08_TARGET_DEFINITION",
+      "topic": "Target interpretation",
+      "category": "AUTHOR_CREATED_RECORD",
+      "status": "IMPLEMENTATION_DOCUMENTED",
+      "value": {
+        "raw_and_current_features": "signed measured active power",
+        "physical_target_and_persistence": "max(0, measured active power)",
+        "not_established": "unconstrained available wind potential"
+      },
+      "basis": [
+        "docs/PUBLICATION_V2_STAGE1_REPORT.md",
+        "docs/PUBLICATION_V2_STAGE2_METHODS.md"
+      ],
+      "limitations": "Clipping measured power does not remove curtailment/outage effects or establish available wind resource.",
+      "required_resolution": "Reviewer must approve measured-generation target wording and limitations; no availability/resource claim."
+    },
+    {
+      "id": "E09_EXPOSURE",
+      "topic": "Historical exposure",
+      "category": "AUTHOR_CREATED_RECORD",
+      "status": "HISTORICALLY_INSPECTED_NEVER_UNTOUCHED",
+      "value": {
+        "all_49_evaluated_blocks": "RETROSPECTIVE",
+        "local_untouched_split": null,
+        "block6_schedule_role": "development",
+        "block6_overlap_with_block7": {
+          "horizon_target_pairs": 15,
+          "scored_h1_targets": 5
+        },
+        "combined_development_overlap": {
+          "horizon_target_pairs": 30,
+          "scored_h1_targets": 10
+        }
+      },
+      "basis": [
+        "publication_v2/evidence/exposure_and_provenance.json",
+        "docs/PUBLICATION_V2_STAGE1_REPORT.md"
+      ],
+      "limitations": "Records do not prove every value was viewed by a human; no affirmative non-exposure custody exists.",
+      "required_resolution": "Preserve exposure classification under all aliases/serialization changes; no confirmation proposal for this source."
+    },
+    {
+      "id": "E10_HISTORICAL_CALIBRATION",
+      "topic": "Archived calibration chronology",
+      "category": "AUTHOR_CREATED_RECORD",
+      "status": "BOUNDARY_FAILURES_RETAINED",
+      "value": {
+        "affected_horizon_decision_cells": 21,
+        "affected_decisions": 6,
+        "repeated_unavailable_label_decision_pairs": 56,
+        "strict_new_rule": "target_time < decision_time"
+      },
+      "basis": [
+        "docs/PUBLICATION_V2_STAGE1_REPORT.md"
+      ],
+      "limitations": "This is a documented historical defect, not repaired by the new protocol.",
+      "required_resolution": "Reviewer must retain findings and require strict target/receipt/residual eligibility for any future replay."
+    },
+    {
+      "id": "E11_REPLAY_CONVENTION",
+      "topic": "Historical interval convention",
+      "category": "ASSUMPTION",
+      "status": "HISTORICAL_SIMULATOR_CONVENTION",
+      "value": {
+        "power_interpretation": "representative of ten-minute interval ending at timestamp"
+      },
+      "basis": [
+        "docs/mathematical_formulation.md",
+        "docs/paper_submission_draft.md"
+      ],
+      "limitations": "Not provider-confirmed timestamp semantics.",
+      "required_resolution": "Provider clarification or separately reviewed scenario with explicit limits; no operational-deployability claim."
+    },
+    {
+      "id": "E12_LATENCY_SCENARIO",
+      "topic": "New assumed-latency scenario",
+      "category": "ASSUMPTION",
+      "status": "NOT_SELECTED_OR_APPROVED",
+      "value": null,
+      "basis": [
+        "publication_v2/stage2/study.py"
+      ],
+      "limitations": "No numerical latency is proposed or measured by this package. Current same-time features reject positive required availability delay.",
+      "required_resolution": "Prespecify/review named delays and evidence, or establish actual availability; do not silently assign receipt=event."
+    },
+    {
+      "id": "E13_RELEASE",
+      "topic": "Authenticated source release/version",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Official release/version mapping, archived metadata and checksum mapping to storage bundle133415/317642."
+    },
+    {
+      "id": "E14_LICENCE",
+      "topic": "Applicable licence and release rights",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Capture exact licence/terms at acquisition and current release; clarify uploader/operator release authority if unresolved."
+    },
+    {
+      "id": "E15_TIMEZONE",
+      "topic": "Timezone/DST and clock synchronization",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Provider clock/timezone/offset/DST/synchronization documentation; never silently localize naive T1 to UTC."
+    },
+    {
+      "id": "E16_INTERVAL",
+      "topic": "Timestamp and aggregation semantics",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Provider signal dictionary: point/average, interval start/end, averaging window and timestamp meaning."
+    },
+    {
+      "id": "E17_AVAILABILITY",
+      "topic": "Operational observation/feature/target availability",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Actual receipt/computation logs or explicitly reviewed assumed-latency replay; no historic deployability claim."
+    },
+    {
+      "id": "E18_SOURCE_QC",
+      "topic": "Missingness and source quality",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Provider missing/outage/curtailment/quality flags and definitions for gaps; prespecified exclusions with denominators."
+    },
+    {
+      "id": "E19_CANONICAL_LINEAGE",
+      "topic": "Admissible new canonical lineage",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "New reviewed canonicalization for timezone, stable IDs and verified/assumed receipts; current one-to-one map cannot invent absent fields."
+    },
+    {
+      "id": "E20_NEW_COHORT",
+      "topic": "New authorized cohort and exclusions",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Exact train/calibration/development periods with all source/target support; missing-data policy and all rejections/denominators."
+    },
+    {
+      "id": "E21_NEW_CUTOFFS",
+      "topic": "New fitting and calibration cutoffs",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Real approved replay fit/model-availability/static-calibration cutoffs and separate actual creation/approval/access records."
+    },
+    {
+      "id": "E22_INDEPENDENT_REVIEW",
+      "topic": "Independent reviewer decision and bindings",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Independent reviewer, actual dates, review evidence hash and all complete trusted-registry bindings."
+    },
+    {
+      "id": "E23_MODEL_HISTORY",
+      "topic": "Historical model fitting/access chronology",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Authenticated frozen fitting/selection/availability ledger where historical deployment is claimed; unknown history stays unknown."
+    },
+    {
+      "id": "E24_FIRST_ACCESS",
+      "topic": "Actual first outcome access",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Independently reviewed full acquisition/access/exposure history; local download metadata does not supply first inspection time."
+    },
+    {
+      "id": "E25_CLEAN_ENVIRONMENT",
+      "topic": "Clean-environment reproduction",
+      "category": "MISSING_EVIDENCE",
+      "status": "UNRESOLVED",
+      "value": null,
+      "basis": [
+        "existing protocols and evidence gaps"
+      ],
+      "limitations": "No value or approval is fabricated.",
+      "required_resolution": "Separate clean installation/reproduction from lawful inputs; installed fingerprint alone is not this evidence."
+    }
+  ],
+  "file_evidence": [
+    {
+      "path": "docs/PUBLICATION_V2_PROTOCOL.md",
+      "sha256": "715925ff04e6f745ae8f519b5e54b3e5669e5920bdfbc091a050fab013cf80cf"
+    },
+    {
+      "path": "docs/PUBLICATION_V2_STAGE1_REPORT.md",
+      "sha256": "3426107b3710cfbc1a5980dda9d3d1feaa49cc7a3cf09a9ef6417cbe40ba7ba3"
+    },
+    {
+      "path": "docs/PUBLICATION_V2_STAGE2_PLAN.md",
+      "sha256": "0b830f3d2782a92a4d387733ea6253efb3c95821627c0e11383a7bdb8d74e751"
+    },
+    {
+      "path": "docs/PUBLICATION_V2_STAGE2_METHODS.md",
+      "sha256": "999b8e92a7806d35516c0a3e31f40a09afbe3c556df98019e9b7721cfef750d1"
+    },
+    {
+      "path": "docs/PUBLICATION_V2_STAGE2_VALIDATION.md",
+      "sha256": "2048039895413add63b5a5f59a98bb1c22c85fd2e95f07807ab2429c060502d9"
+    },
+    {
+      "path": "docs/PUBLICATION_V2_RETROSPECTIVE_PROTOCOL_REVIEW.md",
+      "sha256": "5a41922aff04d689ae880ca2ea55dcdd1adf6c61a2653b142cdb8d911ed4f378"
+    },
+    {
+      "path": "publication_v2/metadata.json",
+      "sha256": "388de38cd3094b7dcb700d41d5e76c71c8d20ef8d85d6149a70d3872c604f62a"
+    },
+    {
+      "path": "publication_v2/evidence/stage1_validation.json",
+      "sha256": "ac48a229414bfb0be7b34fdb16fb28bcfb57273dd92ce236cb117e5cd2ab8c11"
+    },
+    {
+      "path": "publication_v2/evidence/chronological_inventory.csv",
+      "sha256": "011a1702b38d2e54726b06b1927ab7a8e67623673b06074407de8dbeffc6e4d5"
+    },
+    {
+      "path": "publication_v2/evidence/exposure_and_provenance.json",
+      "sha256": "0d8256cf96c5925461d98619dae7b9bafece982e6d4bc9b3ba4e90d55b4e9cbd"
+    },
+    {
+      "path": "publication_v2/stage2/validation/stage21_stage2_test_summary_final.json",
+      "sha256": "731fc74cae5daefb1ad2a81d2d2d9db8a2d1fe6188dc36113272da1ddc6e1678"
+    },
+    {
+      "path": "publication_v2/stage2/validation/preservation_verification.json",
+      "sha256": "02379a9cebc36dcd1603d7a7c56f3f4744b87c7c6c1195dc08c18789fa5cbeed"
+    },
+    {
+      "path": "publication_v2/stage2/validation/environment_manifest.json",
+      "sha256": "13d41a0f470ee8b1a964f2a9175b491c9028046961e63b4d3cc87df0c1c9141d"
+    },
+    {
+      "path": "publication_v2/stage2/lineage.py",
+      "sha256": "39918618848e18cf6544196b67126a0608bdfc20cd912a6d79c8e5b647abe839"
+    },
+    {
+      "path": "publication_v2/stage2/study.py",
+      "sha256": "0c5374aed34db5ff6eeb08d209c194110863f05efef39ff69373b9e2bdb8fc01"
+    },
+    {
+      "path": "publication_v2/stage2/provenance_policy.json",
+      "sha256": "229d140d785ff1c177ef090c6034cf67bee5a2464903789bc6c93df390017b7b"
+    },
+    {
+      "path": "scripts/prepare_forecasting_data.py",
+      "sha256": "053d990e7c55c6c04eba1ede744e316cf8b3094564ed9c399276b38f9f1d3a7f"
+    },
+    {
+      "path": "scripts/build_wind_features.py",
+      "sha256": "95d19721c8bb851bfae138f5315f7d59f0badb9aba982786961e56ab48188970"
+    },
+    {
+      "path": "scripts/prepare_multistep_ml_data.py",
+      "sha256": "a0d79f5d75cba0d7301f11003038818d9e5e71702d116fe4b74c219fbc9e3508"
+    },
+    {
+      "path": "scripts/train_multistep_xgboost.py",
+      "sha256": "c71fbbe8ceb40961ff28eb0c498c224ad81e338a914a9b1d7d0563e6c4488444"
+    },
+    {
+      "path": "scripts/save_wind_forecasting_model.py",
+      "sha256": "7708f2821ef2e41102c2034afce7cf5adf6207923953ed5fdc39d0b243cc3832"
+    },
+    {
+      "path": "results/development_controller_freeze_manifest.json",
+      "sha256": "b007aa5c57b5610ea75663d592b92816598c15658ed21bf0fcd99c107859895a"
+    },
+    {
+      "path": "data/raw/T1.csv",
+      "sha256": "f92c33c1cc199756b759fec251eeddc506f35d6a9e47ede034fc3e339a7c46d5"
+    },
+    {
+      "path": "README.md",
+      "sha256": "9ddaf89841a0d0a8697ffeae4f931677492de8405327d1459e292f5cdd4f6540"
+    },
+    {
+      "path": "docs/mathematical_formulation.md",
+      "sha256": "3fbdddbb41239ce670c09b499e09b4fd65063533a925342ae308ae3eb381e75a"
+    },
+    {
+      "path": "docs/paper_submission_draft.md",
+      "sha256": "30a24b28321d946f462f46d348c70ee47227589112017308aa5cddfa98286540"
+    },
+    {
+      "path": "results/evaluation_schedule.csv",
+      "sha256": "55465f5d923d5dba3b0f2215cd267188b1c0b66ffa797fc72900b2d6780473a9"
+    },
+    {
+      "path": "docs/tables_v2/aggregate_metrics.csv",
+      "sha256": "f584d4f16543088f113dc4e9f65f91dfebac7bc8aa1b8a52b0814f53044e6163"
+    },
+    {
+      "path": "docs/tables_v2/uncontrolled_wind_baseline.csv",
+      "sha256": "6662fefbd6dabd77a39aa2010970df7a315746fc4e6b3851dccf31f34c0ecb50"
+    }
+  ],
+  "public_metadata_checks": [
+    {
+      "url": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset",
+      "checked_on": "2026-11-05",
+      "status": "TITLE_ONLY_NO_READABLE_SUBSTANTIVE_METADATA",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    },
+    {
+      "url": "https://www.kaggle.com/api/v1/datasets/view/berkerisen/wind-turbine-scada-dataset",
+      "checked_on": "2026-11-05",
+      "status": "INACCESSIBLE_AUTOMATED_TOOL",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    },
+    {
+      "url": "https://www.kaggle.com/api/v1/datasets/metadata/berkerisen/wind-turbine-scada-dataset",
+      "checked_on": "2026-11-05",
+      "status": "INACCESSIBLE_AUTOMATED_TOOL",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    },
+    {
+      "url": "https://www.kaggle.com/dsv/317642",
+      "checked_on": "2026-11-05",
+      "status": "INACCESSIBLE_AUTOMATED_TOOL",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    },
+    {
+      "url": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset?datasetVersionNumber=1",
+      "checked_on": "2026-11-05",
+      "status": "INACCESSIBLE_AUTOMATED_TOOL",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    },
+    {
+      "url": "https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset/discussion/86526",
+      "checked_on": "2026-11-05",
+      "status": "INACCESSIBLE_AUTOMATED_TOOL",
+      "limitation": "Access limitation is not proof that provider omits metadata."
+    }
+  ],
+  "new_admission_design": {
+    "analysis_protocol_created_at": null,
+    "analysis_protocol_approved_at": null,
+    "authorized_periods": null,
+    "model_fitting_cutoff": null,
+    "model_available_at": null,
+    "static_calibration_target_cutoff": null,
+    "availability_mode": null,
+    "assumed_latency_scenario": null,
+    "canonical_dataset": null,
+    "lineage_manifest": null,
+    "cohort_policy": null,
+    "study_contract": null
+  },
+  "historical_split_constants_only": {
+    "validation_start_naive": "2018-09-09 02:50:00",
+    "evaluation_start_naive": "2018-11-05 15:10:00",
+    "status": "HISTORICAL_SCRIPT_CONSTANTS_NOT_NEW_APPROVED_CUTOFFS"
+  },
+  "negative_archived_comparison": {
+    "uncontrolled": {
+      "violations": 1465,
+      "summed_exceedance_kw": 317210.288
+    },
+    "adaptive_one_sided": {
+      "violations": 1486,
+      "summed_exceedance_kw": 323638.526
+    },
+    "fixed_margin": {
+      "violations": 1502,
+      "summed_exceedance_kw": 326158.296
+    },
+    "interpretation": "Archived retrospective arithmetic; both controllers worse than uncontrolled on aggregate counts/exceedance; no new experiment."
+  },
+  "preserved_model_identities": [
+    {
+      "path": "models/wind_xgboost_10min.json",
+      "sha256": "8f4d57de5b46012513a305e468e19afe7446677630f9b3220568d25b7dacfdba",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h1.json",
+      "sha256": "05134594fda631aa3bbb62b2f1775cc34112ab1499e7c566771bbe2a101eb7a2",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h2.json",
+      "sha256": "39ce38a5b0b4e62131370987088dc7dcc1745242e33179c9d1666233f1369eaf",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h3.json",
+      "sha256": "e5fe7ded7b6239fd26c47654e8f5e5eabcb48b57d057209e8a99b5cc69cff284",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h4.json",
+      "sha256": "ad1bf619db60e58a5dc491863981b694f31afe200b08653470cc53f1abd75ee0",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h5.json",
+      "sha256": "ec9cd5e9f4c468dc6cfa00ea84cce2dd5cd90da03bc11a1baa2373d462d38389",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    },
+    {
+      "path": "models/wind_xgboost_h6.json",
+      "sha256": "5adb91612fa71ded061a1becd301b75aebd762e88ce5b36eb52410169d2475aa",
+      "historical_fitting_availability": "NOT_AUTHENTICATED"
+    }
+  ],
+  "scope_limits": [
+    "Evidence package is author-created and cannot self-approve provenance.",
+    "No dataset/model transformation/training/inference/calibration/MPC experiment was executed.",
+    "No registry entry is installed or approved.",
+    "No signed acquisition URL query credentials are retained."
+  ]
+}
