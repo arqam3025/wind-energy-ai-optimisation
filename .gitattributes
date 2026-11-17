@@ -5,3 +5,4 @@ scripts/*_v1.py -text
 tests/*_v1.py -text
 audits/research_grade_20261029/** -text
 docs/research_grade_tables/** -text
+app/assets/real_data/** -text

@@ -1,0 +1,19 @@
+{
+ "description": "Copies of checksummed result files from branch research/stage4-real-data (commit 72224a5).",
+ "origins": {
+  "sealed_2023_2024_tests.json": "publication_v2/stage4/results/sealed_v3/tests.json",
+  "sealed_2023_2024_forecast_skill.json": "publication_v2/stage4/results/sealed_v3/forecast_skill.json",
+  "development_2021_tests.json": "publication_v2/stage4/runs/dev_r3/analysis/tests.json (development, round 3)",
+  "validation_2022_tests.json": "publication_v2/stage4/runs/validation_2022/analysis/tests.json (pre-freeze check)",
+  "simulation_primary_tests.json": "publication_v2/stage33/results/confirmatory_v1/primary_tests.json"
+ },
+ "stage4_protocol_sha256": "d8337ad97bfd55fdffd368002fc8ffe61a94afb5ccdcc5e9ea1b1b771d84bda7",
+ "stage33_protocol_sha256": "bed65ff8d1c82b282068237071338599d33e80bb6d8e02addb4a832177c72cec",
+ "file_sha256": {
+  "development_2021_tests.json": "832a40f7102fa2baa700efad311bdc65957c6aba19a722f8a4c67a86d57432bf",
+  "sealed_2023_2024_forecast_skill.json": "3ac42ec6688076b0bc874882c92609b2a7a22805bad66901f57e6eb328e1ae24",
+  "sealed_2023_2024_tests.json": "a325cda284f270a576a54a2e17378af779dfb21c80395e03a087159bfa25c0a5",
+  "simulation_primary_tests.json": "8f2fa798a4c940636c423ac179e11d4c934517b338fa158e6becc9886ffeea80",
+  "validation_2022_tests.json": "3e1e4f598beb5dd10341a088a66ebfff2c780834d34510638c92230eb121b8f3"
+ }
+}
