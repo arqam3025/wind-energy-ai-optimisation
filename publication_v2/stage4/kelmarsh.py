@@ -56,11 +56,11 @@ def _read_deduplicated(handle, name):
     """Stream one turbine file and resolve the cumulative-export duplicates of the 2023-2024 files.
 
     Rule (fixed after the structural check recorded in runs/sealed_v1/DEVIATIONS.md, D1, and
-    before any outcome was computed): rows are grouped by timestamp. A row whose every
-    non-timestamp field is "NaN" is blank. Each timestamp keeps its single distinct non-blank
-    row; with none, the interval is missing (NaN, never imputed). Two different non-blank rows for
-    one timestamp make the loader refuse. Files with one row per timestamp (2018-2022) are
-    unaffected.
+    before any outcome was computed): rows are grouped by timestamp. Versions of a row may differ
+    only by values being replaced with "NaN" (as observed). The most complete version is kept;
+    if two versions disagree on any non-missing value, or each has a value the other lacks, the
+    loader refuses. Missing values stay NaN and are never imputed. Files with one row per
+    timestamp (2018-2022) are unaffected.
     """
     header, preamble = None, []
     for line in handle:
@@ -80,23 +80,28 @@ def _read_deduplicated(handle, name):
         line = line.rstrip(EOL)
         if not line:
             continue
-        stamp, rest = line.split(',', 1)
-        if all(field == 'NaN' for field in rest.split(',')):
-            duplicates += stamp in kept
-            kept.setdefault(stamp, None)
-            continue
+        stamp = line.split(',', 1)[0]
         previous = kept.get(stamp)
         if previous is None:
             kept[stamp] = line
-        elif previous != line:
-            raise DataAccessError(f'{name}: two different non-blank rows for {stamp}')
-        else:
-            duplicates += 1
+            continue
+        duplicates += 1
+        if previous == line:
+            continue
+        old, new = previous.split(','), line.split(',')
+        if len(old) != len(new):
+            raise DataAccessError(f'{name}: rows of different width for {stamp}')
+        missing = ('NaN', '')
+        conflict = any(a != b and a not in missing and b not in missing for a, b in zip(old, new))
+        new_adds = any(a in missing and b not in missing for a, b in zip(old, new))
+        old_adds = any(b in missing and a not in missing for a, b in zip(old, new))
+        if conflict or (new_adds and old_adds):
+            raise DataAccessError(f'{name}: incompatible rows for {stamp}')
+        if new_adds:
+            kept[stamp] = line   # the more complete version; the other differs only value -> NaN
     # Parse the resolved rows with the same pandas CSV parser used for 2018-2022, so files that
     # had no duplicates are reproduced bit for bit (floating-point parsing differs between parsers).
-    blank_tail = ',NaN' * (len(header) - 1)
-    body = chr(10).join([raw_header] + [line if line is not None else stamp + blank_tail
-                                        for stamp, line in kept.items()])
+    body = chr(10).join([raw_header] + list(kept.values()))
     frame = pd.read_csv(io.StringIO(body), usecols=lambda c: c in COLUMNS or c == 'Date and time' or c == direction[0])
     frame = frame.rename(columns={direction[0]: 'wind_dir_deg'})
     frame.attrs['resolved_duplicate_rows'] = duplicates
