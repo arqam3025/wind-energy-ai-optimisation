@@ -1,10 +1,10 @@
-"""Stage 4 development experiment: real Kelmarsh closed loop on development data only.
+"""Stage 4 real Kelmarsh closed loop: one runner for development, validation and the sealed test.
 
-Round 1 design (development, not confirmatory): forecasters are fitted on 2018-2020 and evaluated
-in closed loop on 2021. 2021 is part of the development period; it is not the validation year
-(2022) and not the sealed test (2023-2024). Episodes are 8-hour blocks starting at
-00:00/08:00/16:00 UTC. The series starts on 2021-01-01, so every conformal and skill window is
-built from out-of-sample 2021 residuals only.
+Development (default): fit on 2018-2020, closed loop on 2021. Validation: fit on 2018-2021,
+closed loop on 2022 (``--stage validation``). Sealed test: fit on 2018-2021, closed loop on
+2023-2024 (``--stage sealed``, frozen protocol only). Episodes are 8-hour blocks starting at
+00:00/08:00/16:00 UTC. The evaluation series starts at the first evaluation year, so every
+conformal and skill window is built from out-of-sample residuals only.
 
 Forecasts:
 * ``persistence``: causal baseline;
@@ -31,30 +31,42 @@ import lightgbm
 from publication_v2.stage2.forecasting import DEFAULT_HYPERPARAMETERS, fit_forecaster
 from .closed_loop import CONTROLLERS, STEPS, Series, eligible, run_episode
 from .features import FEATURES, LABELS, SPATIAL_FEATURES, build, build_spatial, complete
-from .kelmarsh import load_development_farm
+from .kelmarsh import ARCHIVES, load_turbine
 
-FIT_YEARS, EVAL_YEAR = (2018, 2019, 2020), 2021
+STAGES = {  # name -> (fit years, evaluation years, roles that may be opened)
+    'development': ((2018, 2019, 2020), (2021,), ('development',)),
+    'validation': ((2018, 2019, 2020, 2021), (2022,), ('development', 'validation')),
+    'sealed': ((2018, 2019, 2020, 2021), (2023, 2024), ('development', 'sealed_test')),
+}
 FORECASTS = ('persistence', 'lightgbm', 'lightgbm_spatial', 'perfect')
 LGBM = dict(DEFAULT_HYPERPARAMETERS['lightgbm'], objective='regression', n_jobs=4, random_state=20261101,
             deterministic=True, force_col_wise=True, verbosity=-1)
 _SERIES: dict[str, Series] = {}
 
 
-def prepare(out: Path) -> dict:
-    frames = load_development_farm()
-    frame = frames[1]
-    table = build(frame)
-    spatial = build_spatial(frames)
-    train = complete(table[table.index.year.isin(FIT_YEARS)])
+def _frames(years, allow):
+    return {t: pd.concat([load_turbine(y, t, allow=allow) for y in years]) for t in range(1, 7)}
+
+
+def prepare(out: Path, stage: str = 'development', *, sealed_opt_in: bool = False) -> dict:
+    fit_years, eval_years, allow = STAGES[stage]
+    if stage == 'sealed' and not sealed_opt_in:
+        raise PermissionError('The sealed test may only be opened by the frozen Stage 4 protocol runner')
+    if any(ARCHIVES[y][0] not in allow for y in (*fit_years, *eval_years)):
+        raise PermissionError('stage definition opens a year outside its allowed roles')
+    fit_frames, eval_frames = _frames(fit_years, allow), _frames(eval_years, allow)
+    train = complete(build(fit_frames[1]))
     model = fit_forecaster('lightgbm', train[FEATURES].to_numpy(), train[LABELS].to_numpy())
-    evaluation = table[table.index.year == EVAL_YEAR]
+    evaluation = build(eval_frames[1])
     features_ok = evaluation[FEATURES].notna().all(axis=1).to_numpy()
     predictions = {name: np.full((len(evaluation), len(LABELS)), np.nan) for name in FORECASTS}
     x = evaluation.loc[features_ok, FEATURES].to_numpy()
     predictions['lightgbm'][features_ok] = model.predict(x)
     predictions['persistence'][features_ok] = np.repeat(x[:, :1], len(LABELS), axis=1)
-    s_train = spatial[spatial.index.year.isin(FIT_YEARS)].dropna(subset=SPATIAL_FEATURES + LABELS)
-    s_eval = spatial[spatial.index.year == EVAL_YEAR]
+    s_train = build_spatial(fit_frames).dropna(subset=SPATIAL_FEATURES + LABELS)
+    s_eval = build_spatial(eval_frames)
+    if not s_eval.index.equals(evaluation.index):
+        raise ValueError('spatial and turbine-1 evaluation grids differ')
     s_ok = s_eval[SPATIAL_FEATURES].notna().all(axis=1).to_numpy()
     spatial_models = [lightgbm.LGBMRegressor(**LGBM).fit(s_train[SPATIAL_FEATURES].to_numpy(), s_train[label].to_numpy())
                       for label in LABELS]
@@ -64,10 +76,10 @@ def prepare(out: Path) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out / 'series.npz', times=evaluation.index.as_unit('ns').asi8, realised=evaluation['power_kw'].to_numpy(),
                         **{f'pred_{k}': v for k, v in predictions.items()})
-    meta = {'fit_years': FIT_YEARS, 'eval_year': EVAL_YEAR, 'training_rows': model.training_rows,
+    meta = {'stage': stage, 'fit_years': fit_years, 'eval_years': eval_years, 'training_rows': model.training_rows,
             'training_features_sha256': model.training_features_sha256, 'versions': model.versions,
             'hyperparameters': model.hyperparameters, 'spatial_training_rows': int(len(s_train)), 'spatial_hyperparameters': LGBM,
-            'sources': sorted({f.attrs.get('source', '') for f in frames.values()})}
+            'sources': sorted({ARCHIVES[y][1] for y in (*fit_years, *eval_years)})}
     (out / 'prepare.json').write_text(json.dumps(meta, indent=1, default=str) + '\n', encoding='utf-8')
     return meta
 
@@ -75,8 +87,10 @@ def prepare(out: Path) -> dict:
 def _load(out: Path):
     data = np.load(out / 'series.npz')
     times = pd.DatetimeIndex(pd.to_datetime(data['times'], unit='ns', utc=True))
-    if not (times[0].year == times[-1].year == EVAL_YEAR):
-        raise ValueError('series times are not in the evaluation year')
+    eval_years = tuple(json.loads((out / 'prepare.json').read_text(encoding='utf-8'))['eval_years'])
+    labels = times - pd.Timedelta(minutes=10)   # interval-start label carries the data year
+    if not set(labels.year) <= set(eval_years) or labels[0].year != eval_years[0]:
+        raise ValueError('series times are not in the evaluation years')
     return {name: Series(times, data['realised'], data[f'pred_{name}'], name) for name in FORECASTS}
 
 
@@ -132,9 +146,10 @@ def main(argv=None):
     parser.add_argument('--stride', type=int, default=6)
     parser.add_argument('--workers', type=int, default=max(1, (os.cpu_count() or 2) - 1))
     parser.add_argument('--prepare', action='store_true')
+    parser.add_argument('--stage', choices=('development', 'validation'), default='development')
     args = parser.parse_args(argv)
     if args.prepare or not (args.out / 'series.npz').exists():
-        print(prepare(args.out))
+        print(prepare(args.out, args.stage))
     print(summarise(run(args.out, stride=args.stride, workers=args.workers)))
 
 

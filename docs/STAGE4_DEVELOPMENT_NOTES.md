@@ -107,3 +107,89 @@ pooled skill, per-horizon skill, MAE30 and ramp correlation.
    a small farm carry little ramp information; skill is about 0.08–0.14 versus persistence.
    Upstream measurements, NWP or lidar would be needed for substantially better ramp forecasts
    [CITE].
+
+### Round 2 closed loop on 2021 (1,027 episodes eligible for all four forecasts)
+
+The neighbour features need all six turbines present, so 42 fewer episodes are eligible. Values are
+mean exceedance (kW) / throughput (kWh) per episode; no battery = 756.8 / 0.
+
+| Forecast | Fixed margin | Adaptive | Stochastic | Stochastic + switch (P) | Switch idle |
+|---|---|---|---|---|---|
+| LightGBM (Stage 2 features) | 728.3 / 657 (−3.8%) | 736.2 / 456 (−2.7%) | 740.4 / 161 (−2.2%) | 751.2 / 90 (−0.7%) | 59% |
+| **LightGBM + neighbours** | 691.3 / 705 (−8.7%) | 699.4 / 491 (−7.6%) | 716.4 / 187 (−5.3%) | 732.5 / 117 (−3.2%) | 52% |
+| Perfect (privileged) | 0.2 / 942 | 0.1 / 122 | 1.1 / 116 | 3.7 / 115 | 2% |
+
+**Findings.**
+- **Benefit roughly doubles** with the neighbour forecaster, but it stays far below the
+  perfect-forecast headroom.
+- **Efficiency.** Exceedance reduction per MWh of throughput is about 0.21 kW/kWh for stochastic
+  MPC and P, against 0.12 for adaptive and 0.09 for fixed margin. This matches the Stage 3.3
+  efficiency result.
+- **Switch cost.** With skill near the 0.10 threshold, the switch idles about half of the
+  decisions, which halves the benefit relative to unswitched stochastic MPC. This is the
+  intermediate-skill cost already seen in simulation. The threshold stays at the prespecified
+  0.10 and is **not** re-tuned on real data.
+
+No safety or accounting violation occurred in any episode.
+
+## Round 3: runner generalised; two boundary defects found and fixed (2026-11-17)
+
+The runner now has three stages: development (fit 2018–2020, evaluate 2021), validation (fit
+2018–2021, evaluate 2022) and sealed (fit 2018–2021, evaluate 2023–2024; refused without the
+frozen-protocol opt-in). The training and evaluation tables are now built separately from their
+own years. Checking the new runner against round 2 exposed two defects in the round 1–2 runs:
+
+1. **Off-by-one evaluation year.** Rounds 1–2 selected the evaluation rows by interval-END year.
+   The 2021 series therefore started with the interval labelled 2020-12-31 23:50 and lacked the
+   last 2021 interval. The evaluation year is now defined by the data file, that is, by the
+   interval-start label.
+2. **Boundary label leakage.** In rounds 1–2, five training rows at the end of 2020 had labels up
+   to 50 minutes into 2021, the development evaluation year. Building each year range separately
+   removes this.
+
+Effect on forecasts: median absolute change 1.0 kW (LightGBM) and 1.7 kW (neighbour model); 99th
+percentile 12 and 22 kW. Development only, no effect on any sealed or validation data. The 2021
+closed loop is re-run with the corrected code (round 3); those numbers supersede rounds 1–2.
+
+### Round 3 results: 2021 with the corrected code (these supersede rounds 1–2)
+
+There are 1,027 paired episodes in 53 ISO weeks. Analysis: `publication_v2/stage4/analysis.py`
+(weekly units, week-block bootstrap).
+
+- The draft primary tests on 2021 would all be supported:
+  - R1: −23.3 kW [−35.8, −12.1] per episode;
+  - R2: −374 kWh [−420, −332] throughput versus adaptive;
+  - R3: 0.0 kW;
+  - R4: −6.1 kW [−12.8, +0.5], margin 37.8 kW.
+- Change in exceedance with the neighbour forecaster:
+  - fixed margin −8.7%; adaptive −7.6%; stochastic −5.4%; P −3.1% [−4.4, −1.7] at 116 kWh;
+  - reduction per MWh: P 201 and stochastic 220, against adaptive 117 and fixed margin 93
+    (kW per MWh of throughput).
+- Forecast skill versus persistence: Stage 2 LightGBM +0.110 and neighbour model +0.130; ramp
+  correlation 0.22 and 0.24.
+- Perfect-forecast headroom: −99.5% to −100%.
+- No safety violations.
+
+**Reporting defect fixed before freezing:** percentage CIs had divided an additive-difference CI by
+the overall mean, which allowed values below −100%. They are now ratio-of-sums week-block bootstrap
+CIs. The forecast-skill summary (protocol Section 5, item 3) was added to the analysis and to the
+sealed runner.
+
+## Pre-freeze validation check: 2022, run once (protocol Section 8)
+
+The model was fitted on 2018–2021 and the closed loop run on 2022: 1,048 paired episodes in 53
+weeks. Run: `runs/validation_2022` (git-ignored; summary here).
+
+| Test | Result on 2022 |
+|---|---|
+| R1 | −24.9 kW [−40.0, −11.2] per episode, Holm p = 8.0e−4 |
+| R2 | −418 kWh [−463, −374] versus adaptive, Holm p = 3.6e−10 |
+| R3 | 0.0 kW, margin 48.0 kW |
+| R4 | −6.6 kW [−16.6, +2.7], margin 48.0 kW |
+
+- **Controllers (neighbour forecaster):** fixed margin −8.0%, adaptive −7.2%, stochastic −5.1%,
+  P −2.6% [−3.9, −1.2] at 144 kWh, with the switch idle 48% of the time.
+- **Perfect-forecast headroom:** −98% to −100%.
+- **Forecast skill versus persistence:** LightGBM +0.128, neighbour model +0.145.
+- **Safety:** no violations.
+- **Defects found:** none, and no change was made after this check. The results agree with 2021.
