@@ -10,6 +10,7 @@ any decision or episode that needs them.
 """
 from __future__ import annotations
 
+import csv
 import hashlib
 import io
 import zipfile
@@ -30,6 +31,7 @@ ARCHIVES = {
 }
 DEVELOPMENT_YEARS = (2018, 2019, 2020, 2021)
 STEP = pd.Timedelta(minutes=10)
+EOL = chr(13) + chr(10)  # characters stripped from line ends
 COLUMNS = {
     'Power (kW)': 'power_kw',
     'Wind speed (m/s)': 'wind_ms',
@@ -50,6 +52,57 @@ def _md5(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _read_deduplicated(handle, name):
+    """Stream one turbine file and resolve the cumulative-export duplicates of the 2023-2024 files.
+
+    Rule (fixed after the structural check recorded in runs/sealed_v1/DEVIATIONS.md, D1, and
+    before any outcome was computed): rows are grouped by timestamp. A row whose every
+    non-timestamp field is "NaN" is blank. Each timestamp keeps its single distinct non-blank
+    row; with none, the interval is missing (NaN, never imputed). Two different non-blank rows for
+    one timestamp make the loader refuse. Files with one row per timestamp (2018-2022) are
+    unaffected.
+    """
+    header, preamble = None, []
+    for line in handle:
+        if line.startswith('# Date and time'):
+            raw_header = line[2:].rstrip(EOL)
+            header = next(csv.reader([raw_header]))
+            break
+        preamble.append(line)
+    if header is None or not any('Time zone: UTC' in line for line in preamble):
+        raise DataAccessError('Missing header or UTC declaration')
+    wanted = ['Date and time', *COLUMNS]
+    direction = [c for c in header if c.startswith('Wind direction (') and c.endswith(')') and ',' not in c]
+    if len(direction) != 1 or any(c not in header for c in wanted):
+        raise DataAccessError(f'Unexpected column set in {name}')
+    kept, duplicates = {}, 0
+    for line in handle:
+        line = line.rstrip(EOL)
+        if not line:
+            continue
+        stamp, rest = line.split(',', 1)
+        if all(field == 'NaN' for field in rest.split(',')):
+            duplicates += stamp in kept
+            kept.setdefault(stamp, None)
+            continue
+        previous = kept.get(stamp)
+        if previous is None:
+            kept[stamp] = line
+        elif previous != line:
+            raise DataAccessError(f'{name}: two different non-blank rows for {stamp}')
+        else:
+            duplicates += 1
+    # Parse the resolved rows with the same pandas CSV parser used for 2018-2022, so files that
+    # had no duplicates are reproduced bit for bit (floating-point parsing differs between parsers).
+    blank_tail = ',NaN' * (len(header) - 1)
+    body = chr(10).join([raw_header] + [line if line is not None else stamp + blank_tail
+                                        for stamp, line in kept.items()])
+    frame = pd.read_csv(io.StringIO(body), usecols=lambda c: c in COLUMNS or c == 'Date and time' or c == direction[0])
+    frame = frame.rename(columns={direction[0]: 'wind_dir_deg'})
+    frame.attrs['resolved_duplicate_rows'] = duplicates
+    return frame
+
+
 def load_turbine(year: int, turbine: int = 1, *, root: Path = ROOT, allow: tuple[str, ...] = ('development',)):
     """One turbine-year, indexed by interval END (UTC). Refuses years whose role is not allowed."""
     if year not in ARCHIVES:
@@ -64,18 +117,8 @@ def load_turbine(year: int, turbine: int = 1, *, root: Path = ROOT, allow: tuple
         members = [m for m in archive.namelist() if m.startswith(f'Turbine_Data_Kelmarsh_{turbine}_')]
         if len(members) != 1:
             raise DataAccessError(f'Expected one file for turbine {turbine} in {name}, found {members}')
-        text = archive.read(members[0]).decode('utf-8')
-    lines = text.splitlines()
-    header_index = next(i for i, line in enumerate(lines) if line.startswith('# Date and time'))
-    if 'Time zone: UTC' not in text[:2000]:
-        raise DataAccessError('File header does not declare UTC')
-    body = '\n'.join([lines[header_index][2:]] + lines[header_index + 1:])
-    frame = pd.read_csv(io.StringIO(body), usecols=lambda c: c in COLUMNS or c == 'Date and time'
-                        or c.startswith('Wind direction (') and c.endswith(')') and ',' not in c)
-    direction = [c for c in frame.columns if c.startswith('Wind direction (')]
-    if len(direction) != 1 or len(frame.columns) != len(COLUMNS) + 2:
-        raise DataAccessError(f'Unexpected column set: {list(frame.columns)}')
-    frame = frame.rename(columns={direction[0]: 'wind_dir_deg'})
+        with archive.open(members[0]) as raw:
+            frame = _read_deduplicated(io.TextIOWrapper(raw, encoding='utf-8', newline=''), name)
     label = pd.to_datetime(frame.pop('Date and time'), format='%Y-%m-%d %H:%M:%S', utc=True)
     frame = frame.rename(columns=COLUMNS)
     frame.index = pd.DatetimeIndex(label + STEP, name='interval_end')

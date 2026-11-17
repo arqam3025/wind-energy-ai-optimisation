@@ -1,6 +1,7 @@
 """Stage 4 tests: data-access guards, causal features, causal calibration/skill, closed-loop leakage."""
 from __future__ import annotations
 
+import io
 import json
 import unittest
 
@@ -46,6 +47,33 @@ class DataAccess(unittest.TestCase):
         self.assertEqual(len(f), 52560)
         self.assertEqual(str(f.index[0]), '2019-01-01 00:10:00+00:00')  # label 00:00 -> interval end 00:10
         self.assertTrue((f['realised_kw'].dropna() >= 0).all())
+
+
+class Deduplication(unittest.TestCase):
+    NL = chr(10)
+    HEADER = ('# Time zone: UTC' + NL + '# Date and time,Wind speed (m/s),"Wind speed, Standard deviation (m/s)",'
+              'Wind direction (deg),Power (kW),Lost Production to Downtime and Curtailment Total (kWh),Other' + NL)
+
+    def text(self, rows):
+        return io.StringIO(self.HEADER + ''.join(r + self.NL for r in rows))
+
+    def test_cumulative_export_with_blank_copies_resolves_to_one_row(self):
+        real = ['2023-01-01 00:00:00,5,1,200,300,0,1', '2023-01-01 00:10:00,6,1,210,400,0,2']
+        blank = ['2023-01-01 00:00:00,NaN,NaN,NaN,NaN,NaN,NaN', '2023-01-01 00:10:00,NaN,NaN,NaN,NaN,NaN,NaN']
+        rows = real[:1] + real + [blank[0]] + real + blank
+        f = kelmarsh._read_deduplicated(self.text(rows), 'x')
+        self.assertEqual(len(f), 2)
+        self.assertEqual(list(f['Power (kW)']), [300., 400.])
+        self.assertGreater(f.attrs['resolved_duplicate_rows'], 0)
+
+    def test_only_blank_rows_mean_missing(self):
+        f = kelmarsh._read_deduplicated(self.text(['2023-01-01 00:00:00,NaN,NaN,NaN,NaN,NaN,NaN']), 'x')
+        self.assertTrue(np.isnan(f['Power (kW)'].iloc[0]))
+
+    def test_conflicting_non_blank_rows_refused(self):
+        rows = ['2023-01-01 00:00:00,5,1,200,300,0,1', '2023-01-01 00:00:00,5,1,200,301,0,1']
+        with self.assertRaises(kelmarsh.DataAccessError):
+            kelmarsh._read_deduplicated(self.text(rows), 'x')
 
 
 class Features(unittest.TestCase):
