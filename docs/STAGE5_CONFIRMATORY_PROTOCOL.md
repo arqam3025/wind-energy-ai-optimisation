@@ -1,7 +1,7 @@
 # Stage 5 confirmatory protocol: second-site test on Penmanshiel (sealed 2023–2024)
 
-**Status: DRAFT, not frozen.** It becomes binding only when its SHA-256 is written into
-`publication_v2/stage5/confirmatory.py` (`PROTOCOL_SHA256`) and committed; that commit is the
+**Status: FROZEN on 2026-11-17, approved by the study author.** It is binding from the commit that writes its SHA-256 into
+`publication_v2/stage5/confirmatory.py` (`PROTOCOL_SHA256`); that commit is the
 frozen commit. The sealed years have been downloaded and MD5-verified but not read.
 
 ## 1. Purpose

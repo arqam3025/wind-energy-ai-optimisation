@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROTOCOL = ROOT / 'docs' / 'STAGE5_CONFIRMATORY_PROTOCOL.md'
-PROTOCOL_SHA256 = None  # set at freeze; the runner refuses while None
+PROTOCOL_SHA256 = '509885b8e3bb7bbb6fe2add6ffed344ba0ecba7feee73ae13cdf10b6730e4aab'  # frozen 2026-11-17
 
 
 def _sha(path: Path) -> str:
