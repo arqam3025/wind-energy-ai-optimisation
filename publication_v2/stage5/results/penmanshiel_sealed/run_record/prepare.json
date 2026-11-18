@@ -1,0 +1,45 @@
+{
+ "site": "penmanshiel",
+ "stage": "sealed",
+ "target_turbine": 11,
+ "neighbours": [
+  12,
+  13,
+  14,
+  15
+ ],
+ "fit_years": [
+  2018,
+  2019,
+  2020,
+  2021
+ ],
+ "eval_years": [
+  2023,
+  2024
+ ],
+ "training_rows": 205698,
+ "training_features_sha256": "7b0f363c5e9d8d57d188c39755bb285b0f9c2e65ce856f4715a4669085942657",
+ "spatial_training_rows": 204112,
+ "versions": {
+  "numpy": "2.5.4",
+  "scikit-learn": "1.9.1",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0"
+ },
+ "absent_rows": {
+  "11": 0,
+  "12": 0,
+  "13": 0,
+  "14": 0,
+  "15": 0
+ },
+ "sources": [
+  "Penmanshiel_SCADA_2018_WT11-15_3116.zip",
+  "Penmanshiel_SCADA_2019_WT11-15_3117.zip",
+  "Penmanshiel_SCADA_2020_WT11-15_3118.zip",
+  "Penmanshiel_SCADA_2021_WT11-15_4461.zip",
+  "Penmanshiel_SCADA_2023_WT_11-15_5964.zip",
+  "Penmanshiel_SCADA_2024_WT_11-15_5966.zip"
+ ]
+}

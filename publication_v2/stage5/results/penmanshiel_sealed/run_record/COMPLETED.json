@@ -1,0 +1,25 @@
+{
+ "stage": "sealed",
+ "site": "penmanshiel",
+ "protocol_sha256": "509885b8e3bb7bbb6fe2add6ffed344ba0ecba7feee73ae13cdf10b6730e4aab",
+ "git_head": "1fa4b9cf7f5bfa83c344b02701535336fedccef0",
+ "started_utc": "2026-11-17T22:58:59.855096+00:00",
+ "environment": {
+  "python": "3.12.5",
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "completed_utc": "2026-11-18T00:02:32.378567+00:00",
+ "file_sha256": {
+  "REPORT.md": "9b4284e901bcc92252e901a04a31a4b77b9ddf9d6d6e7bb5a631719d20c63ca6",
+  "STARTED.json": "676e8a748b474a07ffed03c523f45e6c6b68d429b7a1eaf4e4eec15b8d1b3473",
+  "forecast_skill.json": "b3a9237cbe557da04e35baf918e7eeef546f576c4133c368f90a139f43fa27b1",
+  "prepare.json": "676b0f7dcfb41e86890f9ae4a7523afd49613ae32129a377d109d12cd2fe18be",
+  "results_stride1.json": "bc76214609011df6078e507056b0d41ae0fe16bca99c6c6ac723ce9aa810730f",
+  "series.npz": "2e6a9aab4341641458c35feef8a2f69fcb0c263b24d6149ac408f91d9342b361",
+  "tests.json": "3d1870dc6cb68230f63764f898aafb4e3bf7e8afb0a945df1043e5473ff91fc7"
+ }
+}
