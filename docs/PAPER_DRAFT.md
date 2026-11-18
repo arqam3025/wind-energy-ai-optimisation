@@ -1,7 +1,8 @@
 # How good must a wind forecast be? Skill-gated stochastic MPC for wind–battery ramp control with conformal uncertainty
 
-*Manuscript draft. Sections 3–4 report the frozen confirmatory run
-(`docs/STAGE33_CONFIRMATORY_RESULTS.md`); every number there is traceable to checksummed result files. `[CITE: …]` marks places that need a
+*Manuscript draft. Section 3 reports three frozen confirmatory runs: simulation
+(`docs/STAGE33_CONFIRMATORY_RESULTS.md`), Kelmarsh (`docs/STAGE4_REAL_DATA_RESULTS.md`) and Penmanshiel
+(`docs/STAGE5_SECOND_SITE_RESULTS.md`). Every number is traceable to checksummed result files. `[CITE: …]` marks places that need a
 reference: fill these from your own literature search. No reference has been invented.*
 
 ## Abstract
@@ -25,8 +26,14 @@ joint six-horizon coverage does not (0.74–0.78). A second pre-registered test 
 (Kelmarsh wind farm, sealed years 2023–2024, 2,048 paired episodes) confirms all four real-data
 hypotheses. The controller reduces ramp exceedance by 3.2% with 73% less battery throughput than
 adaptive MPC, and does no harm with weak forecasts. A perfect forecast would remove 99.8%,
-identifying short-term ramp forecasting as the bottleneck. All code, protocols, development
-history and checksummed results are released.
+identifying short-term ramp forecasting as the bottleneck. A third pre-registered test at a second
+wind farm (Penmanshiel, sealed 2023–2024, 2,067 episodes, no re-tuning) confirms all six hypotheses
+for a graded variant of the switch, which scales the plan by the released skill instead of switching
+it on or off. It matches the binary switch's reduction (3.7% against 3.3%) with 47% less battery
+throughput, and replicates all four Kelmarsh findings. Adaptive MPC and a forecast-driven low-pass
+filter reduce exceedance more (7.0% and 5.5%) but at a higher cost per kW avoided; the graded weight,
+not the optimiser, carries the efficiency gain. All code, protocols, development history and
+checksummed results are released.
 
 ## 1. Introduction (outline with key claims)
 
@@ -47,7 +54,10 @@ history and checksummed results are released.
    - C2: a causal forecast-skill safety switch computed from the verified calibration ledger;
    - C3: a forecast-quality break-even analysis that maps forecast error to control value;
    - C4: a pre-registered, checksummed evaluation protocol with full disclosure of the development
-     history, including rejected hypotheses and negative results.
+     history, including rejected hypotheses and negative results;
+   - C5: a graded skill weight that scales any controller's dispatch by the released skill, and a
+     sealed two-site real-data evaluation (Kelmarsh and Penmanshiel) against an industry-style
+     low-pass filter baseline.
 
 ## 2. Methods
 
@@ -137,7 +147,23 @@ heuristic. Ablations: no switch; switch thresholds 0, 0.05 and 0.20; no do-no-ha
 target instead of the band; point forecast only; independent-increments dependence
 (R̃ spread √(σ_t² − σ_{t−1}²)).
 
-### 2.9 Evaluation protocol and statistics
+### 2.9 Graded skill weight and low-pass baseline (Stage 5)
+
+**Graded switch (G).** Instead of an on/off decision at SS = 0.10, the stochastic MPC plan is scaled
+by w = clip(SS / 0.30, 0, 1). All planned charge and discharge flows are multiplied by w. Because the
+stored energy then follows E_0 + w (E_k − E_0), every scaled plan stays inside the SOC and power
+limits of the original plan, so no re-optimisation is needed. With SS ≤ 0 the battery is idle, as with
+the binary switch. The end points 0 and 0.30 were chosen on simulation and Kelmarsh development data
+(`docs/STAGE5_DEVELOPMENT_NOTES.md`).
+
+**Low-pass filter baseline.** A common industrial smoothing method [CITE: low-pass / moving-average
+BESS smoothing], driven by the next-interval forecast p̂: the grid target is
+g_t = g_{t−1} + α (p̂ − g_{t−1}) + k (E_t − E_ref) / Δt, with α = 0.5, SOC feedback k = 1/6 per step
+and E_ref at 65% SOC; the battery covers the difference within its limits. A graded variant scales
+the filter's battery flow by the same weight w. The filter was added as a baseline during Kelmarsh
+development (Week 1), after the sealed Kelmarsh test.
+
+### 2.10 Evaluation protocol and statistics
 
 Design decisions were made on development seeds (1000–1005) and are documented with every round,
 including rejected hypotheses (`docs/STAGE33_DEVELOPMENT_NOTES.md`). The confirmatory protocol
@@ -300,6 +326,63 @@ showed that the copies differ only by values replaced with NaN. The corrected lo
 most complete row version and refuses on any conflict. It reproduces the development and
 validation data bit for bit. The protocol and analysis were unchanged.
 
+### 3.9 Second site (Penmanshiel, sealed 2023–2024)
+
+We repeated the real-data design at a second wind farm whose test years had never been opened
+(Penmanshiel, Scotland; WT11 as control unit, WT12–WT15 as forecast inputs; DOI
+10.5281/zenodo.16807304, CC-BY-4.0) [CITE: dataset]. The forecasters were refitted on 2018–2021 with
+unchanged code and hyperparameters; no controller setting was tuned for this site. Design checks used
+2021 (development) and 2022 (validation). The protocol (SHA-256 `509885b8…`) was frozen and pushed
+before the frozen runner opened 2023–2024, giving 2,067 paired episodes in 106 weeks. The run had no
+deviations. The six primary hypotheses concern the graded switch G; P is the binary-switch controller
+of Section 3.8.
+
+**All six primary hypotheses are supported** (Table 3).
+
+**Table 3.** Second-site primary tests, Holm-adjusted, n = 106 weeks. U = 1,041 kW.
+
+| Test | Forecast | Contrast | Mean difference [95% CI] | p (Holm) |
+|---|---|---|---|---|
+| S1: exceedance < no battery | neighbour LightGBM | G − none | −38.1 kW [−49.7, −28.5] (−3.7%) | 1.4e−17 |
+| S2: throughput < P | neighbour LightGBM | G − P | −82.2 kWh [−92.1, −72.5] | 1.0e−18 |
+| S3: exceedance non-inferior to P (m = 10.4 kW) | neighbour LightGBM | G − P | −4.2 kW [−9.5, +0.8] | 3.7e−07 |
+| S4: throughput < adaptive MPC | neighbour LightGBM | G − adaptive | −483.9 kWh [−519.6, −446.7] | 1.0e−18 |
+| S5: no harm (m = 52.1 kW) | persistence | G − none | 0.0 kW | 2.2e−24 |
+| S6: no harm (m = 52.1 kW) | Stage 2 LightGBM | G − none | −13.3 kW [−23.1, −5.4] | 1.0e−18 |
+
+S5 holds by construction (the released skill of persistence is zero, so w = 0). S2 and S3 together
+support the pre-registered claim of the same benefit with less battery: G reduces exceedance by 3.66%
+using 91 kWh per episode, against 3.26% and 173 kWh for P (Figure 7a). The same pattern appeared in
+2021 (−3.63% at 77 kWh against −3.29% at 146 kWh) and 2022 (−3.19% at 97 kWh against −3.08% at
+186 kWh) (Figure 7b), so the sealed result shows no sign of overfitting to the design years.
+
+**Replication of Kelmarsh.** All four Kelmarsh hypotheses for P hold at Penmanshiel (secondary
+analysis with the same contrasts and margins): R1 −33.9 kW [−45.4, −24.0] (−3.3%, against −3.2% at
+Kelmarsh); R2 −402 kWh against adaptive MPC; R3 and R4 no harm.
+
+**Stronger reducers exist (secondary, partly post-hoc).** Adaptive MPC reduces exceedance by 7.0%
+[6.1, 7.9] at 574 kWh, and the forecast-driven low-pass filter by 5.5% [4.7, 6.2] at 151 kWh. Both
+exceed G (by 34.9 and 18.9 kW per episode). Per unit of battery use, however, G (4.0% per 100 kWh) and
+the graded low-pass filter (5.3%) are the most efficient controllers, against 1.2% for adaptive MPC.
+Applied to the filter, the graded weight gives the same reduction as G (difference +2.4 kW
+[−1.5, +6.6]) with 26 kWh less throughput. With a perfect forecast, the MPC controllers remove 99.4–99.8%
+of exceedance but the filters only 78%: an optimiser is needed to exploit a good forecast.
+
+**Economic view (post-hoc, illustrative).** Pricing throughput by battery degradation and conversion
+losses [CITE: Li-ion capex and cycle life; wholesale energy price], the ramp penalty at which the
+battery cost is recovered is 0.08 EUR per kW of exceedance for G under central assumptions
+(0.03–0.18 across scenarios), against 0.17 for P and 0.27 for adaptive MPC.
+
+**Forecasts and safety.** The neighbour forecast reaches a skill of 0.148 against persistence (ramp
+correlation 0.27), close to Kelmarsh. No SOC or power violation occurred in any of the 66,144 episode
+runs.
+
+![Figure 7](figures_stage5_second_site/fig7_second_site.png)
+
+**Figure 7.** Penmanshiel. (a) Sealed 2023–2024: exceedance reduction against battery throughput for
+every controller, neighbour forecast, with week-block 95% CIs. (b) Binary switch P (open) to graded
+switch G (filled) in the development, validation and sealed periods.
+
 ## 4. Discussion
 
 **When does forecast-driven storage control pay?** The confirmatory results support a simple
@@ -336,6 +419,18 @@ and 74 kW of summed ramp excess per 8-hour episode. That is small relative to th
 uncontrolled level, and well below a single large ramp event. H2b also holds at 5%, so the
 efficiency conclusion does not rest on the margin change disclosed in the protocol.
 
+**Efficiency, not maximum reduction.** The two real-data studies change what the proposed approach
+should be claimed to do. With SCADA-only forecasts (skill ≈ 0.15), no controller removes more than
+about 7% of exceedance. Within that regime the controllers trade reduction against battery use. Adaptive
+MPC buys the largest reduction with the most cycling. The graded switch sits at the efficient end of
+the trade-off: it gives the binary switch's reduction at half its throughput, at two sites, without
+re-tuning. That the graded low-pass filter is equally efficient shows that the contribution is the
+causal skill weight, which can be placed in front of any dispatch rule, rather than the specific
+optimiser. A strong forecast-driven low-pass filter should be a standard baseline in this literature.
+The perfect-forecast results show where the larger gains lie: better ramp forecasts, for example from
+NWP, lidar or upstream measurements [CITE: ramp forecasting with NWP / lidar], would let the optimiser
+remove most exceedance, which the filter cannot.
+
 **Relation to prior work.** Battery-based ramp-rate control and MPC for wind–storage systems are
 established [CITE: wind–BESS ramp control; MPC for storage]. Conformal prediction for energy
 forecasting is growing [CITE]. To our knowledge, the combination evaluated here has not been
@@ -345,10 +440,15 @@ the literature before submission [CITE: closest related work].
 
 ## 5. Limitations
 
-- The large effects are synthetic. Real-data confirmation covers one wind farm (Kelmarsh) with
-  one turbine as the control unit and SCADA-only forecasts. There, the benefit is small (−3.2%)
-  because the forecasts have little ramp skill. Other sites, farm-level control, and forecasts
-  using NWP, lidar or upstream measurements remain to be tested.
+- The large effects are synthetic. Real-data confirmation covers two wind farms from the same
+  dataset provider in the UK (Kelmarsh and Penmanshiel), with one turbine as the control unit at each
+  and SCADA-only forecasts. There, the benefit is small (−3.2% to −3.7%) because the forecasts have
+  little ramp skill. Other regions, farm-level control, and forecasts using NWP, lidar or upstream
+  measurements remain to be tested.
+- The graded-switch end points and the low-pass baseline were designed after the Kelmarsh sealed
+  test had been seen, and were confirmed only at Penmanshiel. The graded controller was not run on
+  the sealed Kelmarsh years. The low-pass comparisons and the economic view are secondary or
+  post-hoc, and the cost assumptions are illustrative.
 - The 10-minute decision structure represents a dispatch-scheduling layer, not second-scale
   ramp-rate control, which can act within an interval without forecasts.
 - The skilful conditions are privileged oracles. The causal forecasters studied have little skill
@@ -377,3 +477,7 @@ times (D2). Outcomes are unaffected because the computation is deterministic, bu
 timing of a few decisions is inflated, so computation time is reported only as the median and 95th
 percentile. The full deviation log is released with the results
 (`publication_v2/stage33/results/confirmatory_v1/DEVIATIONS.md`).
+
+The Kelmarsh run had the loader deviation described in Section 3.8. The Penmanshiel run (tag
+`stage5-protocol-frozen`, commit `1fa4b9c`) ran once with no deviations; its run record, including
+the SHA-256 of every output, is in `publication_v2/stage5/results/penmanshiel_sealed/run_record/`.
