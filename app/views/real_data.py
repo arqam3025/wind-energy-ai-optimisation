@@ -45,7 +45,8 @@ def _descriptive(doc):
 def render(context=None):
     section_header('Evidence / real wind farm', 'Real-Data Validation',
                    'Pre-registered test on the Kelmarsh wind farm (UK). Forecasters were trained on 2018–2021 and '
-                   'evaluated once on the sealed years 2023–2024: 2,048 paired 8-hour episodes for turbine 1.')
+                   'evaluated once on the sealed years 2023–2024: 2,048 paired 8-hour episodes for turbine 1. '
+                   'A second site, Penmanshiel, is shown further down.')
     sealed = load('sealed_2023_2024_tests.json')
     skill = load('sealed_2023_2024_forecast_skill.json')
     rows = _descriptive(sealed)
@@ -134,6 +135,8 @@ def render(context=None):
                             'R1–R4 supported': f"{sum(t['supported'] for t in doc['tests'])} / {len(doc['tests'])}"})
     st.dataframe(pd.DataFrame(consistency).set_index('Period'), width='stretch')
 
+    _second_site()
+
     simulation = load('simulation_primary_tests.json')
     st.subheader('Link to the simulation study')
     st.write(f"The pre-registered simulation study (18,900 held-out episodes) supported "
@@ -149,7 +152,84 @@ def render(context=None):
                  'Two runs stopped at data loading before any outcome was computed. An author-approved structural '
                  'check (row counts only) showed that the copies differ only by values replaced with NaN. The corrected '
                  'loader keeps the most complete version of each row and reproduces 2021 and 2022 bit for bit.')
-        st.write('**Limitations:** one site with turbine 1 as the control unit; SCADA-only forecasts; a 10-minute '
-                 'dispatch layer rather than second-scale ramp-rate control.')
-        st.write('**Data:** Kelmarsh wind farm data, Plumley & Takeuchi, Zenodo DOI 10.5281/zenodo.16807551 '
-                 '(CC-BY-4.0). Raw data is not included in this app.')
+        st.write('**Second site:** the Penmanshiel protocol was frozen separately (SHA-256 509885b8…, tag '
+                 'stage5-protocol-frozen) and run once with no deviations.')
+        st.write('**Limitations:** two UK sites from the same data provider, one turbine as the control unit at each; '
+                 'SCADA-only forecasts; a 10-minute dispatch layer rather than second-scale ramp-rate control. The '
+                 'low-pass comparisons are secondary (post-hoc) analyses.')
+        st.write('**Data:** Kelmarsh wind farm data, Plumley & Takeuchi, Zenodo DOI 10.5281/zenodo.16807551; '
+                 'Penmanshiel wind farm data, Zenodo DOI 10.5281/zenodo.16807304 (both CC-BY-4.0). Raw data is not '
+                 'included in this app.')
+
+
+SITE2_CONTROLLERS = {'heuristic': 'Heuristic', 'adaptive': 'Adaptive MPC', 'stochastic': 'Stochastic MPC',
+                     'stochastic_skill': 'P: binary skill switch', 'graded_mpc': 'G: graded skill switch (proposed)',
+                     'lowpass_fast': 'Low-pass filter', 'graded_lowpass': 'Graded low-pass filter'}
+SITE2_TESTS = {'S1': 'G reduces ramp exceedance vs no battery',
+               'S2': 'G uses less battery throughput than P',
+               'S3': 'G exceedance non-inferior to P (margin 1% of U)',
+               'S4': 'G uses less battery throughput than adaptive MPC',
+               'S5': 'No material harm with a persistence forecast (margin 5% of U)',
+               'S6': 'No material harm with the weaker Stage 2 forecast (margin 5% of U)'}
+
+
+def _second_site():
+    """Penmanshiel: the sealed second-site test of the graded skill switch (Stage 5)."""
+    st.subheader('Second site: Penmanshiel (sealed 2023–2024)')
+    sealed = load('penmanshiel_sealed_2023_2024_tests.json')
+    rows = _descriptive(sealed)
+    tests = {t['test']: t for t in sealed['tests']}
+    g, p = rows[('lightgbm_spatial', 'graded_mpc')], rows[('lightgbm_spatial', 'stochastic_skill')]
+    st.write(f"A second wind farm, never seen during design, tested with no re-tuning: turbine WT11, "
+             f"{tests['S1']['episodes']:,} paired episodes. The new graded switch G scales the battery plan by the "
+             'released forecast skill instead of switching it on or off.')
+    metrics([('Hypotheses supported', f"{sum(t['supported'] for t in tests.values())} / {len(tests)}",
+              'Holm-adjusted, one-sided, weekly units'),
+             ('G: exceedance change', f"{g['change_vs_uncontrolled_pct']:+.1f}%", 'Neighbour forecast, vs no battery'),
+             ('Battery use vs P', f"{(g['throughput_kwh'] / p['throughput_kwh'] - 1) * 100:+.0f}%",
+              f"{g['throughput_kwh']:.0f} vs {p['throughput_kwh']:.0f} kWh per episode"),
+             ('P: exceedance change', f"{p['change_vs_uncontrolled_pct']:+.1f}%", 'Kelmarsh controller, replicated')])
+    st.dataframe(pd.DataFrame([{
+        'Test': tid, 'Claim': SITE2_TESTS[tid], 'Forecast': FORECASTS[t['forecast']],
+        'Mean difference': f"{t['mean_difference']:+.1f}",
+        '95% CI (week-block bootstrap)': f"[{t['ci95_block_bootstrap'][0]:+.1f}, {t['ci95_block_bootstrap'][1]:+.1f}]",
+        'p (Holm)': f"{t['p_holm']:.1e}", 'Supported': 'yes' if t['supported'] else 'no'} for tid, t in tests.items()
+    ]).set_index('Test'), width='stretch')
+    st.caption('Units: S1, S3, S5, S6 in kW of summed ramp exceedance per episode; S2, S4 in kWh of throughput per episode.')
+
+    left, right = st.columns(2)
+    with left:
+        fig = go.Figure()
+        for c, label in SITE2_CONTROLLERS.items():
+            r = rows[('lightgbm_spatial', c)]
+            y = -r['change_vs_uncontrolled_pct']
+            lo, hi = (-v for v in r['change_ci95_pct'][::-1])
+            proposed = c == 'graded_mpc'
+            fig.add_trace(go.Scatter(
+                x=[r['throughput_kwh']], y=[y], mode='markers', name=label,
+                error_y={'type': 'data', 'symmetric': False, 'array': [hi - y], 'arrayminus': [y - lo]},
+                marker={'size': 16 if proposed else 11, 'symbol': 'diamond' if 'lowpass' in c else 'circle',
+                        'color': '#24D3BA' if proposed else ('#F4B860' if 'lowpass' in c else '#9DADC0')},
+                hovertemplate=label + '<br>%{x:.0f} kWh · %{y:.2f}% reduction<extra></extra>'))
+        fig.update_layout(title='Reduction vs battery use (neighbour forecast) · 95% CI', height=400,
+                          xaxis_title='Throughput per episode (kWh)', yaxis_title='Exceedance reduction (%)',
+                          hovermode='closest', legend={'orientation': 'h', 'y': -0.25})
+        chart(fig, 'penmanshiel_efficiency')
+    with right:
+        periods = [('2021', 'Development', 'penmanshiel_development_2021_tests.json'),
+                   ('2022', 'Pre-freeze validation', 'penmanshiel_validation_2022_tests.json'),
+                   ('2023–2024', 'Sealed test', 'penmanshiel_sealed_2023_2024_tests.json')]
+        table = []
+        for period, role, name in periods:
+            r = _descriptive(load(name))
+            for c in ('graded_mpc', 'stochastic_skill'):
+                v = r[('lightgbm_spatial', c)]
+                table.append({'Period': period, 'Role': role, 'Controller': 'G (graded)' if c == 'graded_mpc' else 'P (binary)',
+                              'Change in exceedance': f"{v['change_vs_uncontrolled_pct']:+.2f}%",
+                              'Throughput (kWh)': f"{v['throughput_kwh']:.0f}"})
+        st.markdown('**Consistency across years (neighbour forecast)**')
+        st.dataframe(pd.DataFrame(table).set_index('Period'), width='stretch')
+    info_note('G gives the same ramp reduction as P with about half the battery use, at a second site and without '
+              're-tuning. Adaptive MPC and a forecast-driven low-pass filter reduce exceedance more, but use more battery '
+              'per kW avoided; G and the graded low-pass filter are the most efficient. These low-pass comparisons are '
+              'secondary analyses.')

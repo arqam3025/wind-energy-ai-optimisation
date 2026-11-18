@@ -37,6 +37,15 @@ class RealDataPage(unittest.TestCase):
         self.assertTrue(all(t['supported'] for t in tests.values()))
         self.assertAlmostEqual(tests['R1']['mean_difference'], -30.6, delta=.05)
 
+    def test_second_site_matches_sealed_run_record(self):
+        sealed = real_data.load('penmanshiel_sealed_2023_2024_tests.json')
+        tests = {t['test']: t for t in sealed['tests']}
+        self.assertEqual(sorted(tests), ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'])
+        self.assertTrue(all(t['supported'] for t in tests.values()))
+        self.assertAlmostEqual(tests['S1']['mean_difference'], -38.1, delta=.05)
+        self.assertAlmostEqual(tests['S2']['mean_difference'], -82.2, delta=.05)
+        self.assertIn('6 / 6', [m.value for m in AppTest.from_function(_page, default_timeout=60).run().metric])
+
     def test_tampered_file_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:
             copy = Path(tmp) / 'real_data'
