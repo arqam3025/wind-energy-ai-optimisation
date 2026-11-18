@@ -16,7 +16,7 @@ no harm with weak forecasts. A perfect forecast would give −99.8%, so forecast
 bottleneck.
 
 - **Run it:** [docs/HOW_TO_RUN.md](docs/HOW_TO_RUN.md). 320 automated tests.
-- **Paper draft:** [docs/PAPER_DRAFT.md](docs/PAPER_DRAFT.md).
+- **Paper draft:** [docs/MANUSCRIPT.md](docs/MANUSCRIPT.md).
 - **Results:** [simulation](docs/STAGE33_CONFIRMATORY_RESULTS.md) · [real data](docs/STAGE4_REAL_DATA_RESULTS.md).
 - **Protocols:** [simulation](docs/STAGE33_CONFIRMATORY_PROTOCOL.md) · [real data](docs/STAGE4_CONFIRMATORY_PROTOCOL.md).
   Deviations are logged with each result set.
@@ -93,7 +93,7 @@ Only the three self-contained Stage 2 test modules are shipped. The tests use
 invented fixtures and mocks, do not train forecasting models, and do not need
 SCADA observations. A Windows account without symlink privileges skips one
 fixture. Private-artifact integration and model-fitting suites are not represented
-as passed by these commands. See [reproducibility](docs/REPRODUCIBILITY.md).
+as passed by these commands. See [reproducibility](docs/REPRODUCIBILITY_STAGE29_RELEASE.md).
 
 The separate native forecasting dependency declaration is
 `publication_v2/stage2/requirements.txt`. An optional isolated installation is:

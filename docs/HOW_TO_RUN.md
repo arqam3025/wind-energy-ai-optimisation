@@ -31,7 +31,7 @@ privilege test). Without the Kelmarsh data, one more Stage 4 test is skipped aut
 
 | What | Where |
 |---|---|
-| Paper draft | `docs/PAPER_DRAFT.md` |
+| Paper draft | `docs/MANUSCRIPT.md` |
 | Simulation study: protocol and results | `docs/STAGE33_CONFIRMATORY_PROTOCOL.md`, `docs/STAGE33_CONFIRMATORY_RESULTS.md` |
 | Real-data study: protocol and results | `docs/STAGE4_CONFIRMATORY_PROTOCOL.md`, `docs/STAGE4_REAL_DATA_RESULTS.md` |
 | Figures 1–5 (simulation), Figure 6 (real data) | `docs/figures_stage33_confirmatory/`, `docs/figures_stage4_real_data/` |
