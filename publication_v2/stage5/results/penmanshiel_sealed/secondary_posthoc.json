@@ -1,0 +1,197 @@
+{
+ "R_replication_P": [
+  {
+   "test": "R1",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "stochastic_skill - uncontrolled",
+   "description": "P reduces exceedance vs no battery",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -33.915550781627964,
+   "ci95_block_bootstrap": [
+    -45.44233930858738,
+    -24.013903205766383
+   ],
+   "p_one_sided": 3.7013769275183533e-10,
+   "p_holm": 3.7013769275183533e-10,
+   "supported": true
+  },
+  {
+   "test": "R2",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_throughput_kwh",
+   "contrast": "stochastic_skill - adaptive",
+   "description": "P uses less throughput than adaptive MPC",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -401.6624241530491,
+   "ci95_block_bootstrap": [
+    -431.2026543903467,
+    -370.4276956756275
+   ],
+   "p_one_sided": 1.9960851797597312e-19,
+   "p_holm": 5.988255539279193e-19,
+   "supported": true
+  },
+  {
+   "test": "R3",
+   "forecast": "persistence",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "stochastic_skill - uncontrolled",
+   "description": "no material harm (margin 5% of U)",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 52.07259001767916,
+   "mean_difference": 0.0,
+   "ci95_block_bootstrap": [
+    0.0,
+    0.0
+   ],
+   "p_one_sided": 3.6867601709815192e-25,
+   "p_holm": 1.4747040683926077e-24,
+   "supported": true
+  },
+  {
+   "test": "R4",
+   "forecast": "lightgbm",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "stochastic_skill - uncontrolled",
+   "description": "no material harm (margin 5% of U)",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 52.07259001767916,
+   "mean_difference": -7.100508887785945,
+   "ci95_block_bootstrap": [
+    -18.461974373416755,
+    2.2306029397766176
+   ],
+   "p_one_sided": 5.193042123568657e-18,
+   "p_holm": 1.0386084247137314e-17,
+   "supported": true
+  }
+ ],
+ "lowpass_and_adaptive_contrasts": [
+  {
+   "test": "L1",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "lowpass_fast - graded_mpc",
+   "description": "lowpass_fast exceedance vs G",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -18.93031943624819,
+   "ci95_block_bootstrap": [
+    -23.924434192630866,
+    -13.925903212492601
+   ],
+   "p_one_sided": 3.9292243161943264e-10,
+   "p_holm": 1.9646121580971632e-09,
+   "supported": true
+  },
+  {
+   "test": "L2",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_throughput_kwh",
+   "contrast": "lowpass_fast - graded_mpc",
+   "description": "lowpass_fast throughput vs G",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": 60.30579403058647,
+   "ci95_block_bootstrap": [
+    52.46066202882687,
+    68.0149077148615
+   ],
+   "p_one_sided": 0.9999999999999972,
+   "p_holm": 0.9999999999999972,
+   "supported": false
+  },
+  {
+   "test": "L3",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "lowpass_fast - stochastic_skill",
+   "description": "lowpass_fast exceedance vs P",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -23.147961991724983,
+   "ci95_block_bootstrap": [
+    -31.031597673191264,
+    -15.932090096912804
+   ],
+   "p_one_sided": 3.5592270040526204e-08,
+   "p_holm": 1.0677681012157861e-07,
+   "supported": true
+  },
+  {
+   "test": "L4",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "graded_lowpass - graded_mpc",
+   "description": "graded_lowpass exceedance vs G",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": 2.3503239685667627,
+   "ci95_block_bootstrap": [
+    -1.5383681265404974,
+    6.645065957331751
+   ],
+   "p_one_sided": 0.34970890679793665,
+   "p_holm": 0.6994178135958733,
+   "supported": false
+  },
+  {
+   "test": "L5",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_throughput_kwh",
+   "contrast": "graded_lowpass - graded_mpc",
+   "description": "graded_lowpass throughput vs G",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -25.620162290450043,
+   "ci95_block_bootstrap": [
+    -33.66996231161528,
+    -17.851751628937063
+   ],
+   "p_one_sided": 2.5463784565482785e-08,
+   "p_holm": 1.0185513826193114e-07,
+   "supported": true
+  },
+  {
+   "test": "A1",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "adaptive - graded_mpc",
+   "description": "adaptive exceedance vs G",
+   "episodes": 2067,
+   "weeks": 106,
+   "U_kw": 1041.4518003535832,
+   "margin": 0.0,
+   "mean_difference": -34.87185001765678,
+   "ci95_block_bootstrap": [
+    -43.234490648104135,
+    -26.701959982520414
+   ],
+   "p_one_sided": 1.6784368492420373e-11,
+   "p_holm": 1.0070621095452224e-10,
+   "supported": true
+  }
+ ],
+ "note": "Secondary, descriptive (protocol section 5). Holm applied within each family only for reference; no confirmatory claim."
+}

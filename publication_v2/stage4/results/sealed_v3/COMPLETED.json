@@ -1,0 +1,25 @@
+{
+ "stage": "sealed",
+ "protocol_sha256": "d8337ad97bfd55fdffd368002fc8ffe61a94afb5ccdcc5e9ea1b1b771d84bda7",
+ "git_head": "ae6f85eec21dbb477fcfe645f161d94c00c5a6d5",
+ "started_utc": "2026-11-17T14:24:06.041371+00:00",
+ "environment": {
+  "python": "3.12.5",
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "completed_utc": "2026-11-17T15:33:13.645179+00:00",
+ "file_sha256": {
+  "DEVIATIONS.md": "d51b5df5f5ccc0a7d5a476bf1d0b4798e77c5fba1896a4c3621c71f4c0b3f63f",
+  "REPORT.md": "73555c22f06883f6f697dd36cef9f2da1a0470153a70f368000cb3dc0d3dedb8",
+  "STARTED.json": "f851f0976f138a23e04438de715a50e510a62c00be8c5cfb2b0bd003bf310cc1",
+  "forecast_skill.json": "3ac42ec6688076b0bc874882c92609b2a7a22805bad66901f57e6eb328e1ae24",
+  "prepare.json": "2f3258c02bf29dc76eccba8f710e447b44e6d98d81a526f4150b48cd70574159",
+  "results_stride1.json": "656d272afe21821e763807ecd15a09b94434d11cf620242efb5871b35bbe4b6b",
+  "series.npz": "00195488a25ab212d96a67b6af3759776e16187901bf3957e71b76b6f4440015",
+  "tests.json": "a325cda284f270a576a54a2e17378af779dfb21c80395e03a087159bfa25c0a5"
+ }
+}

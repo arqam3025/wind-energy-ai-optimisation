@@ -1,0 +1,664 @@
+{
+ "tests": [
+  {
+   "test": "S1",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "graded_mpc - uncontrolled",
+   "description": "G reduces ramp exceedance vs no battery",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 0.0,
+   "mean_difference": -37.28889980429957,
+   "ci95_block_bootstrap": [
+    -50.771964470913375,
+    -25.33334174009098
+   ],
+   "p_one_sided": 1.3463953151013134e-08,
+   "p_holm": 2.6927906302026268e-08,
+   "supported": true
+  },
+  {
+   "test": "S2",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_throughput_kwh",
+   "contrast": "graded_mpc - stochastic_skill",
+   "description": "G uses less throughput than the binary-switch controller P",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 0.0,
+   "mean_difference": -89.53501876869414,
+   "ci95_block_bootstrap": [
+    -105.81038512798943,
+    -74.47737694600451
+   ],
+   "p_one_sided": 4.138534253087915e-10,
+   "p_holm": 1.5110441752761347e-09,
+   "supported": true
+  },
+  {
+   "test": "S3",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "graded_mpc - stochastic_skill",
+   "description": "G exceedance non-inferior to P (margin 1% of U)",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 11.69378593127127,
+   "mean_difference": -1.2438282872502193,
+   "ci95_block_bootstrap": [
+    -7.454589056275344,
+    5.417895001808967
+   ],
+   "p_one_sided": 5.106662105140489e-05,
+   "p_holm": 5.106662105140489e-05,
+   "supported": true
+  },
+  {
+   "test": "S4",
+   "forecast": "lightgbm_spatial",
+   "metric": "total_throughput_kwh",
+   "contrast": "graded_mpc - adaptive",
+   "description": "G uses less throughput than adaptive MPC",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 0.0,
+   "mean_difference": -520.0608491675849,
+   "ci95_block_bootstrap": [
+    -577.1544173563825,
+    -460.05107019381063
+   ],
+   "p_one_sided": 8.881784197001252e-16,
+   "p_holm": 5.329070518200751e-15,
+   "supported": true
+  },
+  {
+   "test": "S5",
+   "forecast": "persistence",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "graded_mpc - uncontrolled",
+   "description": "no material harm without skill (margin 5% of U)",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 58.46892965635635,
+   "mean_difference": 0.0,
+   "ci95_block_bootstrap": [
+    0.0,
+    0.0
+   ],
+   "p_one_sided": 7.687298972140174e-13,
+   "p_holm": 3.843649486070087e-12,
+   "supported": true
+  },
+  {
+   "test": "S6",
+   "forecast": "lightgbm",
+   "metric": "total_ramp_exceedance_kw",
+   "contrast": "graded_mpc - uncontrolled",
+   "description": "no material harm with a weak forecast (margin 5% of U)",
+   "episodes": 968,
+   "weeks": 50,
+   "U_kw": 1169.378593127127,
+   "margin": 58.46892965635635,
+   "mean_difference": -12.766032829722143,
+   "ci95_block_bootstrap": [
+    -21.20493305597632,
+    -6.1696779901944065
+   ],
+   "p_one_sided": 3.7776104381903367e-10,
+   "p_holm": 1.5110441752761347e-09,
+   "supported": true
+  }
+ ],
+ "descriptive": [
+  {
+   "forecast": "persistence",
+   "controller": "uncontrolled",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "persistence",
+   "controller": "heuristic",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "persistence",
+   "controller": "adaptive",
+   "episodes": 968,
+   "exceedance_kw": 1170.9242048773247,
+   "throughput_kwh": 219.50003283180763,
+   "change_vs_uncontrolled_pct": 0.13217376812623455,
+   "change_ci95_pct": [
+    -0.13930231361777298,
+    0.4105601434342524
+   ],
+   "reduction_per_mwh": -7.0415103371852386,
+   "violations": 7.693181818181818,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 125
+  },
+  {
+   "forecast": "persistence",
+   "controller": "stochastic",
+   "episodes": 968,
+   "exceedance_kw": 1172.524816096421,
+   "throughput_kwh": 77.90271846890722,
+   "change_vs_uncontrolled_pct": 0.26905084356646947,
+   "change_ci95_pct": [
+    0.00820042090054335,
+    0.5316965276727926
+   ],
+   "reduction_per_mwh": -40.38656199847478,
+   "violations": 7.708677685950414,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 3
+  },
+  {
+   "forecast": "persistence",
+   "controller": "stochastic_skill",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 1.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "persistence",
+   "controller": "graded_mpc",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "persistence",
+   "controller": "lowpass_fast",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "persistence",
+   "controller": "graded_lowpass",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "uncontrolled",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "heuristic",
+   "episodes": 968,
+   "exceedance_kw": 1161.3669108906893,
+   "throughput_kwh": 6.57915875823416,
+   "change_vs_uncontrolled_pct": -0.6851230459942709,
+   "change_ci95_pct": [
+    -1.6170503883907397,
+    0.14267098482236618
+   ],
+   "reduction_per_mwh": 1217.7365725383183,
+   "violations": 7.645661157024794,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "adaptive",
+   "episodes": 968,
+   "exceedance_kw": 1141.2981123922013,
+   "throughput_kwh": 559.6693182723434,
+   "change_vs_uncontrolled_pct": -2.40131646841878,
+   "change_ci95_pct": [
+    -3.274084600934415,
+    -1.4579844036152112
+   ],
+   "reduction_per_mwh": 50.17334311197879,
+   "violations": 7.767561983471074,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 36
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "stochastic",
+   "episodes": 968,
+   "exceedance_kw": 1151.7890116191033,
+   "throughput_kwh": 212.66761009860494,
+   "change_vs_uncontrolled_pct": -1.504181931446652,
+   "change_ci95_pct": [
+    -2.426546664557265,
+    -0.5654972198903265
+   ],
+   "reduction_per_mwh": 82.70926400060529,
+   "violations": 7.777892561983471,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 7
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "stochastic_skill",
+   "episodes": 968,
+   "exceedance_kw": 1161.0332372966138,
+   "throughput_kwh": 116.81353207300285,
+   "change_vs_uncontrolled_pct": -0.7136573116321577,
+   "change_ci95_pct": [
+    -1.5064270533425028,
+    0.04353978538876118
+   ],
+   "reduction_per_mwh": 71.44168729781714,
+   "violations": 7.756198347107438,
+   "skill_gated_fraction": 0.5994533402203857,
+   "safety_violations": 0,
+   "solver_failures": 4
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "graded_mpc",
+   "episodes": 968,
+   "exceedance_kw": 1156.6125602974048,
+   "throughput_kwh": 53.114193002019476,
+   "change_vs_uncontrolled_pct": -1.091693734155291,
+   "change_ci95_pct": [
+    -1.6728160537153476,
+    -0.583405579201596
+   ],
+   "reduction_per_mwh": 240.35068798346913,
+   "violations": 7.641528925619835,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 8
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "lowpass_fast",
+   "episodes": 968,
+   "exceedance_kw": 1150.624496345363,
+   "throughput_kwh": 119.80855828516071,
+   "change_vs_uncontrolled_pct": -1.6037660422371773,
+   "change_ci95_pct": [
+    -2.2340575130314764,
+    -0.923661078492908
+   ],
+   "reduction_per_mwh": 156.53386577882358,
+   "violations": 7.639462809917355,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm",
+   "controller": "graded_lowpass",
+   "episodes": 968,
+   "exceedance_kw": 1156.3284601037267,
+   "throughput_kwh": 40.61360885380045,
+   "change_vs_uncontrolled_pct": -1.1159887054629587,
+   "change_ci95_pct": [
+    -1.5341242913082898,
+    -0.7363118805658329
+   ],
+   "reduction_per_mwh": 321.3241421213719,
+   "violations": 7.619834710743802,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "uncontrolled",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "heuristic",
+   "episodes": 968,
+   "exceedance_kw": 1165.714368831806,
+   "throughput_kwh": 10.513511052501581,
+   "change_vs_uncontrolled_pct": -0.31334798814147224,
+   "change_ci95_pct": [
+    -1.2783668008588995,
+    0.49626706950198446
+   ],
+   "reduction_per_mwh": 348.5252716264602,
+   "violations": 7.651859504132231,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "adaptive",
+   "episodes": 968,
+   "exceedance_kw": 1095.1981405371985,
+   "throughput_kwh": 616.5931911748521,
+   "change_vs_uncontrolled_pct": -6.343578805522405,
+   "change_ci95_pct": [
+    -7.551841151057353,
+    -5.013228045801681
+   ],
+   "reduction_per_mwh": 120.3069603292012,
+   "violations": 7.581611570247934,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 25
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "stochastic",
+   "episodes": 968,
+   "exceedance_kw": 1115.7382585563678,
+   "throughput_kwh": 283.18983689186916,
+   "change_vs_uncontrolled_pct": -4.587080256644275,
+   "change_ci95_pct": [
+    -5.705456616094312,
+    -3.472693985392596
+   ],
+   "reduction_per_mwh": 189.41475852200375,
+   "violations": 7.607438016528926,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 16
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "stochastic_skill",
+   "episodes": 968,
+   "exceedance_kw": 1133.3335216100775,
+   "throughput_kwh": 186.0673607759613,
+   "change_vs_uncontrolled_pct": -3.082412464953578,
+   "change_ci95_pct": [
+    -4.158155103577983,
+    -1.9503347916651248
+   ],
+   "reduction_per_mwh": 193.7205502713087,
+   "violations": 7.615702479338843,
+   "skill_gated_fraction": 0.5111484159779615,
+   "safety_violations": 0,
+   "solver_failures": 11
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "graded_mpc",
+   "episodes": 968,
+   "exceedance_kw": 1132.0896933228273,
+   "throughput_kwh": 96.53234200726712,
+   "change_vs_uncontrolled_pct": -3.1887790680845622,
+   "change_ci95_pct": [
+    -4.017755601406765,
+    -2.366474698223873
+   ],
+   "reduction_per_mwh": 386.28400626074523,
+   "violations": 7.546487603305785,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 2
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "lowpass_fast",
+   "episodes": 968,
+   "exceedance_kw": 1108.0601750074193,
+   "throughput_kwh": 155.34246849739347,
+   "change_vs_uncontrolled_pct": -5.243675442675195,
+   "change_ci95_pct": [
+    -6.095920642732206,
+    -4.374447510729198
+   ],
+   "reduction_per_mwh": 394.7305505882103,
+   "violations": 7.461776859504132,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "lightgbm_spatial",
+   "controller": "graded_lowpass",
+   "episodes": 968,
+   "exceedance_kw": 1129.8099754605494,
+   "throughput_kwh": 65.49470592431202,
+   "change_vs_uncontrolled_pct": -3.3837302905267164,
+   "change_ci95_pct": [
+    -3.9660213536580984,
+    -2.7696739664061973
+   ],
+   "reduction_per_mwh": 604.1498638425012,
+   "violations": 7.503099173553719,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "perfect",
+   "controller": "uncontrolled",
+   "episodes": 968,
+   "exceedance_kw": 1169.378593127127,
+   "throughput_kwh": 0.0,
+   "change_vs_uncontrolled_pct": 0.0,
+   "change_ci95_pct": [
+    0.0,
+    0.0
+   ],
+   "reduction_per_mwh": null,
+   "violations": 7.617768595041323,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "perfect",
+   "controller": "heuristic",
+   "episodes": 968,
+   "exceedance_kw": 27.087530454960977,
+   "throughput_kwh": 229.2805684499268,
+   "change_vs_uncontrolled_pct": -97.68359617542474,
+   "change_ci95_pct": [
+    -99.04353624804406,
+    -96.04250904787243
+   ],
+   "reduction_per_mwh": 4982.066602480681,
+   "violations": 0.10330578512396695,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "perfect",
+   "controller": "adaptive",
+   "episodes": 968,
+   "exceedance_kw": 1.080586311174832,
+   "throughput_kwh": 207.91237816414537,
+   "change_vs_uncontrolled_pct": -99.90759311676084,
+   "change_ci95_pct": [
+    -99.99901906868217,
+    -99.74416021293973
+   ],
+   "reduction_per_mwh": 5619.184471516118,
+   "violations": 0.006198347107438017,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 5
+  },
+  {
+   "forecast": "perfect",
+   "controller": "stochastic",
+   "episodes": 968,
+   "exceedance_kw": 2.014042162905357,
+   "throughput_kwh": 195.12043967456984,
+   "change_vs_uncontrolled_pct": -99.82776816894523,
+   "change_ci95_pct": [
+    -99.93610423843317,
+    -99.62252791682545
+   ],
+   "reduction_per_mwh": 5982.789670375906,
+   "violations": 0.16012396694214875,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 5
+  },
+  {
+   "forecast": "perfect",
+   "controller": "stochastic_skill",
+   "episodes": 968,
+   "exceedance_kw": 5.166820132065221,
+   "throughput_kwh": 194.61635372301,
+   "change_vs_uncontrolled_pct": -99.55815677126016,
+   "change_ci95_pct": [
+    -99.86580059757814,
+    -99.14355357056526
+   ],
+   "reduction_per_mwh": 5982.086041196927,
+   "violations": 0.16632231404958678,
+   "skill_gated_fraction": 0.01700241046831956,
+   "safety_violations": 0,
+   "solver_failures": 5
+  },
+  {
+   "forecast": "perfect",
+   "controller": "graded_mpc",
+   "episodes": 968,
+   "exceedance_kw": 5.166820132065221,
+   "throughput_kwh": 194.61635372301,
+   "change_vs_uncontrolled_pct": -99.55815677126016,
+   "change_ci95_pct": [
+    -99.86580059757814,
+    -99.14355357056526
+   ],
+   "reduction_per_mwh": 5982.086041196927,
+   "violations": 0.16632231404958678,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 5
+  },
+  {
+   "forecast": "perfect",
+   "controller": "lowpass_fast",
+   "episodes": 968,
+   "exceedance_kw": 248.8707832398782,
+   "throughput_kwh": 477.0280977534472,
+   "change_vs_uncontrolled_pct": -78.71768948888028,
+   "change_ci95_pct": [
+    -81.1134001869601,
+    -76.26531474127884
+   ],
+   "reduction_per_mwh": 1929.6720973509925,
+   "violations": 2.8378099173553717,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  },
+  {
+   "forecast": "perfect",
+   "controller": "graded_lowpass",
+   "episodes": 968,
+   "exceedance_kw": 250.86842243433958,
+   "throughput_kwh": 476.47226577176593,
+   "change_vs_uncontrolled_pct": -78.5468603659425,
+   "change_ci95_pct": [
+    -80.9921253518535,
+    -76.08027894266431
+   ],
+   "reduction_per_mwh": 1927.7306082129053,
+   "violations": 2.8378099173553717,
+   "skill_gated_fraction": 0.0,
+   "safety_violations": 0,
+   "solver_failures": 0
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 .venv/
 .venv*/
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .mplconfig/
 
@@ -9,6 +9,13 @@ data/raw/*
 data/processed/*
 models/*
 results/*
+# Research stages: generated runs, private inputs and results are never committed by default;
+# small checksummed summaries are added explicitly with `git add -f`.
+**/runs/
+**/inputs/
+publication_v2/**/results/
+private/
+*.bundle
 # Local fine-grained diagnostic exports; review data rights before redistribution.
 docs/completion_tables/interval_ramp_attribution.csv
 docs/completion_tables/representative_intervals.csv

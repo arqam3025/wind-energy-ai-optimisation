@@ -1,0 +1,15 @@
+{
+ "stage": "sealed",
+ "site": "penmanshiel",
+ "protocol_sha256": "509885b8e3bb7bbb6fe2add6ffed344ba0ecba7feee73ae13cdf10b6730e4aab",
+ "git_head": "1fa4b9cf7f5bfa83c344b02701535336fedccef0",
+ "started_utc": "2026-11-17T22:58:59.855096+00:00",
+ "environment": {
+  "python": "3.12.5",
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "scipy": "1.18.1",
+  "lightgbm": "4.7.0",
+  "platform": "Windows-11-10.0.26200-SP0"
+ }
+}

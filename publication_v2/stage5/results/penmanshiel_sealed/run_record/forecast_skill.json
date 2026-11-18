@@ -1,0 +1,54 @@
+{
+ "persistence": {
+  "decisions": 102181,
+  "mae_kw": [
+   92.9,
+   127.4,
+   147.7,
+   163.1,
+   176.0,
+   187.0
+  ],
+  "skill_vs_persistence": 0.0,
+  "ramp_correlation_abs_ramp_gt_200": 0.0
+ },
+ "lightgbm": {
+  "decisions": 102181,
+  "mae_kw": [
+   94.9,
+   130.0,
+   150.4,
+   166.3,
+   179.6,
+   191.4
+  ],
+  "skill_vs_persistence": 0.11551732687952221,
+  "ramp_correlation_abs_ramp_gt_200": 0.229139621468609
+ },
+ "lightgbm_spatial": {
+  "decisions": 102181,
+  "mae_kw": [
+   92.6,
+   127.7,
+   148.0,
+   163.6,
+   177.1,
+   188.9
+  ],
+  "skill_vs_persistence": 0.1476869733466175,
+  "ramp_correlation_abs_ramp_gt_200": 0.26718091524147236
+ },
+ "perfect": {
+  "decisions": 102181,
+  "mae_kw": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "skill_vs_persistence": 1.0,
+  "ramp_correlation_abs_ramp_gt_200": 1.0
+ }
+}

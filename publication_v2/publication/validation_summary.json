@@ -1,0 +1,36 @@
+{
+  "excluded_suites": [
+    "private-artifact data/lineage/retrospective/workflow integration",
+    "forecast model-fitting"
+  ],
+  "model_fitting": false,
+  "python_version": "3.12.5",
+  "real_data_experiment": false,
+  "schema_version": "publication_v2.public.synthetic-validation.v1",
+  "scope": "SYNTHETIC_SOFTWARE_ONLY",
+  "skip_explanation": "Windows symlink fixture requires an unavailable privilege when skipped; no scientific observation was excluded",
+  "standard_library_only": true,
+  "suites": {
+    "stage1": {
+      "errors": 0,
+      "failed": 0,
+      "passed": 58,
+      "run": 59,
+      "skipped": 1
+    },
+    "stage2_conformal_metrics_environment": {
+      "errors": 0,
+      "failed": 0,
+      "passed": 48,
+      "run": 48,
+      "skipped": 0
+    }
+  },
+  "total": {
+    "errors": 0,
+    "failed": 0,
+    "passed": 106,
+    "run": 107,
+    "skipped": 1
+  }
+}
