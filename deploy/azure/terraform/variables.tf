@@ -10,9 +10,9 @@ variable "name" {
 }
 
 variable "location" {
-  description = "Azure region. Azure for Students subscriptions allow only some regions; change it if a policy rejects this one."
+  description = "Azure region. Azure for Students allows only some regions (here: switzerlandnorth, francecentral, norwayeast, austriaeast, spaincentral); francecentral is the closest to the UK."
   type        = string
-  default     = "uksouth"
+  default     = "francecentral"
 }
 
 variable "image_registry" {

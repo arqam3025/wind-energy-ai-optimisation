@@ -48,9 +48,10 @@ flowchart LR
 5. **Deploy:** *Actions → Deploy (Azure) → Run workflow*. Every later merge to `main` deploys
    automatically. The run summary shows the API and dashboard URLs.
 
-If Azure rejects the region (student subscriptions allow only some regions), set `location` in
-`deploy/azure/terraform/variables.tf` to an allowed region, for example `westeurope`. Re-run the
-bootstrap with `LOCATION=westeurope`.
+Region: Azure for Students allows only some regions. You can list them with
+`az policy assignment list --query "[].parameters.listOfAllowedLocations.value"`. This deployment
+uses `francecentral`, the closest allowed region to the UK. To use another one, change `location` in
+`deploy/azure/terraform/variables.tf` and re-run the bootstrap with `LOCATION=<region>`.
 
 ## Cost
 

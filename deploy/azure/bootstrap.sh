@@ -14,7 +14,7 @@
 set -euo pipefail
 
 REPO="${REPO:-arqam3025/wind-energy-ai-optimisation}"
-LOCATION="${LOCATION:-uksouth}"
+LOCATION="${LOCATION:-francecentral}"
 STATE_RG="rg-windgrid-tfstate"
 IDENTITY="id-windgrid-github"
 
