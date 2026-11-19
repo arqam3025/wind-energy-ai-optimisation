@@ -46,9 +46,20 @@ echo "Deployment identity (OIDC)..."
 az identity create -n "$IDENTITY" -g "$STATE_RG" -l "$LOCATION" -o none
 CLIENT_ID=$(az identity show -n "$IDENTITY" -g "$STATE_RG" --query clientId -o tsv)
 PRINCIPAL_ID=$(az identity show -n "$IDENTITY" -g "$STATE_RG" --query principalId -o tsv)
-az identity federated-credential create --name github-main --identity-name "$IDENTITY" -g "$STATE_RG" \
-  --issuer "https://token.actions.githubusercontent.com" --subject "repo:${REPO}:ref:refs/heads/main" \
-  --audiences "api://AzureADTokenExchange" -o none 2>/dev/null || echo "  (federated credential already exists)"
+# GitHub's OIDC subject comes in two formats: the classic "repo:owner/name:ref:..." and the newer
+# immutable-ID form "repo:owner@<owner_id>/name@<repo_id>:ref:...". Trust both, main branch only.
+IDS=$(curl -fsSL "https://api.github.com/repos/${REPO}" | python3 -c 'import json,sys; r=json.load(sys.stdin); print(r["owner"]["id"], r["id"])')
+OWNER_ID=${IDS% *}
+REPO_ID=${IDS#* }
+OWNER=${REPO%/*}
+NAME=${REPO#*/}
+add_subject() {
+  az identity federated-credential create --name "$1" --identity-name "$IDENTITY" -g "$STATE_RG" \
+    --issuer "https://token.actions.githubusercontent.com" --subject "$2" \
+    --audiences "api://AzureADTokenExchange" -o none 2>/dev/null || echo "  (credential $1 already exists)"
+}
+add_subject github-main "repo:${REPO}:ref:refs/heads/main"
+add_subject github-main-ids "repo:${OWNER}@${OWNER_ID}/${NAME}@${REPO_ID}:ref:refs/heads/main"
 
 echo "Role assignments (may take a minute to propagate)..."
 az role assignment create --assignee-object-id "$PRINCIPAL_ID" --assignee-principal-type ServicePrincipal \
