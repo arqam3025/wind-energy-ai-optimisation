@@ -28,7 +28,11 @@ for provider in Microsoft.App Microsoft.OperationalInsights Microsoft.Storage Mi
 done
 
 echo "Terraform state storage..."
-az group create -n "$STATE_RG" -l "$LOCATION" -o none
+if az group show -n "$STATE_RG" -o none 2>/dev/null; then
+  echo "  reusing resource group $STATE_RG ($(az group show -n "$STATE_RG" --query location -o tsv))"
+else
+  az group create -n "$STATE_RG" -l "$LOCATION" -o none
+fi
 STORAGE=$(az storage account list -g "$STATE_RG" --query "[0].name" -o tsv)
 if [ -z "$STORAGE" ]; then
   STORAGE="stwindgrid$(openssl rand -hex 4)"
