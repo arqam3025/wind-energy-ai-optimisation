@@ -23,9 +23,8 @@ jobs:
       vars.AZURE_CLIENT_ID != '' &&
       (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ steps.apply.outputs.dashboard_url }}
+    # No GitHub 'environment' here: the Azure federated credential trusts the main-branch subject
+    # (repo:<owner>/<repo>:ref:refs/heads/main), which an environment would replace.
     env:
       ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
