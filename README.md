@@ -21,7 +21,9 @@ wears the battery. WindGrid is a forecast-aware battery dispatch system that:
   skill, so the battery stays idle when the forecast is no better than persistence;
 - ships as a tested **Python package, REST API, CLI, Docker images and dashboard**.
 
-**Live demo:** _the Azure URLs are added here after the first deployment (see [Deployment](#deployment))_
+**Live on Azure** (deployed automatically from `main`; containers scale to zero, so the first request may take a few seconds):
+- **Dashboard:** https://windgrid-dashboard.ashystone-2cde2852.francecentral.azurecontainerapps.io
+- **REST API docs:** https://windgrid-api.ashystone-2cde2852.francecentral.azurecontainerapps.io/docs
 
 ## Results
 
