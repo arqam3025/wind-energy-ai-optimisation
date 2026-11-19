@@ -30,3 +30,8 @@ audits/**/replay_*.log
 *.key
 *.p12
 *.pfx
+
+# Python build artefacts
+build/
+*.egg-info/
+.ruff_cache/

@@ -6,7 +6,7 @@ from platform_data import ArtifactError
 
 def render_page(name):
     context=current_context()
-    if context.get('block_id') is None and name not in ['command_center','reproducibility','results','real_data']:
+    if context.get('block_id') is None and name not in ['command_center','reproducibility','results','real_data','controller_lab']:
         st.error('No valid evaluation block can be selected. Restore the saved docs/tables_v2 summaries; block identities are never invented.')
         st.caption(context.get('summary_error','Research summaries are unavailable.'))
         return

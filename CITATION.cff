@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "WindGrid: skill-aware battery control of wind-power ramps"
+type: software
+authors:
+  - family-names: "Abdullah"
+    given-names: "Raja Arqam"
+    affiliation: "Teesside University"
+version: "1.0.0"
+date-released: "2026-11-19"
+license: MIT
+repository-code: "https://github.com/arqam3025/wind-energy-ai-optimisation"
+keywords:
+  - wind energy
+  - battery energy storage
+  - model predictive control
+  - conformal prediction
+  - forecast skill
+abstract: >-
+  Forecast-aware battery dispatch for smoothing short-term wind-power ramps: scenario-based
+  stochastic MPC with conformal uncertainty and a causal forecast-skill switch, validated in
+  pre-registered studies on simulation and two UK wind farms (Kelmarsh, Penmanshiel).

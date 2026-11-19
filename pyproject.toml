@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "windgrid"
+version = "1.0.0"
+description = "Forecast-aware battery dispatch for smoothing wind-power ramps: skill-gated stochastic MPC with conformal uncertainty, validated in pre-registered studies on two wind farms."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Raja Arqam Abdullah" }]
+keywords = ["wind energy", "battery storage", "model predictive control", "conformal prediction", "forecasting", "MILP"]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+# Runtime of the controllers, forecasting and the dispatch service (versions tested in CI).
+dependencies = [
+    "numpy==2.5.4",
+    "pandas==3.0.6",
+    "scipy==1.18.1",
+    "scikit-learn==1.9.1",
+    "lightgbm==4.7.0",
+    "matplotlib==3.11.2",
+]
+
+[project.optional-dependencies]
+api = ["fastapi==0.163.2", "starlette==1.7.0", "uvicorn==0.54.0"]
+dashboard = ["streamlit==1.65.0", "plotly==7.1.0"]
+dev = ["ruff==0.17.6", "httpx2==2.16.2"]
+# Earlier retrospective study (src/windresearch, scripts/): CVXPY-based MPC and XGBoost.
+legacy = ["cvxpy==1.9.3", "highspy==1.15.1", "xgboost==3.4.1"]
+all = ["windgrid[api,dashboard,dev]"]
+
+[project.scripts]
+windgrid = "windgrid.cli:main"
+
+[project.urls]
+Repository = "https://github.com/arqam3025/wind-energy-ai-optimisation"
+
+[tool.setuptools.packages.find]
+include = ["windgrid*", "publication_v2*"]
+
+[tool.setuptools.package-data]
+windgrid = ["data/*.npz", "data/*.json", "data/*.md"]
+publication_v2 = ["**/*.json"]
+
+[tool.ruff]
+line-length = 125
+target-version = "py312"
+# The frozen research code (publication_v2/) and the earlier study are byte-preserved records
+# (checksums, frozen protocols); they are tested but not reformatted. New code is linted.
+include = ["windgrid/**/*.py", "app/views/controller_lab.py", "tests/test_controller_lab_page.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "N", "C4", "PIE", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]   # en dashes and Unicode symbols are intentional in text
+
+[tool.ruff.lint.isort]
+known-first-party = ["windgrid", "publication_v2"]
+known-local-folder = ["ui", "views", "routes", "platform_data"]
+
+[tool.ruff.format]
+quote-style = "single"

@@ -1,0 +1,12 @@
+{
+ "source_file": "publication_v2/stage5/runs/pen_validation_2022/series.npz",
+ "source_sha256": "60071955a12de8c04592f0ae64f38e0db2848523b215e0967980f3382cf4ace7",
+ "start_row": 4752,
+ "rows": 2016,
+ "turbine": "Penmanshiel WT11",
+ "forecasts": [
+  "persistence",
+  "lightgbm_spatial"
+ ],
+ "sample_sha256": "1206f67da974d7a5e5085534157ac78ca24620e596bff1d80c67d82e74da0eee"
+}

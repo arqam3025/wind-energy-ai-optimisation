@@ -1,11 +1,12 @@
-"""WindGrid AI entry point: eight registered historical research pages."""
+"""WindGrid AI entry point: the Controller Lab and the registered research pages."""
 from pathlib import Path
 import sys
 import streamlit as st
 
 APP_DIRECTORY=Path(__file__).resolve().parent
-if str(APP_DIRECTORY) not in sys.path:
-    sys.path.insert(0,str(APP_DIRECTORY))
+for _path in (APP_DIRECTORY,APP_DIRECTORY.parent):  # app helpers, then the windgrid/publication_v2 packages
+    if str(_path) not in sys.path:
+        sys.path.insert(0 if _path==APP_DIRECTORY else 1,str(_path))
 from platform_data import CASES, ArtifactError, valid_blocks, get_replay, interval_frame
 from ui import apply_style
 
@@ -32,9 +33,14 @@ with st.sidebar:
     st.markdown('<div class="wg-brand">WindGrid <span style="color:#24d3ba">AI</span></div>',unsafe_allow_html=True)
     st.markdown('<div class="wg-sub">WIND–BATTERY DIGITAL TWIN<br>Research platform / recorded operation</div>',unsafe_allow_html=True)
 
+# Without the private study artifacts (e.g. a public cloud demo) the app opens on the Controller Lab,
+# which runs on the bundled sample; with them it opens on the Command Center as before.
+LOCAL_ARTIFACTS=(APP_DIRECTORY.parent/'data'/'processed'/'evaluation_block_1.csv').is_file()
 page=st.navigation({
+    "LIVE CONTROL":[
+        st.Page("screens/controller_lab.py",title="Controller Lab",icon=":material/tune:",url_path="controller-lab",default=not LOCAL_ARTIFACTS)],
     "OPERATIONS":[
-        st.Page("screens/command_center.py",title="Command Center",icon=":material/dashboard:",url_path="command-center",default=True),
+        st.Page("screens/command_center.py",title="Command Center",icon=":material/dashboard:",url_path="command-center",default=LOCAL_ARTIFACTS),
         st.Page("screens/digital_twin.py",title="Digital Twin",icon=":material/play_circle:",url_path="digital-twin")],
     "ANALYSIS":[
         st.Page("screens/forecasting.py",title="AI Forecasting Lab",icon=":material/query_stats:",url_path="forecasting"),
