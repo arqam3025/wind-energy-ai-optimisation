@@ -21,7 +21,7 @@ wears the battery. WindGrid is a forecast-aware battery dispatch system that:
   skill, so the battery stays idle when the forecast is no better than persistence;
 - ships as a tested **Python package, REST API, CLI, Docker images and dashboard**.
 
-**Live demo:** _add the Streamlit Community Cloud link here after deployment (see [Deployment](#deployment))_
+**Live demo:** _the Azure URLs are added here after the first deployment (see [Deployment](#deployment))_
 
 ## Results
 
@@ -113,7 +113,7 @@ flowchart LR
 | Practice | Where |
 |---|---|
 | Continuous integration on Ubuntu and Windows: lint, 300+ tests, CLI smoke test, Docker build, container smoke test | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
-| Container images published to GitHub Container Registry on every push to `main` and every release | `ghcr.io/arqam3025/windgrid-api`, `windgrid-dashboard` |
+| Container images published to GitHub Container Registry; Kubernetes deploy test on kind; Terraform + continuous deployment to Azure | `ghcr.io/arqam3025/windgrid-api`, `windgrid-dashboard` |
 | Packaging with pinned dependencies and optional extras (`api`, `dashboard`, `dev`) | [`pyproject.toml`](pyproject.toml) |
 | Linting and formatting (ruff), pre-commit hooks, Dependabot updates | [`.pre-commit-config.yaml`](.pre-commit-config.yaml), [`.github/dependabot.yml`](.github/dependabot.yml) |
 | Causality and leakage tests, physical-invariant checks (SOC, power, energy conservation) | `publication_v2/*/tests` |
@@ -121,11 +121,19 @@ flowchart LR
 
 ## Deployment
 
-- **Docker:** `docker compose up --build`, or pull the published images from GHCR.
-- **Streamlit Community Cloud (free):** new app → this repository, branch `main`, main file
-  `app/dashboard.py`, Python 3.12. `app/requirements.txt` and `packages.txt` are already set up.
-  Without the private study data, the app opens on the Controller Lab, which runs on the bundled
-  sample.
+Production-style delivery, fully automated ([details](docs/DEPLOYMENT.md)):
+
+- **Containers:** Docker images for the API and the dashboard, published to GitHub Container
+  Registry and tagged by commit.
+- **Kubernetes:** manifests with health probes, resource limits, autoscaling, a disruption budget
+  and the restricted pod-security standard. They are deployed to a throwaway cluster in CI on every
+  push.
+- **Azure Container Apps:** the infrastructure is defined in Terraform
+  ([`deploy/azure/terraform`](deploy/azure/terraform)). It provides public HTTPS endpoints, scales
+  to zero when idle, and sends logs to Log Analytics.
+- **Continuous deployment:** every change merged to `main` that passes CI is deployed to Azure by
+  GitHub Actions and smoke-tested on the live URL. GitHub signs in through OpenID Connect, so no
+  cloud passwords are stored in GitHub.
 
 ## Repository map
 

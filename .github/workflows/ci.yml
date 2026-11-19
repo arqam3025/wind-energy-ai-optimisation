@@ -61,10 +61,28 @@ jobs:
           windgrid dispatch --controller graded_mpc
           windgrid simulate --episodes 2
 
-  docker:
-    name: Docker build and smoke test
+  infrastructure:
+    name: Infrastructure as code
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform format and validate
+        run: |
+          terraform -chdir=deploy/azure/terraform fmt -check -recursive
+          terraform -chdir=deploy/azure/terraform init -backend=false -input=false
+          terraform -chdir=deploy/azure/terraform validate
+      - name: Kubernetes manifests build
+        run: |
+          kubectl kustomize deploy/k8s/base > /dev/null
+          kubectl kustomize deploy/k8s/overlays/ci > /dev/null
+      - name: Shell scripts
+        run: shellcheck deploy/azure/bootstrap.sh
+
+  docker:
+    name: Containers (Docker + Kubernetes)
+    runs-on: ubuntu-latest
+    needs: [lint, test, infrastructure]
     steps:
       - uses: actions/checkout@v4
       - name: Build images
@@ -83,9 +101,27 @@ jobs:
           docker run -d --name dashboard -p 8501:8501 windgrid-dashboard:ci
           for i in $(seq 1 30); do curl -fs http://localhost:8501/_stcore/health && exit 0; sleep 2; done
           docker logs dashboard; exit 1
-      - name: Container logs on failure
+      - name: Create a Kubernetes cluster (kind)
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: windgrid
+      - name: Deploy to Kubernetes and call the API
+        run: |
+          kind load docker-image windgrid-api:ci windgrid-dashboard:ci --name windgrid
+          kubectl apply -k deploy/k8s/overlays/ci
+          kubectl -n windgrid rollout status deployment/windgrid-api --timeout=240s
+          kubectl -n windgrid rollout status deployment/windgrid-dashboard --timeout=240s
+          kubectl -n windgrid get pods -o wide
+          kubectl -n windgrid port-forward service/windgrid-api 8080:80 &
+          for i in $(seq 1 30); do curl -fs http://localhost:8080/health && break; sleep 2; done
+          curl -fs http://localhost:8080/v1/sample > k8s-request.json
+          curl -fs -X POST http://localhost:8080/v1/dispatch -H "Content-Type: application/json"             -d @k8s-request.json | head -c 300
+      - name: Diagnostics on failure
         if: failure()
-        run: docker logs api || true
+        run: |
+          docker logs api || true
+          kubectl -n windgrid describe pods || true
+          kubectl -n windgrid logs -l app.kubernetes.io/part-of=windgrid --tail=100 || true
 
   publish:
     name: Publish images (GHCR)

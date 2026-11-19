@@ -1,0 +1,9 @@
+# Deploy with:  kubectl apply -k deploy/k8s/base
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: windgrid
+resources:
+  - namespace.yaml
+  - api.yaml
+  - dashboard.yaml
+  - ingress.yaml

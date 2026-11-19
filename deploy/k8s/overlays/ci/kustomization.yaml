@@ -1,0 +1,26 @@
+# CI overlay: images built in the pipeline and loaded into a throwaway kind cluster.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/arqam3025/windgrid-api
+    newName: windgrid-api
+    newTag: ci
+  - name: ghcr.io/arqam3025/windgrid-dashboard
+    newName: windgrid-dashboard
+    newTag: ci
+patches:
+  # Without an ingress controller or metrics-server in kind, drop the Ingress and HPA.
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: windgrid
+  - patch: |-
+      $patch: delete
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: windgrid-api

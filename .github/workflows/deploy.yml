@@ -1,0 +1,76 @@
+name: Deploy (Azure)
+
+# Continuous deployment: runs after CI succeeds on main (CI has already published the images),
+# or manually. Does nothing until the Azure variables exist (see deploy/azure/bootstrap.sh).
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: false
+
+permissions:
+  id-token: write   # OpenID Connect token for Azure login (no stored secrets)
+  contents: read
+
+jobs:
+  deploy:
+    if: >-
+      vars.AZURE_CLIENT_ID != '' &&
+      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.apply.outputs.dashboard_url }}
+    env:
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+      TF_IN_AUTOMATION: "true"
+    defaults:
+      run:
+        working-directory: deploy/azure/terraform
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: Terraform init
+        run: >-
+          terraform init -input=false
+          -backend-config="resource_group_name=rg-windgrid-tfstate"
+          -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE }}"
+          -backend-config="container_name=tfstate"
+          -backend-config="key=windgrid.tfstate"
+          -backend-config="use_oidc=true"
+          -backend-config="use_azuread_auth=true"
+      - name: Terraform apply
+        id: apply
+        run: |
+          sha=${{ github.event.workflow_run.head_sha || github.sha }}
+          terraform apply -input=false -auto-approve \
+            -var "subscription_id=${ARM_SUBSCRIPTION_ID}" -var "image_tag=sha-${sha::7}"
+          echo "api_url=$(terraform output -raw api_url)" >> "$GITHUB_OUTPUT"
+          echo "dashboard_url=$(terraform output -raw dashboard_url)" >> "$GITHUB_OUTPUT"
+      - name: Smoke test the live service
+        run: |
+          api=${{ steps.apply.outputs.api_url }}
+          for i in $(seq 1 30); do curl -fs "$api/health" && break; sleep 5; done
+          curl -fs "$api/v1/sample" > request.json
+          curl -fs -X POST "$api/v1/dispatch" -H "Content-Type: application/json" -d @request.json | head -c 400
+          echo
+          echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- API: $api/docs" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Dashboard: ${{ steps.apply.outputs.dashboard_url }}" >> "$GITHUB_STEP_SUMMARY"

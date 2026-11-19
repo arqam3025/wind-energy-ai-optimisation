@@ -1,0 +1,84 @@
+# WindGrid dispatch API: stateless, horizontally scalable.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: windgrid-api
+  labels: {app.kubernetes.io/name: windgrid-api, app.kubernetes.io/part-of: windgrid}
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels: {app.kubernetes.io/name: windgrid-api}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: windgrid-api, app.kubernetes.io/part-of: windgrid}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: api
+          image: ghcr.io/arqam3025/windgrid-api:latest
+          ports:
+            - {name: http, containerPort: 8000}
+          env:
+            - {name: MPLCONFIGDIR, value: /tmp/matplotlib}
+          resources:
+            requests: {cpu: 250m, memory: 384Mi}
+            limits: {cpu: "1", memory: 1Gi}
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: windgrid-api
+  labels: {app.kubernetes.io/name: windgrid-api, app.kubernetes.io/part-of: windgrid}
+spec:
+  selector: {app.kubernetes.io/name: windgrid-api}
+  ports:
+    - {name: http, port: 80, targetPort: http}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: windgrid-api
+spec:
+  scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: windgrid-api}
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: {type: Utilization, averageUtilization: 70}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: windgrid-api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: windgrid-api}
